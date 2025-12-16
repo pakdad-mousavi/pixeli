@@ -1,5 +1,5 @@
 import z from 'zod';
-import { isValidHexColor, normalizeHexColor } from './utils.js';
+import { isValidHexColor, hexToRgba } from './utils.js';
 
 export const hexColorValidator = z.union([
   z.string().transform((color, ctx) => {
@@ -13,7 +13,7 @@ export const hexColorValidator = z.union([
       return z.NEVER;
     }
 
-    return normalizeHexColor(color);
+    return hexToRgba(color);
   }),
 
   z.object({

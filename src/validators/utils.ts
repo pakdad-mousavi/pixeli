@@ -3,7 +3,7 @@ export const isValidHexColor = (hex: string) => {
   return hexRegex.test(hex);
 };
 
-export const normalizeHexColor = (color: string) => {
+export const hexToRgba = (color: string) => {
   // 3. Normalize hex → RGBA
   let r, g, b, a;
   const hexValue = color.slice(1);
@@ -30,6 +30,25 @@ export const normalizeHexColor = (color: string) => {
 
   return { r, g, b, a };
 };
+
+export const rgbaToHex = (rgba: { r: number; g: number; b: number; a: number }) => {
+  // Function to convert a number to a 2-digit hex string
+  const componentToHex = (c: number) => {
+    const hex = c.toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
+
+  // Convert r, g, b (0-255)
+  const rHex = componentToHex(rgba.r);
+  const gHex = componentToHex(rgba.g);
+  const bHex = componentToHex(rgba.b);
+
+  // Convert alpha (0-1) to 0-255 range, then to 2-digit hex
+  const aVal = Math.round(rgba.a * 255);
+  const aHex = componentToHex(aVal);
+
+  return `#${rHex}${gHex}${bHex}${aHex}`;
+}
 
 export const parseAspectRatio = (aspectRatio: string): number | false => {
   // return ratio straight away if its just a number
