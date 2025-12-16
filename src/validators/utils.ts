@@ -13,19 +13,19 @@ export const normalizeHexColor = (color: string) => {
     r = parseInt(hexValue.charAt(0) + hexValue.charAt(0), 16);
     g = parseInt(hexValue.charAt(1) + hexValue.charAt(1), 16);
     b = parseInt(hexValue.charAt(2) + hexValue.charAt(2), 16);
-    a = 255;
+    a = 1;
   } // #rrggbb
   else if (hexValue.length === 6) {
     r = parseInt(hexValue.slice(0, 2), 16);
     g = parseInt(hexValue.slice(2, 4), 16);
     b = parseInt(hexValue.slice(4, 6), 16);
-    a = 255;
+    a = 1;
   } // #rrggbbaa
   else {
     r = parseInt(hexValue.slice(0, 2), 16);
     g = parseInt(hexValue.slice(2, 4), 16);
     b = parseInt(hexValue.slice(4, 6), 16);
-    a = parseInt(hexValue.slice(6, 8), 16);
+    a = Number(parseFloat(String((hexValue.slice(6, 8), 16) / 255)).toFixed(2));
   }
 
   return { r, g, b, a };
