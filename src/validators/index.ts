@@ -1,7 +1,7 @@
 import z from 'zod';
 import { hexColorValidator } from './hexColor.js';
 import { aspectRatioValidator } from './aspectRatio.js';
-import { inputImageValidation } from './inputImage.js';
+import { sharpImageValidation } from './sharpImage.js';
 import { dirPathValidator, filePathValidator } from './path.js';
 import { outputFileValidator } from './outputFile.js';
 import { useNumberCoercion } from './coercion.js';
@@ -12,7 +12,7 @@ export const VALIDATORS = {
   template: filePathValidator,
   dir: dirPathValidator,
   output: outputFileValidator,
-  images: z.array(inputImageValidation),
+  images: z.array(sharpImageValidation).nonempty(),
 
   // Flags
   caption: z.boolean(),
@@ -26,7 +26,7 @@ export const VALIDATORS = {
   // Numbers
   cornerRadius: z.number().int().gte(0),
   gap: z.number().gte(0).int(),
-  imageWidth: z.number().gt(0).int().nullable(),
+  imageWidth: z.number().gt(0).int(),
   columns: z.number().gt(0).int(),
   maxCaptionSize: z.number().gt(0).int(),
   rowHeight: z.number().gt(0).int(),
@@ -54,12 +54,4 @@ export const VALIDATORS = {
   // Misc
   mapping: z.json(),
   aspectRatio: aspectRatioValidator,
-};
-
-export const getDefault = <T>(schema: z.ZodType<T>): T | undefined => {
-  try {
-    return schema.parse(undefined);
-  } catch {
-    return undefined;
-  }
 };
