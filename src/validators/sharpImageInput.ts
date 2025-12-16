@@ -6,4 +6,4 @@ export const sharpImageValidation = z.union([
   z.instanceof(Uint8Array),
 ]);
 
-export type SharpImage = z.infer<typeof sharpImageValidation>;
+export type SharpImageInput = z.infer<typeof sharpImageValidation>;

@@ -1,18 +1,21 @@
 import z from 'zod';
 import { hexColorValidator } from './hexColor.js';
 import { aspectRatioValidator } from './aspectRatio.js';
-import { sharpImageValidation } from './sharpImage.js';
+import { sharpImageValidation } from './sharpImageInput.js';
 import { dirPathValidator, filePathValidator } from './path.js';
 import { outputFileValidator } from './outputFile.js';
 import { useNumberCoercion } from './coercion.js';
 
 export const VALIDATORS = {
-  // Inputs
+  // Inputs and outputs
   files: z.array(filePathValidator),
   template: filePathValidator,
   dir: dirPathValidator,
   output: outputFileValidator,
-  images: z.array(sharpImageValidation).nonempty(),
+  imageInputs: z.array(sharpImageValidation),
+
+  // Strings
+  captions: z.array(z.string()),
 
   // Flags
   caption: z.boolean(),
