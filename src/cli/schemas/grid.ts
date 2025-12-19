@@ -20,7 +20,7 @@ export const cliGridSchema = z
   })
   .superRefine((opts, ctx) => {
     // files XOR dir
-    if (!opts.files && !opts.dir) {
+    if (opts.files && !opts.files.length && !opts.dir) {
       ctx.addIssue({
         code: 'custom',
         message: 'You must provide either --files or --dir',
@@ -28,7 +28,7 @@ export const cliGridSchema = z
       });
     }
 
-    if (opts.files && opts.dir) {
+    if (opts.files && opts.files.length && opts.dir) {
       ctx.addIssue({
         code: 'custom',
         message: 'You cannot use --files and --dir together',

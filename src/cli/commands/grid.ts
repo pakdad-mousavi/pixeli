@@ -1,6 +1,12 @@
-import { buildCommandFromSchema } from './buildCommandFromSchema.js';
-import { cliGridSchema } from '../schemas/grid.js';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 import z from 'zod';
+
+import { buildCommandFromSchema } from '../utils/buildCommandFromSchema.js';
+import { loadImages } from '../utils/loadImages.js';
+import { gridMerge } from '../../core/merges/grid-merge/index.js';
+import { isSupportedOutputImage } from '../../core/helpers.js';
+import { cliGridSchema } from '../schemas/grid.js';
 
 const gridCommand = buildCommandFromSchema(
   'grid',
@@ -71,14 +77,43 @@ const gridCommand = buildCommandFromSchema(
   try {
     const validatedOptions = await cliGridSchema.parseAsync(input);
     console.log(validatedOptions);
-    // Run core grid merge
 
+    // Use loadImages module
+    const { images, filepaths, ignoredFiles } = await loadImages({
+      input: { files: validatedOptions.files, dir: validatedOptions.dir },
+      recursive: validatedOptions.recursive,
+    });
+
+    if (ignoredFiles.length) {
+      // are you sure you want to continue?
+    }
+
+    // Collect merge options
+    const { recursive, output, files, dir, ...cliOptions } = validatedOptions;
+    const format = path.extname(output).replace('.', '');
+
+    // Ensure format validity
+    if (!isSupportedOutputImage(format)) {
+      console.log('Invalid output format!');
+      return;
+    }
+
+    const mergeOptions = {
+      format: format,
+      captions: filepaths.map((p) => path.basename(p)),
+      ...cliOptions,
+    };
+
+    // Write file
+    const buffer = await gridMerge(images, mergeOptions);
+    await fs.writeFile(output, buffer);
   } catch (err) {
     if (err instanceof z.ZodError) {
       console.log(err.issues);
+    } else {
+      console.log(err);
     }
   }
-
 });
 
 export default gridCommand;
