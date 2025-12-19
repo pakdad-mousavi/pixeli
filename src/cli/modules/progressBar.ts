@@ -41,5 +41,3 @@ export class MergeProgressBar {
     this.progressBar.update(100);
   }
 }
-
-const x = new MergeProgressBar();
