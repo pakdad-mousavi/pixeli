@@ -20,6 +20,6 @@ export const hexColorValidator = z.union([
     r: z.number().int().min(0).max(255),
     g: z.number().int().min(0).max(255),
     b: z.number().int().min(0).max(255),
-    a: z.number().int().min(0).max(1),
+    alpha: z.number().min(0).max(1),
   }),
 ]);

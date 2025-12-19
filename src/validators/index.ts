@@ -5,6 +5,7 @@ import { sharpImageValidation } from './sharpImageInput.js';
 import { dirPathValidator, filePathValidator } from './path.js';
 import { outputFileValidator } from './outputFile.js';
 import { useNumberCoercion } from './coercion.js';
+import { formatValidator } from './format.js';
 
 export const VALIDATORS = {
   // Inputs and outputs
@@ -12,6 +13,7 @@ export const VALIDATORS = {
   template: filePathValidator,
   dir: dirPathValidator,
   output: outputFileValidator,
+  format: formatValidator,
   imageInputs: z.array(sharpImageValidation),
 
   // Strings
@@ -40,7 +42,7 @@ export const VALIDATORS = {
   // Coerced Numbers
   cliCornerRadius: useNumberCoercion(z.number().int().gte(0)),
   cliGap: useNumberCoercion(z.number().gte(0).int()),
-  cliImageWidth: useNumberCoercion(z.number().gt(0).int()).nullable(),
+  cliImageWidth: useNumberCoercion(z.number().gt(0).int()),
   cliColumns: useNumberCoercion(z.number().gt(0).int()),
   cliMaxCaptionSize: useNumberCoercion(z.number().gt(0).int()),
   cliRowHeight: useNumberCoercion(z.number().gt(0).int()),

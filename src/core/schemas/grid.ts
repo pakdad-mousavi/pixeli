@@ -3,12 +3,11 @@ import { VALIDATORS } from '../../validators/index.js';
 
 export const gridSchema = z
   .strictObject({
-    recursive: VALIDATORS.recursive.default(false),
     shuffle: VALIDATORS.shuffle.default(false),
     cornerRadius: VALIDATORS.cornerRadius.default(0),
     gap: VALIDATORS.gap.default(50),
     canvasColor: VALIDATORS.canvasColor.prefault('#fff'),
-    output: VALIDATORS.output.default('./pixeli.png'),
+    format: VALIDATORS.format,
     aspectRatio: VALIDATORS.aspectRatio.prefault('1:1'),
     imageWidth: VALIDATORS.imageWidth.optional(),
     columns: VALIDATORS.columns.default(4),
