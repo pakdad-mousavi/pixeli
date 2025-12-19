@@ -1,6 +1,10 @@
 import z from 'zod';
 import { Argument, Command, Option } from 'commander';
-import type { CommandBuilderOption } from '../types.js';
+
+interface CommandBuilderOption {
+  flags: string;
+  description: string;
+}
 
 const getDefault = <T>(schema: z.ZodType<T>): T | undefined => {
   try {
