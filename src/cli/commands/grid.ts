@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import z from 'zod';
 
 import { buildCommandFromSchema } from '../utils/buildCommandFromSchema.js';
-import { loadImages } from '../utils/loadImages.js';
+import { loadImages } from '../modules/loadImages.js';
 import { gridMerge } from '../../core/merges/grid-merge/index.js';
 import { isSupportedOutputImage } from '../../core/helpers.js';
 import { cliGridSchema } from '../schemas/grid.js';
