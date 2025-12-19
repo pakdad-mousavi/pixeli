@@ -10,7 +10,6 @@ import { shuffleArray, shuffleTogether } from '../../helpers.js';
 import { gridSchema } from '../../schemas/grid.js';
 
 export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => {
-  // Validate options
   const validationOptions = await gridSchema.parseAsync(options);
 
   // Load images from inputs
@@ -39,6 +38,17 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
     maxCaptionSize,
     format,
   } = validationOptions;
+
+  // Update progress if needed
+  const progressInfo = {
+    completed: 0,
+    total: images.length,
+    phase: 'Initializing',
+  };
+
+  if (onProgress) {
+    onProgress(progressInfo);
+  }
 
   // Shuffle images and captions if needed
   let orderedImages = images;
@@ -136,6 +146,13 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
 
       // Update coordinates
       x += width + gap;
+
+      // Update progress if needed
+      if (onProgress) {
+        progressInfo.completed++;
+        progressInfo.phase = 'Merging';
+        onProgress(progressInfo);
+      }
     }
 
     // Update coordinates

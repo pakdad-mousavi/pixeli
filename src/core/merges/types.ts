@@ -1,11 +1,11 @@
 import z from 'zod';
-import type { GridSchema } from '../schemas/grid.js';
 import sharp from 'sharp';
+import type { GridSchema } from '../schemas/grid.js';
 
-interface ProgressInfo {
+export interface ProgressInfo {
   completed: number;
   total: number;
-  imageIndex: number;
+  phase: string;
 }
 
 interface MergeCommand<T extends z.ZodObject<any>> {

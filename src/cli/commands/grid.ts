@@ -7,6 +7,7 @@ import { loadImages } from '../modules/loadImages.js';
 import { gridMerge } from '../../core/merges/grid-merge/index.js';
 import { isSupportedOutputImage } from '../../core/helpers.js';
 import { cliGridSchema } from '../schemas/grid.js';
+import { MergeProgressBar } from '../modules/progressBar.js';
 
 const gridCommand = buildCommandFromSchema(
   'grid',
@@ -74,11 +75,14 @@ const gridCommand = buildCommandFromSchema(
   }
 ).action(async (files, opts) => {
   const input = { files, ...opts };
+
+  // Use progress bar module to track progress
+  const bar = new MergeProgressBar();
+
   try {
     const validatedOptions = await cliGridSchema.parseAsync(input);
-    console.log(validatedOptions);
 
-    // Use loadImages module
+    // Use load images module
     const { images, filepaths, ignoredFiles } = await loadImages({
       input: { files: validatedOptions.files, dir: validatedOptions.dir },
       recursive: validatedOptions.recursive,
@@ -104,8 +108,16 @@ const gridCommand = buildCommandFromSchema(
       ...cliOptions,
     };
 
+    // Get grid buffer
+    const buffer = await gridMerge(images, mergeOptions, (progressInfo) => {
+      if (progressInfo.completed === 0) {
+        bar.startBar(progressInfo.phase);
+      } else {
+        bar.updateBar(progressInfo);
+      }
+    });
+
     // Write file
-    const buffer = await gridMerge(images, mergeOptions);
     await fs.writeFile(output, buffer);
   } catch (err) {
     if (err instanceof z.ZodError) {
@@ -113,6 +125,8 @@ const gridCommand = buildCommandFromSchema(
     } else {
       console.log(err);
     }
+  } finally {
+    bar.endBar();
   }
 });
 
