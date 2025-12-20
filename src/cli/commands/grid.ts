@@ -3,11 +3,13 @@ import fs from 'node:fs/promises';
 import z from 'zod';
 
 import { buildCommandFromSchema } from '../utils/buildCommandFromSchema.js';
-import { loadImages } from '../modules/loadImages.js';
 import { gridMerge } from '../../core/merges/grid-merge/index.js';
 import { isSupportedOutputImage } from '../../core/helpers.js';
 import { cliGridSchema } from '../schemas/grid.js';
+
+import { loadImages } from '../modules/loadImages.js';
 import { MergeProgressBar } from '../modules/progressBar.js';
+import { MessageRenderer, MESSAGES } from '../modules/messages.js';
 
 const gridCommand = buildCommandFromSchema(
   'grid',
@@ -83,13 +85,17 @@ const gridCommand = buildCommandFromSchema(
     const validatedOptions = await cliGridSchema.parseAsync(input);
 
     // Use load images module
-    const { images, filepaths, ignoredFiles } = await loadImages({
+    const { images, filepaths, ignoredPaths } = await loadImages({
       input: { files: validatedOptions.files, dir: validatedOptions.dir },
       recursive: validatedOptions.recursive,
     });
 
-    if (ignoredFiles.length) {
-      // are you sure you want to continue?
+    // Ensure user knows about ignored files
+    if (ignoredPaths.length) {
+      const warning = new MessageRenderer(MESSAGES.WARNINGS.IGNORED_FILES, ignoredPaths.join('\n') + '\n');
+
+      const confirmation = await warning.confirm();
+      if (!confirmation) return;
     }
 
     // Collect merge options
@@ -117,16 +123,19 @@ const gridCommand = buildCommandFromSchema(
       }
     });
 
-    // Write file
+    // Write file and display message
     await fs.writeFile(output, buffer);
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      console.log(err.issues);
-    } else {
-      console.log(err);
-    }
-  } finally {
     bar.endBar();
+
+    const success = new MessageRenderer(MESSAGES.SUCCESS.OUTPUT, output);
+    success.render();
+  } catch (err) {
+    bar.endBar();
+    if (err instanceof z.ZodError) {
+      return console.log(err.issues);
+    } else {
+      return console.log(err);
+    }
   }
 });
 
