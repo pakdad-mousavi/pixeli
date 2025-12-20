@@ -18,28 +18,26 @@ const hasDir = (input: { dir: string | undefined }): input is { dir: string } =>
 };
 
 export const loadImages = async ({ input, recursive, count }: LoadImagesOptions) => {
-  let ignoredFiles: string[] = [];
   let filepaths: string[] = [];
   let images: Buffer[] = [];
 
+  // Get all file paths
   if (input.files && input.files.length) {
-    // Load directly from provided file list
     filepaths = input.files;
   } else if (hasDir(input)) {
-    // Get all files from directory
-    const { skippedFiles, paths } = await getFilesFromDirectory(input.dir, recursive);
-    filepaths = paths;
-    ignoredFiles = skippedFiles;
+    filepaths = await getFilesFromDirectory(input.dir, recursive);
   }
 
-  images = await loadFromFiles(filepaths, count);
+  // Load valid image paths
+  const { ignoredPaths, imagePaths } = validateFilepaths(filepaths);
+  images = await loadFromFiles(imagePaths, count);
 
   // Ensure filepaths and images match
   if (images.length !== filepaths.length) {
     filepaths = filepaths.slice(0, images.length);
   }
 
-  return { images, filepaths, ignoredFiles };
+  return { images, filepaths, ignoredPaths };
 };
 
 const loadFromFiles = async (files: string[], count: number | undefined) => {
@@ -59,16 +57,9 @@ const loadFromFiles = async (files: string[], count: number | undefined) => {
   return images;
 };
 
-const getFilesFromDirectory = async (
-  dir: string,
-  recursive: boolean,
-  depth = 0
-): Promise<{ paths: string[]; skippedFiles: string[] }> => {
-  // Use to collect warnings
-  const skippedFiles = [];
-
+const getFilesFromDirectory = async (dir: string, recursive: boolean, depth = 0): Promise<string[]> => {
   // Ensure recursiveness ends at the max recursion depth
-  if (depth >= MAX_RECURSION_DEPTH) return { paths: [], skippedFiles: [] };
+  if (depth >= MAX_RECURSION_DEPTH) return [];
 
   // Get entries
   const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -77,24 +68,32 @@ const getFilesFromDirectory = async (
   for (const entry of entries) {
     const file = path.join(entry.parentPath, entry.name);
 
-    // If the entry is a valid image file, add it to the list
-    const extname = path.extname(entry.name).replace('.', '');
-    if (entry.isFile() && isSupportedInputImage(extname)) {
+    // If the entry is a file, add it to the list
+    if (entry.isFile()) {
       files.push(file);
-    }
-    // If it is an invalid file format, add to skipped files
-    else if (entry.isFile() && !isSupportedInputImage(extname) && entry.name !== '.DS_Store') {
-      skippedFiles.push(entry.name);
     }
     // If it's a directory AND the recursive option is true,
     // recursively get all the files
     else if (recursive && entry.isDirectory() && !entry.isSymbolicLink()) {
-      const dirpath = path.join(entry.parentPath, entry.name);
-      const dirObj = await getFilesFromDirectory(dirpath, recursive, depth + 1);
-      files.push(...dirObj?.paths);
-      skippedFiles.push(...dirObj.skippedFiles);
+      const dirPath = path.join(entry.parentPath, entry.name);
+      const paths = await getFilesFromDirectory(dirPath, recursive, depth + 1);
+      files.push(...paths);
     }
   }
 
-  return { paths: files, skippedFiles };
+  return files;
+};
+
+const validateFilepaths = (filepaths: string[]) => {
+  const ignoredPaths = [];
+  const imagePaths = [];
+
+  for (const filepath of filepaths) {
+    if (path.basename(filepath) === '.DS_Store') continue;
+
+    const extname = path.extname(filepath).replace('.', '');
+    isSupportedInputImage(extname) ? imagePaths.push(filepath) : ignoredPaths.push(filepath);
+  }
+
+  return { ignoredPaths, imagePaths };
 };
