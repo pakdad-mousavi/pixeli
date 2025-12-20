@@ -11,14 +11,12 @@ export const MESSAGES = {
   WARNINGS: {
     IGNORED_FILES: {
       message: '{0}\nThe following files will be ignored. Proceed?',
-      confirmation: true,
       chalk: chalk.yellow,
     },
   },
   SUCCESS: {
     OUTPUT: {
       message: 'Image created at {0}.',
-      confirmation: false,
       chalk: chalk.blue,
     },
   },
