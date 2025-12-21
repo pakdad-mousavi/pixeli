@@ -1,27 +1,48 @@
 import sharp from 'sharp';
+import z from 'zod';
+
 import type { GridMerge } from '../types.js';
+
 import { getSmallestImageDimensions } from '../../utils/getSmallestImageDimensions.js';
 import { scaleImages } from '../../utils/scaleImages.js';
 import { roundImages } from '../../utils/roundImages.js';
 import { createSvgTextBuffer } from '../../utils/createSvgTextBuffer.js';
-import { rgbaToHex } from '../../../validators/utils.js';
 import { getFontSize } from '../../utils/getFontSize.js';
+
+import { rgbaToHex } from '../../utils/rgbaToHex.js';
 import { shuffleArray, shuffleTogether } from '../../helpers.js';
 import { gridSchema } from '../../schemas/grid.js';
+import { MergeError } from '../../mergeError.js';
+import { MESSAGES } from '../../../cli/modules/messages.js';
 
 export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => {
-  const validationOptions = await gridSchema.parseAsync(options);
+  let validationOptions!: z.infer<typeof gridSchema>;
+
+  try {
+    validationOptions = await gridSchema.parseAsync(options);
+  } catch (err) {
+    // Handle validation errors
+    if (err instanceof z.ZodError && err.issues[0]) {
+      const path = err.issues[0].path;
+      const error = err.issues[0].message;
+      const errorText = path.length > 0 ? `Invalid value at ${path.join('/')}: ${error}` : `Error: ${error}`;
+
+      throw new MergeError('validation', errorText);
+    }
+
+    // Handle internal errors
+    throw new MergeError('internal', 'Error: an internal error has occured');
+  }
 
   // Load images from inputs
-  const images = [];
-  for (const imageInput of imageInputs) {
+  const images: sharp.Sharp[] = [];
+  imageInputs.forEach((imageInput, idx) => {
     try {
       images.push(sharp(imageInput));
     } catch (e) {
-      console.log('------- ERROR -------');
-      console.log(e);
+      throw new MergeError('validation', `Invalid image input at index ${idx}`);
     }
-  }
+  });
 
   // Destructure params
   const {
@@ -161,7 +182,28 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
   }
 
   // Create final grid
-  canvas.composite(composites);
+  try {
+    canvas.composite(composites);
+  } catch (e) {
+    console.log('YYYYYYY');
+  }
 
-  return await canvas.toFormat(format).toBuffer();
+  try {
+    return await canvas.toFormat(format).toBuffer();
+  } catch (e) {
+    // An error which should never occur, for type safety
+    if (!(e instanceof Error)) {
+      throw new MergeError('internal', MESSAGES.ERROR.INTERNAL.message);
+    }
+
+    // SPECIFIC SHARP ERROR
+    // occurs when trying to create a buffer that exceeds the limits of the current image format
+    if (e.message.includes('pixel limit')) {
+      const errText = `Error: image to large for '${format}' format, try a format that allows larger images`;
+      throw new MergeError('image', errText);
+    }
+
+    // Other sharp errors
+    throw new MergeError('image', MESSAGES.ERROR.INTERNAL.message);
+  }
 };

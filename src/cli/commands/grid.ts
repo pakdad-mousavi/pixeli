@@ -1,7 +1,5 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
-import chalk from 'chalk';
-import z from 'zod';
 
 import { buildCommandFromSchema } from '../utils/buildCommandFromSchema.js';
 import { gridMerge } from '../../core/merges/grid-merge/index.js';
@@ -11,6 +9,7 @@ import { cliGridSchema } from '../schemas/grid.js';
 import { loadImages } from '../modules/loadImages.js';
 import { MergeProgressBar } from '../modules/progressBar.js';
 import { MessageRenderer, MESSAGES } from '../modules/messages.js';
+import { toErrorMessage } from '../utils/toErrorMessage.js';
 
 const gridCommand = buildCommandFromSchema(
   'grid',
@@ -124,27 +123,18 @@ const gridCommand = buildCommandFromSchema(
       }
     });
 
-    // Write file and display message
+    // Write file and display success message
     await fs.writeFile(output, buffer);
     bar.endBar();
 
     const success = new MessageRenderer(MESSAGES.SUCCESS.OUTPUT, output);
     success.render();
   } catch (err) {
+    // End the progress bar
     bar.endBar();
-    let errorMessage = MESSAGES.ERROR.INTERNAL;
 
-    if (err instanceof z.ZodError && err.issues[0]) {
-      const path = err.issues[0].path;
-      const error = err.issues[0].message;
-      const errorText = path.length > 0 ? `Invalid value at ${path.join('/')}: ${error}` : `Error: ${error}`;
-
-      errorMessage = {
-        message: errorText,
-        chalk: chalk.red,
-      };
-    }
-
+    // Create and render error
+    const errorMessage = toErrorMessage(err);
     const error = new MessageRenderer(errorMessage);
     error.render();
   }
