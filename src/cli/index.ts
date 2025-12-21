@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import gridCommand from './commands/grid.js';
+import { configureCommandErrors } from './utils/configureCommandErrors.js';
 
 const program = new Command();
 
@@ -11,6 +12,8 @@ program
   .version('1.0.0');
 
 program.addCommand(gridCommand);
+
+configureCommandErrors(program);
 
 try {
   program.parse();
