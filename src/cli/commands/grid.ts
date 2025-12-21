@@ -10,6 +10,7 @@ import { cliGridSchema } from '../schemas/grid.js';
 import { loadImages } from '../modules/loadImages.js';
 import { MergeProgressBar } from '../modules/progressBar.js';
 import { MessageRenderer, MESSAGES } from '../modules/messages.js';
+import chalk from 'chalk';
 
 const gridCommand = buildCommandFromSchema(
   'grid',
@@ -131,11 +132,21 @@ const gridCommand = buildCommandFromSchema(
     success.render();
   } catch (err) {
     bar.endBar();
-    if (err instanceof z.ZodError) {
-      return console.log(err.issues);
-    } else {
-      return console.log(err);
+    let errorMessage = MESSAGES.ERROR.INTERNAL;
+
+    if (err instanceof z.ZodError && err.issues[0]) {
+      const path = err.issues[0].path;
+      const error = err.issues[0].message;
+      const errorText = path.length > 0 ? `Invalid value at ${path.join('/')}: ${error}` : `Error: ${error}`;
+
+      errorMessage = {
+        message: errorText,
+        chalk: chalk.red,
+      };
     }
+
+    const error = new MessageRenderer(errorMessage);
+    error.render();
   }
 });
 

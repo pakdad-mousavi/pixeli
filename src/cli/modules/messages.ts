@@ -20,6 +20,12 @@ export const MESSAGES = {
       chalk: chalk.blue,
     },
   },
+  ERROR: {
+    INTERNAL: {
+      message: 'Internal error has occured.',
+      chalk: chalk.red,
+    },
+  },
 };
 
 export class MessageRenderer {
