@@ -53,3 +53,8 @@ export const isSupportedInputImage = (extname: string): extname is SupportedInpu
 export const isSupportedOutputImage = (extname: string): extname is SupportedOutputFormat => {
   return (SUPPORTED_OUTPUT_FORMATS as readonly string[]).includes(extname);
 };
+
+export const isValidHexColor = (hex: string) => {
+  const hexRegex = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+  return hexRegex.test(hex);
+};

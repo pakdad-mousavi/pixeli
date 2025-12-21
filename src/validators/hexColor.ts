@@ -1,5 +1,6 @@
 import z from 'zod';
-import { isValidHexColor, hexToRgba } from './utils.js';
+import { isValidHexColor } from '../core/helpers.js';
+import { hexToRgba } from '../core/utils/hexToRgba.js';
 
 export const hexColorValidator = z.union([
   z.string().transform((color, ctx) => {
