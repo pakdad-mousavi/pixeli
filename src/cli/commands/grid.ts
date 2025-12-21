@@ -1,5 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
+import chalk from 'chalk';
 import z from 'zod';
 
 import { buildCommandFromSchema } from '../utils/buildCommandFromSchema.js';
@@ -10,7 +11,6 @@ import { cliGridSchema } from '../schemas/grid.js';
 import { loadImages } from '../modules/loadImages.js';
 import { MergeProgressBar } from '../modules/progressBar.js';
 import { MessageRenderer, MESSAGES } from '../modules/messages.js';
-import chalk from 'chalk';
 
 const gridCommand = buildCommandFromSchema(
   'grid',
