@@ -4,7 +4,7 @@ interface ScaleImagesOptions {
   width?: number;
   height?: number;
   finalizePipeline?: boolean;
-};
+}
 
 export const scaleImages = async (
   images: sharp.Sharp[],
@@ -39,7 +39,9 @@ export const scaleImages = async (
 
       // Only finalize changes in the image pipeline if needed
       if (finalizePipeline) {
-        const buffer = await newImage.toBuffer();
+        // Use jpg format if possible for less memory usage
+        const formatPipe = meta.channels === 4 ? newImage.toFormat('png') : newImage.toFormat('jpg');
+        const buffer = await formatPipe.toBuffer();
         return sharp(buffer);
       } else {
         return newImage;
