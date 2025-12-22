@@ -20,5 +20,5 @@ export const dirPathValidator = z.string().refine(
       return false;
     }
   },
-  { error: 'Directory path does not exist or is invalid.' }
+  { error: 'Directory path does not exist or is invalid.', abort: true }
 );
