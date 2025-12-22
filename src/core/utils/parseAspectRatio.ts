@@ -19,5 +19,7 @@ export const parseAspectRatio = (aspectRatio: string): number | false => {
   const width = parseInt(wStr, 10);
   const height = parseInt(hStr, 10);
 
+  if (width === 0 || height === 0) return false;
+
   return width / height;
 };
