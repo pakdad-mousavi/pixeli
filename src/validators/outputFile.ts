@@ -1,9 +1,8 @@
 import path from 'node:path';
 import z from 'zod';
-
-const SUPPORTED_OUTPUT_FORMATS: readonly string[] = ['.webp', '.gif', '.jpeg', '.jpg', '.png', '.tiff', '.avif'];
+import { SUPPORTED_OUTPUT_FORMATS, type SupportedOutputFormat } from '../core/helpers.js';
 
 export const outputFileValidator = z.string().refine((outputPath) => {
-  const extension = path.extname(outputPath);
-  return SUPPORTED_OUTPUT_FORMATS.includes(extension);
-});
+  const extension = path.extname(outputPath).replace('.', '');
+  return SUPPORTED_OUTPUT_FORMATS.includes(extension as SupportedOutputFormat);
+}, '--output image format is invalid');
