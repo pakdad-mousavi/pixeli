@@ -43,7 +43,7 @@ export const getFontSize = async ({ text, maxWidth, maxHeight, initialFontSize =
     }
 
     // If the difference is greater than the threshold, use large change
-    if (maxWidth - meta.width > THRESHOLD || maxHeight - meta.height) {
+    if (meta.width - maxWidth > THRESHOLD || meta.height - maxHeight > THRESHOLD) {
       fontSize -= LARGE_CHANGE;
     } else {
       fontSize -= SMALL_CHANGE;
