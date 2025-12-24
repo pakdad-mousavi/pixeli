@@ -5,7 +5,7 @@ interface CreateSvgTextBufferOptions {
   maxWidth: number;
   maxHeight: number;
   fontSize: number;
-  fill: string;
+  fill?: string;
 }
 
 export const createSvgTextBuffer = ({ text, maxWidth, maxHeight, fontSize, fill = '#000000' }: CreateSvgTextBufferOptions) => {
