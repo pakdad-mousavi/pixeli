@@ -15,6 +15,27 @@ import { gridSchema } from '../../schemas/grid.js';
 import { MergeError } from '../../mergeError.js';
 import { MESSAGES } from '../../../cli/modules/messages.js';
 
+/**
+ * Merges multiple images into a grid layout. Note that each image is resized to
+ * `options.imageWidth` or to the smallest image width.
+ *
+ * @param imageInputs - Input images (buffers, file paths, or streams supported by sharp)
+ * @param options - Grid merge configuration options
+ * @param onProgress - Callback function which is called everytime progress is made
+ *
+ * @returns A Promise that resolves to the merged image buffer
+ *
+ * @example
+ * ```ts
+ * const buffer = await gridMerge(images, {
+ *   columns: 3,
+ *   gap: 12,
+ *   captions: ['A', 'B', 'C'],
+ *   format: 'png'
+ * });
+ * ```
+ */
+
 export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => {
   let validationOptions!: z.infer<typeof gridSchema>;
 
