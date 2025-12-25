@@ -1,4 +1,6 @@
-export const rgbaToHex = (rgba: { r: number; g: number; b: number; alpha: number }) => {
+import type { RGBA } from './types.js';
+
+export const rgbaToHex = (rgba: RGBA): string => {
   // Function to convert a number to a 2-digit hex string
   const componentToHex = (c: number) => {
     const hex = c.toString(16);

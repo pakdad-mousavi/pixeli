@@ -1,4 +1,6 @@
-export const hexToRgba = (color: string) => {
+import type { RGBA } from './types.js';
+
+export const hexToRgba = (color: string): RGBA => {
   // 3. Normalize hex → RGBA
   let r, g, b, alpha;
   const hexValue = color.slice(1);
