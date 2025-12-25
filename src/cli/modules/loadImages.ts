@@ -37,7 +37,7 @@ export const loadImages = async ({ input, recursive, count }: LoadImagesOptions)
     filepaths = filepaths.slice(0, images.length);
   }
 
-  return { images, filepaths, ignoredPaths };
+  return { images, imagePaths, ignoredPaths };
 };
 
 const loadFromFiles = async (files: string[], count: number | undefined) => {

@@ -84,7 +84,7 @@ const gridCommand = buildCommandFromSchema(
     const validatedOptions = await cliGridSchema.parseAsync(input);
 
     // Use load images module
-    const { images, filepaths, ignoredPaths } = await loadImages({
+    const { images, imagePaths, ignoredPaths } = await loadImages({
       input: { files: validatedOptions.files, dir: validatedOptions.dir },
       recursive: validatedOptions.recursive,
     });
@@ -100,7 +100,7 @@ const gridCommand = buildCommandFromSchema(
     // Collect merge options
     const { recursive, output, files, dir, ...cliOptions } = validatedOptions;
     const format = path.extname(output).replace('.', '');
-    const captions = filepaths.map((p) => path.basename(p));
+    const captions = imagePaths.map((p) => path.basename(p));
 
     const mergeOptions = {
       format,
