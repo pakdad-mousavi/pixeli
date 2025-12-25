@@ -3,7 +3,6 @@ import fs from 'node:fs/promises';
 
 import { buildCommandFromSchema } from '../utils/buildCommandFromSchema.js';
 import { gridMerge } from '../../core/merges/grid-merge/index.js';
-import { isSupportedOutputImage } from '../../core/helpers.js';
 import { cliGridSchema } from '../schemas/grid.js';
 
 import { loadImages } from '../modules/loadImages.js';
@@ -101,16 +100,11 @@ const gridCommand = buildCommandFromSchema(
     // Collect merge options
     const { recursive, output, files, dir, ...cliOptions } = validatedOptions;
     const format = path.extname(output).replace('.', '');
-
-    // Ensure format validity
-    if (!isSupportedOutputImage(format)) {
-      console.log('Invalid output format!');
-      return;
-    }
+    const captions = filepaths.map((p) => path.basename(p));
 
     const mergeOptions = {
-      format: format,
-      captions: filepaths.map((p) => path.basename(p)),
+      format,
+      captions,
       ...cliOptions,
     };
 

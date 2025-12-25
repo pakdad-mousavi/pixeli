@@ -7,7 +7,7 @@ export const gridSchema = z
     cornerRadius: VALIDATORS.cornerRadius.default(0),
     gap: VALIDATORS.gap.default(50),
     canvasColor: VALIDATORS.canvasColor.prefault('#fff'),
-    format: VALIDATORS.format,
+    format: VALIDATORS.format.default('png'),
     aspectRatio: VALIDATORS.aspectRatio.prefault('1:1'),
     imageWidth: VALIDATORS.imageWidth.optional(),
     columns: VALIDATORS.columns.default(4),
@@ -26,5 +26,3 @@ export const gridSchema = z
       });
     }
   });
-
-export type GridSchema = typeof gridSchema;
