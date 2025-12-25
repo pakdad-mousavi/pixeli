@@ -12,7 +12,7 @@ export const cliGridSchema = z
     canvasColor: VALIDATORS.canvasColor.prefault('#fff'),
     output: VALIDATORS.output.default('./pixeli.png'),
     aspectRatio: VALIDATORS.aspectRatio.prefault('1:1'),
-    imageWidth: VALIDATORS.cliImageWidth,
+    imageWidth: VALIDATORS.cliImageWidth.optional(),
     columns: VALIDATORS.cliColumns.default(4),
     caption: VALIDATORS.caption.default(false),
     captionColor: VALIDATORS.captionColor.prefault('#000'),

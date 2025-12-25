@@ -43,8 +43,8 @@ export interface GridMergeOptions {
   /** Grid aspect ratio (e.g. "16:9" or 1.777) */
   aspectRatio?: string | number;
 
-  /** Width of each image cell in pixels */
-  imageWidth?: number;
+  /** Width of each image cell in pixels, uses the smallest image width if undefined */
+  imageWidth?: number | undefined;
 
   /** Number of columns in the grid */
   columns?: number;
