@@ -1,5 +1,5 @@
 import z from 'zod';
-import { parseAspectRatio } from '../core/utils/parseAspectRatio.js';
+import { parseAspectRatio } from '../core/utils/images/parseAspectRatio.js';
 
 export const aspectRatioValidator = z.coerce.string().transform((ratio, ctx) => {
   const result = parseAspectRatio(ratio);

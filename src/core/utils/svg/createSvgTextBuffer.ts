@@ -1,4 +1,4 @@
-import { escapeXML } from '../helpers.js';
+import { escapeXML } from '../../helpers.js';
 
 interface CreateSvgTextBufferOptions {
   text: string;

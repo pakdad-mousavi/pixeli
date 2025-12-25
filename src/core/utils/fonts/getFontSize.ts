@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { escapeXML } from '../helpers.js';
+import { escapeXML } from '../../helpers.js';
 
 interface GetFontSizeOptions {
   text: string;
