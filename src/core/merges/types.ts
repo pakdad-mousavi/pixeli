@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import type { Color } from '../utils/colors/types.js';
 
 export interface ProgressInfo {
   /** How many images have been processed so far */
@@ -35,7 +36,7 @@ export interface GridMergeOptions {
   gap?: number;
 
   /** Background canvas color */
-  canvasColor?: string | { r: number; g: number; b: number; alpha: number };
+  canvasColor?: Color;
 
   /** Output image format (png, jpeg, webp) */
   format?: string;
@@ -56,7 +57,7 @@ export interface GridMergeOptions {
   captions?: string[];
 
   /** Caption text color */
-  captionColor?: string | { r: number; g: number; b: number; alpha: number };
+  captionColor?: Color;
 
   /** Maximum caption font size in pixels */
   maxCaptionSize?: number;
