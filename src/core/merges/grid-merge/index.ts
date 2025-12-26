@@ -14,6 +14,7 @@ import { shuffleArray, shuffleTogether } from '../../helpers.js';
 import { gridSchema } from '../../schemas/grid.js';
 import { MergeError } from '../../mergeError.js';
 import { MESSAGES } from '../../../cli/modules/messages.js';
+import { isActualImage } from '../../utils/images/isActualImage.js';
 
 /**
  * Merges multiple images into a grid layout. Note that each image is resized to
@@ -57,13 +58,17 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
 
   // Load images from inputs
   const images: sharp.Sharp[] = [];
-  imageInputs.forEach((imageInput, idx) => {
-    try {
-      images.push(sharp(imageInput));
-    } catch (e) {
-      throw new MergeError('validation', `Invalid image input at index ${idx}`);
+  for (let i = 0; i < imageInputs.length; i++) {
+    // Ensure image is valid
+    const input = imageInputs[i]!;
+    const { isImage, reason } = await isActualImage(input);
+
+    if (!isImage) {
+      throw new MergeError('validation', `Invalid image input at index ${i}, ${reason}`);
     }
-  });
+
+    images.push(sharp(input));
+  }
 
   // Ensure there's at least one image
   if (images.length <= 0) {
