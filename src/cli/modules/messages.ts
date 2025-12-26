@@ -22,7 +22,7 @@ export const MESSAGES = {
   },
   ERROR: {
     INTERNAL: {
-      message: 'Internal error has occured.',
+      message: 'An internal error has occured.',
       chalk: chalk.red,
     },
   },
