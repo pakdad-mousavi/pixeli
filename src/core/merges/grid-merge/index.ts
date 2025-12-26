@@ -52,7 +52,7 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
     }
 
     // Handle internal errors
-    throw new MergeError('internal', 'Error: an internal error has occured');
+    throw new MergeError('internal', MESSAGES.ERROR.INTERNAL.message);
   }
 
   // Load images from inputs
@@ -64,6 +64,11 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
       throw new MergeError('validation', `Invalid image input at index ${idx}`);
     }
   });
+
+  // Ensure there's at least one image
+  if (images.length <= 0) {
+    throw new MergeError('validation', 'No images provided to merge');
+  }
 
   // Destructure params
   const {
@@ -206,7 +211,7 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
   try {
     canvas.composite(composites);
   } catch (e) {
-    console.log('YYYYYYY');
+    throw new MergeError('internal', MESSAGES.ERROR.INTERNAL.message);
   }
 
   try {
