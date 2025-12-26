@@ -49,11 +49,14 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
       const error = err.issues[0].message;
       const errorText = path.length > 0 ? `Invalid value at ${path.join('/')}: ${error}` : `Error: ${error}`;
 
-      throw new MergeError('validation', errorText);
+      throw new MergeError(errorText, { type: 'validation' });
     }
 
     // Handle internal errors
-    throw new MergeError('internal', MESSAGES.ERROR.INTERNAL.message);
+    throw new MergeError(MESSAGES.ERROR.INTERNAL.message, {
+      type: 'internal',
+      cause: (err as Error)?.message,
+    });
   }
 
   // Load images from inputs
@@ -64,7 +67,10 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
     const { isImage, reason } = await isActualImage(input);
 
     if (!isImage) {
-      throw new MergeError('validation', `Invalid image input at index ${i}, ${reason}`);
+      throw new MergeError(`Invalid image input at index ${i}`, {
+        type: 'validation',
+        cause: reason,
+      });
     }
 
     images.push(sharp(input));
@@ -72,7 +78,7 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
 
   // Ensure there's at least one image
   if (images.length <= 0) {
-    throw new MergeError('validation', 'No images provided to merge');
+    throw new MergeError('No images provided to merge', { type: 'validation' });
   }
 
   // Destructure params
@@ -215,26 +221,27 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
   // Create final grid
   try {
     canvas.composite(composites);
-  } catch (e) {
-    throw new MergeError('internal', MESSAGES.ERROR.INTERNAL.message);
+  } catch (err) {
+    throw new MergeError(MESSAGES.ERROR.INTERNAL.message, {
+      type: 'internal',
+      cause: (err as Error)?.message,
+    });
   }
 
   try {
     return await canvas.toFormat(format).toBuffer();
-  } catch (e) {
-    // An error which should never occur, for type safety
-    if (!(e instanceof Error)) {
-      throw new MergeError('internal', MESSAGES.ERROR.INTERNAL.message);
-    }
-
+  } catch (err) {
     // SPECIFIC SHARP ERROR
     // occurs when trying to create a buffer that exceeds the limits of the current image format
-    if (e.message.includes('pixel limit')) {
+    if ((err as Error)?.message?.includes('pixel limit')) {
       const errText = `Error: image to large for '${format}' format, try a format that allows larger images`;
-      throw new MergeError('image', errText);
+      throw new MergeError(errText, { type: 'image' });
     }
 
     // Other sharp errors
-    throw new MergeError('image', MESSAGES.ERROR.INTERNAL.message);
+    throw new MergeError(MESSAGES.ERROR.INTERNAL.message, {
+      type: 'internal',
+      cause: (err as Error)?.message,
+    });
   }
 };
