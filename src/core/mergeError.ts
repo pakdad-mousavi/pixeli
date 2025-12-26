@@ -4,7 +4,15 @@ interface Context {
 }
 
 export class MergeError extends Error {
-  constructor(public message: string, public context: Context) {
+  public readonly context: Context;
+
+  constructor(message: string, context: Context) {
     super(message);
+
+    this.name = 'MergeError';
+    this.context = context;
+
+    // Fix prototype chain
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
