@@ -26,40 +26,40 @@ interface MergeCommand<T> {
 }
 
 export interface GridMergeOptions {
-  /** Whether to randomize image order before merging */
+  /** Whether to randomize image order before merging. */
   shuffle?: boolean;
 
-  /** Rounded corner radius in pixels */
+  /** Rounded corner radius in pixels. */
   cornerRadius?: number;
 
-  /** Gap between images in pixels */
+  /** Gap between images in pixels. */
   gap?: number;
 
-  /** Background canvas color */
+  /** Background canvas color. */
   canvasColor?: Color;
 
-  /** Output image format (png, jpeg, webp) */
+  /** Output image format (png, jpeg, webp). */
   format?: string;
 
-  /** Grid aspect ratio (e.g. "16:9" or 1.777) */
+  /** Grid aspect ratio (e.g. "16:9" or 1.777). */
   aspectRatio?: string | number;
 
-  /** Width of each image cell in pixels, uses the smallest image width if undefined */
+  /** Width of each image cell in pixels, uses the smallest image width if undefined. */
   imageWidth?: number | undefined;
 
-  /** Number of columns in the grid */
+  /** Number of columns in the grid. */
   columns?: number;
 
-  /** Enable captions under images */
+  /** Enable captions under images. */
   caption?: boolean;
 
-  /** Captions text (one per image, in order) */
+  /** Captions text (one per image, in order). */
   captions?: string[];
 
-  /** Caption text color */
+  /** Caption text color. */
   captionColor?: Color;
 
-  /** Maximum caption font size in pixels */
+  /** Maximum caption font size in pixels. */
   maxCaptionSize?: number;
 }
 
