@@ -1,6 +1,6 @@
 interface Context {
   type: 'validation' | 'image' | 'internal';
-  cause?: string;
+  cause?: any;
 }
 
 export class MergeError extends Error {

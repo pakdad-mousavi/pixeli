@@ -38,24 +38,23 @@ import { isActualImage } from '../../utils/images/isActualImage.js';
  */
 
 export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => {
-  let validationOptions!: z.infer<typeof gridSchema>;
+  const { success, data, error } = await gridSchema.safeParseAsync(options);
 
-  try {
-    validationOptions = await gridSchema.parseAsync(options);
-  } catch (err) {
-    // Handle validation errors
-    if (err instanceof z.ZodError && err.issues[0]) {
-      const path = err.issues[0].path;
-      const error = err.issues[0].message;
-      const errorText = path.length > 0 ? `Invalid value at ${path.join('/')}: ${error}` : `Error: ${error}`;
-
-      throw new MergeError(errorText, { type: 'validation' });
-    }
-
-    // Handle internal errors
+  // Try to validate given options
+  let validationOptions: z.infer<typeof gridSchema>;
+  if (success) {
+    validationOptions = data;
+  } else if (error.issues[0]) {
+    // Handles zod errors
+    const path = error.issues[0].path;
+    const err = error.issues[0].message;
+    const errorText = path.length > 0 ? `Invalid value at ${path.join('/')}: ${err}` : `Error: ${err}`;
+    throw new MergeError(errorText, { type: 'validation' });
+  } else {
+    // Handles non-zod errors
     throw new MergeError(MESSAGES.ERROR.INTERNAL.message, {
       type: 'internal',
-      cause: (err as Error)?.message,
+      cause: error,
     });
   }
 
@@ -97,6 +96,11 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
     format,
   } = validationOptions;
 
+  // Ensure caption length is not less than image length
+  if (areCaptionsProvided(caption, captions) && captions.length < images.length) {
+    throw new MergeError('Not enough captions provided', { type: 'validation' });
+  }
+
   // Update progress if needed
   const progressInfo = {
     completed: 0,
@@ -105,18 +109,18 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
   };
 
   if (onProgress) {
-    onProgress(progressInfo);
+    onProgress({ ...progressInfo });
   }
 
   // Shuffle images and captions if needed
   let orderedImages = images;
   let orderedCaptions = captions || [];
 
-  if (shuffle && caption && captions?.length) {
+  if (shuffle && areCaptionsProvided(caption, captions)) {
     [orderedImages, orderedCaptions] = shuffleTogether(images, captions);
   }
 
-  if (shuffle && !caption) {
+  if (shuffle && !areCaptionsProvided(caption, captions)) {
     orderedImages = shuffleArray(images);
   }
 
@@ -209,7 +213,7 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
       if (onProgress) {
         progressInfo.completed++;
         progressInfo.phase = 'Merging';
-        onProgress(progressInfo);
+        onProgress({ ...progressInfo });
       }
     }
 
@@ -224,7 +228,7 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
   } catch (err) {
     throw new MergeError(MESSAGES.ERROR.INTERNAL.message, {
       type: 'internal',
-      cause: (err as Error)?.message,
+      cause: err,
     });
   }
 
@@ -233,7 +237,7 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
   } catch (err) {
     // SPECIFIC SHARP ERROR
     // occurs when trying to create a buffer that exceeds the limits of the current image format
-    if ((err as Error)?.message?.includes('pixel limit')) {
+    if ((err as Error)?.message?.includes('pixel limit') || (err as Error)?.message?.includes('Processed image is too large')) {
       const errText = `Error: image to large for '${format}' format, try a format that allows larger images`;
       throw new MergeError(errText, { type: 'image' });
     }
@@ -241,7 +245,11 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
     // Other sharp errors
     throw new MergeError(MESSAGES.ERROR.INTERNAL.message, {
       type: 'internal',
-      cause: (err as Error)?.message,
+      cause: err,
     });
   }
+};
+
+const areCaptionsProvided = (caption: boolean, captions: string[] | undefined): captions is string[] => {
+  return caption;
 };
