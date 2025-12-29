@@ -1,20 +1,20 @@
 import sharp from 'sharp';
 import z from 'zod';
 
-import type { GridMerge } from '../types.js';
+import type { GridMerge } from './types.js';
 
-import { getSmallestImageDimensions } from '../../utils/images/getSmallestImageDimensions.js';
-import { scaleImages } from '../../utils/images/scaleImages.js';
-import { roundImages } from '../../utils/images/roundImages.js';
-import { createSvgTextBuffer } from '../../utils/svg/createSvgTextBuffer.js';
-import { getFontSize } from '../../utils/fonts/getFontSize.js';
+import { getSmallestImageDimensions } from '../utils/images/getSmallestImageDimensions.js';
+import { scaleImages } from '../utils/images/scaleImages.js';
+import { roundImages } from '../utils/images/roundImages.js';
+import { createSvgTextBuffer } from '../utils/svg/createSvgTextBuffer.js';
+import { getFontSize } from '../utils/fonts/getFontSize.js';
 
-import { rgbaToHex } from '../../utils/colors/rgbaToHex.js';
-import { shuffleArray, shuffleTogether } from '../../helpers.js';
-import { gridSchema } from '../../schemas/grid.js';
-import { MergeError } from '../../mergeError.js';
-import { MESSAGES } from '../../../cli/modules/messages.js';
-import { isActualImage } from '../../utils/images/isActualImage.js';
+import { rgbaToHex } from '../utils/colors/rgbaToHex.js';
+import { shuffleArray, shuffleTogether } from '../helpers.js';
+import { gridSchema } from '../schemas/grid.js';
+import { MergeError } from '../mergeError.js';
+import { MESSAGES } from '../../cli/modules/messages.js';
+import { isActualImage } from '../utils/images/isActualImage.js';
 
 /**
  * Merges multiple images into a grid layout. Note that each image is resized to

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { gridMerge } from '../../../../core/merges/grid-merge/index.js';
+import { gridMerge } from '../../../../core/merges/index.js';
 import { MergeError } from '../../../../core/mergeError.js';
 import { readFile, writeFile } from 'node:fs/promises';
 

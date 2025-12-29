@@ -2,7 +2,7 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 
 import { buildCommandFromSchema } from '../utils/buildCommandFromSchema.js';
-import { gridMerge } from '../../core/merges/grid-merge/index.js';
+import { gridMerge } from '../../core/merges/index.js';
 import { cliGridSchema } from '../schemas/grid.js';
 
 import { loadImages } from '../modules/loadImages.js';
