@@ -16,7 +16,6 @@ export const masonrySchema = z
     hAlign: VALIDATORS.hAlign.default('justified'),
     vAlign: VALIDATORS.vAlign.default('justified'),
   })
-
   .superRefine((opts, ctx) => {
     switch (opts.flow) {
       case 'horizontal':
