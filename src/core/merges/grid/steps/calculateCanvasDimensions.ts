@@ -1,0 +1,33 @@
+import type { MergeStep } from '../../../pipeline/mergePipeline.js';
+import type { GridState } from '../index.js';
+import { requireState } from '../../../pipeline/guards.js';
+
+interface calculateCanvasDimensionsOptions {
+  columns: number;
+  gap: number;
+}
+
+export const calculateCanvasDimensions: MergeStep<calculateCanvasDimensionsOptions, GridState> = async (
+  context,
+  options,
+  _onProgress
+) => {
+  requireState(context.state, 'imageWidth');
+  requireState(context.state, 'imageHeight');
+  requireState(context.state, 'areCaptionsProvided');
+
+  const CAPTION_HEIGHT_TO_CANVAS_WIDTH_RATIO = 0.04;
+  const rows = Math.ceil(context.images.length / options.columns);
+
+  const canvasWidth = context.state.imageWidth * options.columns + (options.columns + 1) * options.gap;
+  const captionHeight = Math.floor(canvasWidth * CAPTION_HEIGHT_TO_CANVAS_WIDTH_RATIO);
+
+  const minimumCanvasHeight = context.state.imageHeight * rows + (rows + 1) * options.gap;
+  const canvasHeight = context.state.areCaptionsProvided ? minimumCanvasHeight + rows * captionHeight : minimumCanvasHeight;
+
+  // Assign values to state
+  context.state.rows = rows;
+  context.state.canvasWidth = canvasWidth;
+  context.state.canvasHeight = canvasHeight;
+  context.state.captionHeight = captionHeight;
+};
