@@ -12,6 +12,8 @@ export interface ProgressInfo {
   phase: string;
 }
 
+export type OnProgress = (info: ProgressInfo) => void;
+
 /**
  * Generic image merge command.
  *
@@ -22,7 +24,7 @@ export interface ProgressInfo {
  * @returns A Promise resolving to the merged image buffer
  */
 interface MergeCommand<T> {
-  (imageInputs: sharp.SharpInput[], options: T, onProgress?: (info: ProgressInfo) => void): Promise<Buffer>;
+  (imageInputs: sharp.SharpInput[], options: T, onProgress?: OnProgress): Promise<Buffer>;
 }
 
 export interface GridMergeOptions {
