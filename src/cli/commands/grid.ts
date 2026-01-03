@@ -2,7 +2,8 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 
 import { buildCommandFromSchema } from '../utils/buildCommandFromSchema.js';
-import { gridMerge } from '../../core/merges/index.js';
+import { gridMerge } from '../../core/merges/grid/index.js';
+
 import { cliGridSchema } from '../schemas/grid.js';
 
 import { loadImages } from '../modules/loadImages.js';
@@ -110,7 +111,7 @@ const gridCommand = buildCommandFromSchema(
 
     // Get grid buffer
     const buffer = await gridMerge(images, mergeOptions, (progressInfo) => {
-      if (progressInfo.completed === 0) {
+      if (!bar.progressBar.isActive) {
         bar.startBar(progressInfo.phase);
       } else {
         bar.updateBar(progressInfo);
