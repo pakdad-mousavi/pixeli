@@ -8,7 +8,7 @@ import { cliGridSchema } from '../schemas/grid.js';
 
 import { loadImages } from '../modules/loadImages.js';
 import { MergeProgressBar } from '../modules/progressBar.js';
-import { MessageRenderer, MESSAGES } from '../modules/messages.js';
+import { MessageRenderer, MESSAGES } from '../../core/modules/messages.js';
 import { toErrorMessage } from '../utils/toErrorMessage.js';
 
 const gridCommand = buildCommandFromSchema(

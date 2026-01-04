@@ -1,7 +1,7 @@
 import sharp from 'sharp';
 import type z from 'zod';
 import { MergeError } from '../mergeError.js';
-import { MESSAGES } from '../../cli/modules/messages.js';
+import { MESSAGES } from '../modules/messages.js';
 import type { OnProgress, ProgressInfo } from '../merges/types.js';
 import chalk from 'chalk';
 

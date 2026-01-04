@@ -1,4 +1,4 @@
-import { MESSAGES } from '../../../cli/modules/messages.js';
+import { MESSAGES } from '../../modules/messages.js';
 import type { SupportedOutputFormat } from '../../helpers.js';
 import { MergeError } from '../../mergeError.js';
 import type { MergeStep } from '../../pipeline/mergePipeline.js';

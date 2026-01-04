@@ -1,7 +1,7 @@
 import z from 'zod';
 import chalk from 'chalk';
 
-import { MESSAGES } from '../modules/messages.js';
+import { MESSAGES } from '../../core/modules/messages.js';
 import { MergeError } from '../../core/mergeError.js';
 
 export const toErrorMessage = (err: unknown) => {

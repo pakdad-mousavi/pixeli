@@ -1,7 +1,7 @@
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { GridState } from '../index.js';
 
-import { MESSAGES } from '../../../../cli/modules/messages.js';
+import { MESSAGES } from '../../../modules/messages.js';
 import { MergeError } from '../../../mergeError.js';
 import { getImageWidths } from '../../../utils/images/getImageWidths.js';
 import { trimmedMedian } from '../../../utils/math/trimmedMedian.js';

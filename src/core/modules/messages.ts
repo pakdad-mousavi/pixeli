@@ -1,6 +1,6 @@
 import readline from 'node:readline';
 import chalk from 'chalk';
-import { formatString } from '../utils/stringFormatter.js';
+import { formatString } from '../../cli/utils/stringFormatter.js';
 
 interface Message {
   message: string;

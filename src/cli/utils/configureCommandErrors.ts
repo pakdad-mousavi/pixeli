@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { MessageRenderer } from '../modules/messages.js';
+import { MessageRenderer } from '../../core/modules/messages.js';
 import chalk from 'chalk';
 
 export const configureCommandErrors = (cmd: Command) => {
