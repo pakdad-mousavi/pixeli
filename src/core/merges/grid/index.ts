@@ -5,6 +5,7 @@ import { MergePipeline } from '../../pipeline/mergePipeline.js';
 import { loadImages } from '../shared-steps/loadImages.js';
 import { validateCaptions } from '../shared-steps/validateCaptions.js';
 import { applyComposites } from '../shared-steps/applyComposites.js';
+import { createCanvas } from '../shared-steps/createCanvas.js';
 import { exportCanvas } from '../shared-steps/exportCanvas.js';
 
 import { shuffleImagesAndCaptions } from './steps/shuffleImagesAndCaptions.js';
@@ -12,7 +13,6 @@ import { calculateImageDimensions } from './steps/calculateImageDimensions.js';
 import { prepareImages } from './steps/prepareImages.js';
 import { calculateCanvasDimensions } from './steps/calculateCanvasDimensions.js';
 import { calculateFontSize } from './steps/calculateFontSize.js';
-import { createCanvas } from './steps/createCanvas.js';
 import { createComposites } from './steps/createComposites.js';
 
 export interface GridState {

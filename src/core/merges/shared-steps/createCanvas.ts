@@ -1,14 +1,14 @@
-import type { MergeStep } from '../../../pipeline/mergePipeline.js';
-import type { GridState } from '../index.js';
-import type { RGBA } from '../../../utils/colors/types.js';
-import { requireState } from '../../../pipeline/guards.js';
+import type { MergeStep } from '../../pipeline/mergePipeline.js';
+import type { RGBA } from '../../utils/colors/types.js';
+import { requireState } from '../../pipeline/guards.js';
+
 import sharp from 'sharp';
 
 interface CreateCanvasOptions {
   canvasColor: RGBA;
 }
 
-export const createCanvas: MergeStep<CreateCanvasOptions, GridState> = async (context, options, _onProgress) => {
+export const createCanvas: MergeStep<CreateCanvasOptions, any> = async (context, options, _onProgress) => {
   requireState(context.state, 'canvasWidth');
   requireState(context.state, 'canvasHeight');
 
