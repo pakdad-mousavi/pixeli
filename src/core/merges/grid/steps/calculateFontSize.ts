@@ -3,11 +3,11 @@ import type { GridState } from '../index.js';
 import { requireState } from '../../../pipeline/guards.js';
 import { getFontSize } from '../../../utils/fonts/getFontSize.js';
 
-interface CalculateFontSizeOptions {
+interface Options {
   maxCaptionSize: number;
 }
 
-export const calculateFontSize: MergeStep<CalculateFontSizeOptions, GridState> = async (context, options, _onProgress) => {
+export const calculateFontSize: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
   if (!context.state.areCaptionsProvided) return;
 
   requireState(context.state, 'imageWidth');

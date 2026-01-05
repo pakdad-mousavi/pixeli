@@ -2,25 +2,21 @@ import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { MasonryState } from '../index.js';
 import { requireState } from '../../../pipeline/guards.js';
 
-interface CalculateCanvasDimensionsVerticalOptions {
+interface HorizontalOptions {
   flow: 'horizontal';
   gap: number;
   canvasWidth: number;
 }
 
-interface CalculateCanvasDimensionsHorizontalOptions {
+interface VerticalOptions {
   flow: 'vertical';
   gap: number;
   canvasHeight: number;
 }
 
-type CalculateCanvasDimensionsOptions = CalculateCanvasDimensionsVerticalOptions | CalculateCanvasDimensionsHorizontalOptions;
+type Options = HorizontalOptions | VerticalOptions;
 
-export const calculateCanvasDimensions: MergeStep<CalculateCanvasDimensionsOptions, MasonryState> = async (
-  context,
-  options,
-  _onProgress
-) => {
+export const calculateCanvasDimensions: MergeStep<Options, MasonryState> = async (context, options, _onProgress) => {
   // Mandatory regardless of flow
   requireState(context.state, 'lanes');
 

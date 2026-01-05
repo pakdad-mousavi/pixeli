@@ -8,13 +8,13 @@ import { getImageHeights } from '../../../utils/images/getImageHeights.js';
 import { MESSAGES } from '../../../modules/messages.js';
 import { MergeError } from '../../../mergeError.js';
 
-interface CalculateLaneSizeOptions {
+interface Options {
   rowHeight?: number | undefined;
   columnWidth?: number | undefined;
   flow: 'horizontal' | 'vertical';
 }
 
-export const calculateLaneSize: MergeStep<CalculateLaneSizeOptions, MasonryState> = async (context, options, _onProgress) => {
+export const calculateLaneSize: MergeStep<Options, MasonryState> = async (context, options, _onProgress) => {
   if (options.flow === 'horizontal') {
     // Calculate rowHeight
     const rowHeight = options.rowHeight || trimmedMedian(await getImageHeights(context.images));

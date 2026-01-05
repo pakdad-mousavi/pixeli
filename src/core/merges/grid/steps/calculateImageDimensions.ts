@@ -6,16 +6,12 @@ import { MergeError } from '../../../mergeError.js';
 import { getImageWidths } from '../../../utils/images/getImageWidths.js';
 import { trimmedMedian } from '../../../utils/math/trimmedMedian.js';
 
-interface calculateImageDimensionsOptions {
+interface Options {
   imageWidth?: number | undefined;
   aspectRatio: number;
 }
 
-export const calculateImageDimensions: MergeStep<calculateImageDimensionsOptions, GridState> = async (
-  context,
-  options,
-  _onProgress
-) => {
+export const calculateImageDimensions: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
   // Calculate image width
   const width = options.imageWidth || trimmedMedian(await getImageWidths(context.images));
   if (width === null) {

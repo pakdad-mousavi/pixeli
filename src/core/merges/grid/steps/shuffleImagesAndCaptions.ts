@@ -3,15 +3,11 @@ import type { GridState } from '../index.js';
 import { shuffleArray, shuffleTogether } from '../../../helpers.js';
 import { requireState } from '../../../pipeline/guards.js';
 
-interface shuffleImagesAndCaptionsOptions {
+interface Options {
   shuffle: boolean;
 }
 
-export const shuffleImagesAndCaptions: MergeStep<shuffleImagesAndCaptionsOptions, GridState> = async (
-  context,
-  options,
-  _onProgress
-) => {
+export const shuffleImagesAndCaptions: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
   requireState(context.state, 'areCaptionsProvided');
 
   // If captions are given and shuffle is true

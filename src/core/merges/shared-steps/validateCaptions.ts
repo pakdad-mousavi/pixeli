@@ -1,16 +1,16 @@
 import type { MergeStep } from '../../pipeline/mergePipeline.js';
 import { MergeError } from '../../mergeError.js';
 
-interface ValidateCaptionsOptions {
+interface Options {
   caption: boolean;
   captions?: string[] | undefined;
 }
 
-interface ValidateCaptionsState {
+interface State {
   areCaptionsProvided: boolean;
 }
 
-export const validateCaptions: MergeStep<ValidateCaptionsOptions, ValidateCaptionsState> = async (
+export const validateCaptions: MergeStep<Options, State> = async (
   context,
   options,
   _onProgress

@@ -6,13 +6,13 @@ import { createSvgTextBuffer } from '../../../utils/svg/createSvgTextBuffer.js';
 import type { RGBA } from '../../../utils/colors/types.js';
 import { rgbaToHex } from '../../../utils/colors/rgbaToHex.js';
 
-interface CreateCompositesOptions {
+interface Options {
   columns: number;
   gap: number;
   captionColor: RGBA;
 }
 
-export const createComposites: MergeStep<CreateCompositesOptions, GridState> = async (context, options, onProgress) => {
+export const createComposites: MergeStep<Options, GridState> = async (context, options, onProgress) => {
   requireState(context.state, 'areCaptionsProvided');
   requireState(context.state, 'captionHeight');
   requireState(context.state, 'imageWidth');

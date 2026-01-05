@@ -4,11 +4,11 @@ import { requireState } from '../../pipeline/guards.js';
 
 import sharp from 'sharp';
 
-interface CreateCanvasOptions {
+interface Options {
   canvasColor: RGBA;
 }
 
-export const createCanvas: MergeStep<CreateCanvasOptions, any> = async (context, options, _onProgress) => {
+export const createCanvas: MergeStep<Options, any> = async (context, options, _onProgress) => {
   requireState(context.state, 'canvasWidth');
   requireState(context.state, 'canvasHeight');
 

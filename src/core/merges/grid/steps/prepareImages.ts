@@ -5,11 +5,11 @@ import { scaleImages } from '../../../utils/images/scaleImages.js';
 import { roundImages } from '../../../utils/images/roundImages.js';
 import { requireState } from '../../../pipeline/guards.js';
 
-interface PrepareImagesOptions {
+interface Options {
   cornerRadius: number;
 }
 
-export const prepareImages: MergeStep<PrepareImagesOptions, GridState> = async (context, options, _onProgress) => {
+export const prepareImages: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
   requireState(context.state, 'imageWidth');
   requireState(context.state, 'imageHeight');
 

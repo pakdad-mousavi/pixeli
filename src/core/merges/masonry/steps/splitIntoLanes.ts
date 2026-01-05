@@ -2,23 +2,23 @@ import type sharp from 'sharp';
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { MasonryState } from '../index.js';
 
-interface SplitIntoHorizontalLanesOptions {
+interface HorizontalOptions {
   flow: 'horizontal';
   gap: number;
   canvasWidth: number;
   hAlign: 'justified' | 'left' | 'center' | 'right';
 }
 
-interface SplitIntoVerticalLanesOptions {
+interface VerticalOptions {
   flow: 'vertical';
   gap: number;
   canvasHeight: number;
   vAlign: 'justified' | 'top' | 'middle' | 'bottom';
 }
 
-type SplitIntoLanesOptions = SplitIntoHorizontalLanesOptions | SplitIntoVerticalLanesOptions;
+type Options = HorizontalOptions | VerticalOptions;
 
-export const splitIntoLanes: MergeStep<SplitIntoLanesOptions, MasonryState> = async (context, options, _onProgress) => {
+export const splitIntoLanes: MergeStep<Options, MasonryState> = async (context, options, _onProgress) => {
   // Split into lanes
   const lanes =
     options.flow === 'horizontal'
@@ -29,12 +29,7 @@ export const splitIntoLanes: MergeStep<SplitIntoLanesOptions, MasonryState> = as
   context.state.lanes = lanes;
 };
 
-const splitIntoRows = async (
-  images: sharp.Sharp[],
-  canvasWidth: number,
-  gap: number,
-  hAlign: SplitIntoHorizontalLanesOptions['hAlign']
-) => {
+const splitIntoRows = async (images: sharp.Sharp[], canvasWidth: number, gap: number, hAlign: HorizontalOptions['hAlign']) => {
   const rows = [];
   let currentRow = [];
   let currentWidth = gap; // initial leading gap
@@ -74,12 +69,7 @@ const splitIntoRows = async (
   return rows;
 };
 
-const splitIntoColumns = async (
-  images: sharp.Sharp[],
-  canvasHeight: number,
-  gap: number,
-  vAlign: SplitIntoVerticalLanesOptions['vAlign']
-) => {
+const splitIntoColumns = async (images: sharp.Sharp[], canvasHeight: number, gap: number, vAlign: VerticalOptions['vAlign']) => {
   const cols = [];
   const currentCol = [];
   let currentHeight = gap;

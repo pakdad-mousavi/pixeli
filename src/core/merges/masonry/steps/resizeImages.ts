@@ -4,11 +4,11 @@ import type { MasonryState } from '../index.js';
 
 import { scaleImages } from '../../../utils/images/scaleImages.js';
 
-interface ResizeImagesImagesOptions {
+interface Options {
   flow: 'horizontal' | 'vertical';
 }
 
-export const resizeImages: MergeStep<ResizeImagesImagesOptions, MasonryState> = async (context, options, _onProgress) => {
+export const resizeImages: MergeStep<Options, MasonryState> = async (context, options, _onProgress) => {
   // Require either rowHeight or columnWidth
   options.flow === 'horizontal' ? requireState(context.state, 'rowHeight') : requireState(context.state, 'columnWidth');
 

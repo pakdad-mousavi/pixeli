@@ -2,16 +2,12 @@ import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { GridState } from '../index.js';
 import { requireState } from '../../../pipeline/guards.js';
 
-interface calculateCanvasDimensionsOptions {
+interface Options {
   columns: number;
   gap: number;
 }
 
-export const calculateCanvasDimensions: MergeStep<calculateCanvasDimensionsOptions, GridState> = async (
-  context,
-  options,
-  _onProgress
-) => {
+export const calculateCanvasDimensions: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
   requireState(context.state, 'imageWidth');
   requireState(context.state, 'imageHeight');
   requireState(context.state, 'areCaptionsProvided');
