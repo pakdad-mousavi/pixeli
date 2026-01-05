@@ -27,7 +27,7 @@ interface MergeCommand<T> {
   (imageInputs: sharp.SharpInput[], options: T, onProgress?: OnProgress): Promise<Buffer>;
 }
 
-export interface GridMergeOptions {
+interface BaseMergeOptions {
   /** Whether to randomize image order before merging. */
   shuffle?: boolean;
 
@@ -42,7 +42,9 @@ export interface GridMergeOptions {
 
   /** Output image format (png, jpeg, webp). */
   format?: string;
+}
 
+export interface GridMergeOptions extends BaseMergeOptions {
   /** Grid aspect ratio (e.g. "16:9" or 1.777). */
   aspectRatio?: string | number;
 
@@ -65,4 +67,29 @@ export interface GridMergeOptions {
   maxCaptionSize?: number;
 }
 
+export interface MasonryMergeOptions extends BaseMergeOptions {
+  /** The height of each row. Only applied in horizontal flows. */
+  rowHeight?: number | undefined;
+
+  /** The width of each column. Only applied in vertical flows. */
+  columnWidth?: number | undefined;
+
+  /** The width of the entire canvas. Only required in horizontal flows. */
+  canvasWidth?: number | undefined;
+
+  /** The width of the entire canvas. Only required in vertical flows. */
+  canvasHeight?: number | undefined;
+
+  /** The orientation of the masonry layout. */
+  flow: 'horizontal' | 'vertical';
+
+  /** The horizontal alignment of each row. Only applied in horizontal layouts. */
+  hAlign?: 'left' | 'center' | 'right' | 'justified';
+
+  /** The vertical alignment of each column. Only applied in vertical layouts. */
+  vAlign?: 'top' | 'middle' | 'bottom' | 'justified';
+}
+
 export type GridMerge = MergeCommand<GridMergeOptions>;
+
+export type MasonryMerge = MergeCommand<MasonryMergeOptions>;
