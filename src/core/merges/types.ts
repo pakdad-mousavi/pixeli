@@ -68,10 +68,10 @@ export interface GridMergeOptions extends BaseMergeOptions {
 }
 
 export interface MasonryMergeOptions extends BaseMergeOptions {
-  /** The height of each row. Only applied in horizontal flows. */
+  /** The height of each row, defaults to the trimmed median image height if undefined. Only applied in horizontal flows. */
   rowHeight?: number | undefined;
 
-  /** The width of each column. Only applied in vertical flows. */
+  /** The width of each column, defaults to the trimmed median image width if undefined. Only applied in vertical flows. */
   columnWidth?: number | undefined;
 
   /** The width of the entire canvas. Only required in horizontal flows. */
