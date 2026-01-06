@@ -6,11 +6,11 @@ import { dirPathValidator, filePathValidator } from './path.js';
 import { outputFileValidator } from './outputFile.js';
 import { useNumberCoercion } from './coercion.js';
 import { formatValidator } from './format.js';
+import { templateValidator } from './template.js';
 
 export const VALIDATORS = {
   // Inputs and outputs
   files: z.array(filePathValidator),
-  template: filePathValidator,
   dir: dirPathValidator,
   output: outputFileValidator,
   format: formatValidator,
@@ -57,6 +57,6 @@ export const VALIDATORS = {
   preset: z.enum(['instagram-grid', 'dashboard-shot', 'horizontal-book-spread', 'vertical-book-spread', 'art-gallery']),
 
   // Misc
-  mapping: z.json(),
+  template: templateValidator,
   aspectRatio: aspectRatioValidator,
 };
