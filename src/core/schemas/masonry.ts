@@ -24,6 +24,7 @@ const verticalMasonrySchema = z.object({
   canvasHeight: VALIDATORS.canvasHeight,
   vAlign: VALIDATORS.vAlign.default('justified'),
 });
+
 export const masonrySchema = z
   .discriminatedUnion('flow', [horizontalMasonrySchema, verticalMasonrySchema])
   .superRefine((opts, ctx) => {
