@@ -1,5 +1,6 @@
 import sharp from 'sharp';
 import type { Color } from '../utils/colors/types.js';
+import type { Template } from './template/types.js';
 
 export interface ProgressInfo {
   /** How many images have been processed so far */
@@ -90,6 +91,12 @@ export interface MasonryMergeOptions extends BaseMergeOptions {
   vAlign?: 'top' | 'middle' | 'bottom' | 'justified';
 }
 
+interface TemplateMergeOptions extends BaseMergeOptions {
+  template: Template;
+}
+
 export type GridMerge = MergeCommand<GridMergeOptions>;
 
 export type MasonryMerge = MergeCommand<MasonryMergeOptions>;
+
+export type TemplateMerge = MergeCommand<TemplateMergeOptions>;
