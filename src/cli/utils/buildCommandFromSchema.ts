@@ -17,15 +17,26 @@ const getDefault = <T>(schema: z.ZodType<T>): T | undefined => {
 export const buildCommandFromSchema = <Shape extends z.ZodRawShape>(
   name: string,
   description: string,
-  schema: z.ZodObject<Shape>,
+  schema: z.ZodObject<Shape> | z.ZodUnion,
   args: Record<string, CommandBuilderOption>,
   options: Record<string, CommandBuilderOption>
 ) => {
   // Initialize command
   const command = new Command(name).description(description);
 
+  // Initialize the shape
+  let shape = {};
+  if (schema instanceof z.ZodUnion) {
+    for (const option of schema.options) {
+      if (option instanceof z.ZodObject) {
+        shape = { ...shape, ...option.shape };
+      }
+    }
+  } else {
+    shape = schema.shape;
+  }
+
   // Go through schema
-  const shape = schema.shape;
   for (const [key, fieldSchema] of Object.entries(shape)) {
     const argConfig = args?.[key];
     const optionConfig = options?.[key];
