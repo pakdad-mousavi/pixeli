@@ -104,7 +104,7 @@ interface VerticalOptions extends BaseOptions {
 
 type Options = HorizontalOptions | VerticalOptions;
 
-export const createComposites: MergeStep<Options, MasonryState> = async (context, options, _onProgress) => {
+export const createComposites: MergeStep<Options, MasonryState> = async (context, options, onProgress) => {
   // Require needed states
   requireState(context.state, 'lanes');
   options.flow === 'horizontal' ? requireState(context.state, 'rowHeight') : requireState(context.state, 'columnWidth');
@@ -159,6 +159,13 @@ export const createComposites: MergeStep<Options, MasonryState> = async (context
       });
 
       primary += axis.getPrimary(meta) + options.gap;
+
+      // Update progress
+      if (onProgress) {
+        context.progressInfo.phase = 'Merging images';
+        context.progressInfo.completed += 1;
+        onProgress({ ...context.progressInfo });
+      }
     }
 
     primaryCursor = options.gap;
