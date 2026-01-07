@@ -82,7 +82,6 @@ export const templateSchema = z
           message: `slot spans past the right edge of the grid (col + colSpan exceeds columns).`,
           path: ['template', 'slots', i],
         });
-        throw new Error(`opts.template.slots[${i}] spans past the right edge of the grid (col + colSpan exceeds columns).`);
       }
 
       // Ensure slot spans within given canvas rows
