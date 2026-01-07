@@ -1,15 +1,15 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
-import { buildCommandFromSchema } from '../utils/buildCommandFromSchema.js';
-import { masonryMerge } from '../../core/merges/masonry/index.js';
+import { buildCommandFromSchema } from '../../utils/buildCommandFromSchema.js';
+import { masonryMerge } from '../../../core/merges/masonry/index.js';
 
-import { cliMasonrySchema } from '../schemas/masonry.js';
+import { cliMasonrySchema } from '../../schemas/masonry.js';
 
-import { loadImages } from '../modules/loadImages.js';
-import { MergeProgressBar } from '../modules/progressBar.js';
-import { MessageRenderer, MESSAGES } from '../../core/modules/messages.js';
-import { toErrorMessage } from '../utils/toErrorMessage.js';
+import { loadImages } from '../../modules/loadImages.js';
+import { MergeProgressBar } from '../../modules/progressBar.js';
+import { MessageRenderer, MESSAGES } from '../../../core/modules/messages.js';
+import { toErrorMessage } from '../../utils/toErrorMessage.js';
 
 const masonryCommand = buildCommandFromSchema(
   'masonry',

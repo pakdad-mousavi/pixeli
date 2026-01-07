@@ -4,7 +4,7 @@ import { Command } from 'commander';
 import { configureCommandErrors } from './utils/configureCommandErrors.js';
 
 import gridCommand from './commands/grid/index.js';
-import masonryCommand from './commands/masonry.js';
+import masonryCommand from './commands/masonry/index.js';
 
 const program = new Command();
 
