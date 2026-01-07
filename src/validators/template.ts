@@ -23,7 +23,7 @@ export const templateValidator = z
     const result = validateSlotOverlaps(opts.slots);
     if (!result.success) {
       const [i, j] = result.overlaps;
-      ctx.addIssue({ code: 'custom', message: `Slot ${i} overlaps with slot ${j}` });
+      ctx.addIssue({ code: 'custom', message: `slot ${i} overlaps with slot ${j}` });
     }
   });
 
