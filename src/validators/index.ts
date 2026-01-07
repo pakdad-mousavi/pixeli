@@ -14,6 +14,7 @@ export const VALIDATORS = {
   dir: dirPathValidator,
   output: outputFileValidator,
   format: formatValidator,
+  cliTemplate: filePathValidator,
   imageInputs: z.array(sharpImageValidation),
 
   // Strings
