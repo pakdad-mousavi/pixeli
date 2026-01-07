@@ -5,6 +5,7 @@ import { configureCommandErrors } from './utils/configureCommandErrors.js';
 
 import gridCommand from './commands/grid/index.js';
 import masonryCommand from './commands/masonry/index.js';
+import templateCommand from './commands/template/index.js';
 
 const program = new Command();
 
@@ -15,6 +16,7 @@ program
 
 program.addCommand(gridCommand);
 program.addCommand(masonryCommand);
+program.addCommand(templateCommand);
 
 configureCommandErrors(program);
 
