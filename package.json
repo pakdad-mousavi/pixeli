@@ -11,16 +11,21 @@
     "url": "git+https://github.com/pakdad-mousavi/pixeli.git"
   },
   "bin": {
-    "pixeli": "dist/cli/index.js"
+    "pixeli": "./dist/cli/index.js"
   },
   "license": "MIT",
   "author": "Pakdad Mousavi",
   "type": "module",
-  "main": "index.js",
+  "main": "./dist/core/index.js",
+  "types": "./dist/core/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/core/index.js",
+      "types": "./dist/core/index.d.ts"
+    }
+  },
   "files": [
-    "/lib",
-    "/bin",
-    "/commands"
+    "dist"
   ],
   "keywords": [
     "cli",
