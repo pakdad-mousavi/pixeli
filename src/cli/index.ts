@@ -3,7 +3,7 @@
 import { Command } from 'commander';
 import { configureCommandErrors } from './utils/configureCommandErrors.js';
 
-import gridCommand from './commands/grid.js';
+import gridCommand from './commands/grid/index.js';
 import masonryCommand from './commands/masonry.js';
 
 const program = new Command();

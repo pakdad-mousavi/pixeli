@@ -1,15 +1,15 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
-import { buildCommandFromSchema } from '../utils/buildCommandFromSchema.js';
-import { gridMerge } from '../../core/merges/grid/index.js';
+import { buildCommandFromSchema } from '../../utils/buildCommandFromSchema.js';
+import { gridMerge } from '../../../core/merges/grid/index.js';
 
-import { cliGridSchema } from '../schemas/grid.js';
+import { cliGridSchema } from '../../schemas/grid.js';
 
-import { loadImages } from '../modules/loadImages.js';
-import { MergeProgressBar } from '../modules/progressBar.js';
-import { MessageRenderer, MESSAGES } from '../../core/modules/messages.js';
-import { toErrorMessage } from '../utils/toErrorMessage.js';
+import { loadImages } from '../../modules/loadImages.js';
+import { MergeProgressBar } from '../../modules/progressBar.js';
+import { MessageRenderer, MESSAGES } from '../../../core/modules/messages.js';
+import { toErrorMessage } from '../../utils/toErrorMessage.js';
 
 const gridCommand = buildCommandFromSchema(
   'grid',
