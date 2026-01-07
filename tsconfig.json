@@ -10,9 +10,9 @@
     "types": ["node"],
 
     // Other Outputs
-    "sourceMap": true,
+    "sourceMap": false,
+    "declarationMap": false,
     "declaration": true,
-    "declarationMap": true,
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
@@ -28,5 +28,5 @@
     "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["dist"]
+  "exclude": ["dist", "**/*.test.ts"]
 }
