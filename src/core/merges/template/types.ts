@@ -16,3 +16,9 @@ export interface Template {
   canvas: Canvas;
   slots: Slot[];
 }
+
+export interface Block {
+  imageBuffer: Buffer;
+  col: number;
+  row: number;
+}
