@@ -25,7 +25,7 @@ export const loadImages = async ({ input, recursive, count }: LoadImagesOptions)
   if (input.files && input.files.length) {
     filepaths = input.files;
   } else if (hasDir(input)) {
-    filepaths = await getFilesFromDirectory(input.dir, recursive);
+    filepaths = await getFilepathsFromDirectory(input.dir, recursive);
   }
 
   // Load valid image paths
@@ -40,8 +40,8 @@ export const loadImages = async ({ input, recursive, count }: LoadImagesOptions)
   return { images, imagePaths, ignoredPaths };
 };
 
-const loadFromFiles = async (files: string[], count: number | undefined) => {
-  const images = [];
+export const loadFromFiles = async (files: string[], count: number | undefined) => {
+  const loadedFiles = [];
   const total = count || files.length;
   for (let i = 0; i < total; i++) {
     // End the loop if count is higher than number of available files
@@ -49,15 +49,15 @@ const loadFromFiles = async (files: string[], count: number | undefined) => {
 
     // Load images
     const filepath = files[i]!;
-    const image = await fs.readFile(filepath);
+    const file = await fs.readFile(filepath);
 
-    images.push(image);
+    loadedFiles.push(file);
   }
 
-  return images;
+  return loadedFiles;
 };
 
-const getFilesFromDirectory = async (dir: string, recursive: boolean, depth = 0): Promise<string[]> => {
+export const getFilepathsFromDirectory = async (dir: string, recursive: boolean, depth = 0): Promise<string[]> => {
   // Ensure recursiveness ends at the max recursion depth
   if (depth >= MAX_RECURSION_DEPTH) return [];
 
@@ -76,7 +76,7 @@ const getFilesFromDirectory = async (dir: string, recursive: boolean, depth = 0)
     // recursively get all the files
     else if (recursive && entry.isDirectory() && !entry.isSymbolicLink()) {
       const dirPath = path.join(entry.parentPath, entry.name);
-      const paths = await getFilesFromDirectory(dirPath, recursive, depth + 1);
+      const paths = await getFilepathsFromDirectory(dirPath, recursive, depth + 1);
       files.push(...paths);
     }
   }
