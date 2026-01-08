@@ -5,7 +5,7 @@ import { MESSAGES } from '../modules/messages.js';
 import type { OnProgress, ProgressInfo } from '../merges/types.js';
 import chalk from 'chalk';
 
-interface MergeContext<TState> {
+export interface MergeContext<TState> {
   inputs: sharp.SharpInput[];
   progressInfo: ProgressInfo;
   images: sharp.Sharp[];
