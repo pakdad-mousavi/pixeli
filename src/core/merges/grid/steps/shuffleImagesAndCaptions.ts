@@ -1,7 +1,7 @@
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { GridState } from '../index.js';
 import { shuffleArray, shuffleTogether } from '../../../helpers.js';
-import { requireState } from '../../../pipeline/guards.js';
+import { requireNonEmptyArray, requireState } from '../../../pipeline/guards.js';
 
 interface Options {
   shuffle: boolean;
@@ -9,6 +9,7 @@ interface Options {
 
 export const shuffleImagesAndCaptions: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
   requireState(context, 'areCaptionsProvided');
+  requireNonEmptyArray(context.images, 'images');
 
   // If captions are given and shuffle is true
   if (context.state.areCaptionsProvided && options.shuffle) {

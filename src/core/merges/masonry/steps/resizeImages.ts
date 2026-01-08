@@ -1,4 +1,4 @@
-import { requireState } from '../../../pipeline/guards.js';
+import { requireNonEmptyArray, requireState } from '../../../pipeline/guards.js';
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { MasonryState } from '../index.js';
 
@@ -9,6 +9,8 @@ interface Options {
 }
 
 export const resizeImages: MergeStep<Options, MasonryState> = async (context, options, _onProgress) => {
+  requireNonEmptyArray(context.images, 'images');
+
   // Require either rowHeight or columnWidth
   options.flow === 'horizontal' ? requireState(context, 'rowHeight') : requireState(context, 'columnWidth');
 

@@ -3,7 +3,7 @@ import type { Block, Template } from '../types.js';
 import type { TemplateState } from '../index.js';
 
 import { roundImages } from '../../../utils/images/roundImages.js';
-import { requireState } from '../../../pipeline/guards.js';
+import { requireNonEmptyArray, requireState } from '../../../pipeline/guards.js';
 
 interface Options {
   template: Template;
@@ -15,6 +15,7 @@ export const getBlocks: MergeStep<Options, TemplateState> = async (context, opti
   // Require needed states
   requireState(context, 'slotWidth');
   requireState(context, 'slotHeight');
+  requireNonEmptyArray(context.images, 'images');
 
   const blocks: Block[] = [];
 

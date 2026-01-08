@@ -3,7 +3,7 @@ import type { GridState } from '../index.js';
 
 import { scaleImages } from '../../../utils/images/scaleImages.js';
 import { roundImages } from '../../../utils/images/roundImages.js';
-import { requireState } from '../../../pipeline/guards.js';
+import { requireNonEmptyArray, requireState } from '../../../pipeline/guards.js';
 
 interface Options {
   cornerRadius: number;
@@ -12,6 +12,7 @@ interface Options {
 export const prepareImages: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
   requireState(context, 'imageWidth');
   requireState(context, 'imageHeight');
+  requireNonEmptyArray(context.images, 'images');
 
   // Get values from context and options
   const width = context.state.imageWidth;

@@ -2,8 +2,12 @@ import sharp from 'sharp';
 import type { MergeStep } from '../../pipeline/mergePipeline.js';
 import { isActualImage } from '../../utils/images/isActualImage.js';
 import { MergeError } from '../../mergeError.js';
+import { requireNonEmptyArray } from '../../pipeline/guards.js';
 
 export const loadImages: MergeStep<any, any> = async (context, _options, _onProgress) => {
+  // Ensure inputs are provided
+  requireNonEmptyArray(context.inputs, 'inputs');
+
   const images: sharp.Sharp[] = [];
   for (let i = 0; i < context.inputs.length; i++) {
     // Ensure image is valid

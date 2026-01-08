@@ -1,6 +1,6 @@
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { GridState } from '../index.js';
-import { requireState } from '../../../pipeline/guards.js';
+import { requireNonEmptyArray, requireState } from '../../../pipeline/guards.js';
 
 interface Options {
   columns: number;
@@ -11,6 +11,7 @@ export const calculateCanvasDimensions: MergeStep<Options, GridState> = async (c
   requireState(context, 'imageWidth');
   requireState(context, 'imageHeight');
   requireState(context, 'areCaptionsProvided');
+  requireNonEmptyArray(context.images, 'images');
 
   const CAPTION_HEIGHT_TO_CANVAS_WIDTH_RATIO = 0.04;
   const rows = Math.ceil(context.images.length / options.columns);

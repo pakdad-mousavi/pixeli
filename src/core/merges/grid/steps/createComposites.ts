@@ -1,6 +1,6 @@
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { GridState } from '../index.js';
-import { requireState } from '../../../pipeline/guards.js';
+import { requireNonEmptyArray, requireState } from '../../../pipeline/guards.js';
 import sharp from 'sharp';
 import { createSvgTextBuffer } from '../../../utils/svg/createSvgTextBuffer.js';
 import type { RGBA } from '../../../utils/colors/types.js';
@@ -18,6 +18,7 @@ export const createComposites: MergeStep<Options, GridState> = async (context, o
   requireState(context, 'imageWidth');
   requireState(context, 'imageHeight');
   requireState(context, 'rows');
+  requireNonEmptyArray(context.images, 'images');
 
   // Only needed when there are captions
   if (context.state.areCaptionsProvided) {

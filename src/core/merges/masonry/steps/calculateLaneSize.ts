@@ -7,6 +7,7 @@ import { getImageHeights } from '../../../utils/images/getImageHeights.js';
 
 import { MESSAGES } from '../../../modules/messages.js';
 import { MergeError } from '../../../mergeError.js';
+import { requireNonEmptyArray } from '../../../pipeline/guards.js';
 
 interface Options {
   rowHeight?: number | undefined;
@@ -15,6 +16,8 @@ interface Options {
 }
 
 export const calculateLaneSize: MergeStep<Options, MasonryState> = async (context, options, _onProgress) => {
+  requireNonEmptyArray(context.images, 'images');
+
   if (options.flow === 'horizontal') {
     // Calculate rowHeight
     const rowHeight = options.rowHeight || trimmedMedian(await getImageHeights(context.images));

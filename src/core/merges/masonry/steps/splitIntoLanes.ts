@@ -1,6 +1,7 @@
 import type sharp from 'sharp';
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { MasonryState } from '../index.js';
+import { requireNonEmptyArray } from '../../../pipeline/guards.js';
 
 interface HorizontalOptions {
   flow: 'horizontal';
@@ -19,6 +20,8 @@ interface VerticalOptions {
 type Options = HorizontalOptions | VerticalOptions;
 
 export const splitIntoLanes: MergeStep<Options, MasonryState> = async (context, options, _onProgress) => {
+  requireNonEmptyArray(context.images, 'images');
+
   // Split into lanes
   const lanes =
     options.flow === 'horizontal'

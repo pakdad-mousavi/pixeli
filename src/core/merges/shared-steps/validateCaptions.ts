@@ -10,11 +10,7 @@ interface State {
   areCaptionsProvided: boolean;
 }
 
-export const validateCaptions: MergeStep<Options, State> = async (
-  context,
-  options,
-  _onProgress
-) => {
+export const validateCaptions: MergeStep<Options, State> = async (context, options, _onProgress) => {
   // Initially set to false
   context.state.areCaptionsProvided = false;
 
