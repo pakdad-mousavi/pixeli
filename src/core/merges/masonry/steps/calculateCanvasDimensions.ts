@@ -18,16 +18,16 @@ type Options = HorizontalOptions | VerticalOptions;
 
 export const calculateCanvasDimensions: MergeStep<Options, MasonryState> = async (context, options, _onProgress) => {
   // Mandatory regardless of flow
-  requireState(context.state, 'lanes');
+  requireState(context, 'lanes');
 
   // Put both canvas width and height in context state
   const totalLanes = context.state.lanes.length;
   if (options.flow === 'horizontal') {
-    requireState(context.state, 'rowHeight');
+    requireState(context, 'rowHeight');
     context.state.canvasWidth = options.canvasWidth;
     context.state.canvasHeight = totalLanes * context.state.rowHeight + (totalLanes + 1) * options.gap;
   } else {
-    requireState(context.state, 'columnWidth');
+    requireState(context, 'columnWidth');
     context.state.canvasHeight = options.canvasHeight;
     context.state.canvasWidth = totalLanes * context.state.columnWidth + (totalLanes + 1) * options.gap;
   }

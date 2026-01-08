@@ -10,8 +10,8 @@ interface Options {
 }
 
 export const prepareImages: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
-  requireState(context.state, 'imageWidth');
-  requireState(context.state, 'imageHeight');
+  requireState(context, 'imageWidth');
+  requireState(context, 'imageHeight');
 
   // Get values from context and options
   const width = context.state.imageWidth;

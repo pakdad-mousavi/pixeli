@@ -10,7 +10,7 @@ interface Options {
 
 export const resizeImages: MergeStep<Options, MasonryState> = async (context, options, _onProgress) => {
   // Require either rowHeight or columnWidth
-  options.flow === 'horizontal' ? requireState(context.state, 'rowHeight') : requireState(context.state, 'columnWidth');
+  options.flow === 'horizontal' ? requireState(context, 'rowHeight') : requireState(context, 'columnWidth');
 
   // Rescale images to match rowHeight or columnWidth
   const scaleOptions =

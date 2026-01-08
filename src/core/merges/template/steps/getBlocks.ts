@@ -13,8 +13,8 @@ interface Options {
 
 export const getBlocks: MergeStep<Options, TemplateState> = async (context, options, _onProgress) => {
   // Require needed states
-  requireState(context.state, 'slotWidth');
-  requireState(context.state, 'slotHeight');
+  requireState(context, 'slotWidth');
+  requireState(context, 'slotHeight');
 
   const blocks: Block[] = [];
 

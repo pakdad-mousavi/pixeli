@@ -13,15 +13,15 @@ interface Options {
 }
 
 export const createComposites: MergeStep<Options, GridState> = async (context, options, onProgress) => {
-  requireState(context.state, 'areCaptionsProvided');
-  requireState(context.state, 'captionHeight');
-  requireState(context.state, 'imageWidth');
-  requireState(context.state, 'imageHeight');
-  requireState(context.state, 'rows');
+  requireState(context, 'areCaptionsProvided');
+  requireState(context, 'captionHeight');
+  requireState(context, 'imageWidth');
+  requireState(context, 'imageHeight');
+  requireState(context, 'rows');
 
   // Only needed when there are captions
   if (context.state.areCaptionsProvided) {
-    requireState(context.state, 'fontSize');
+    requireState(context, 'fontSize');
   }
 
   const composites = [];

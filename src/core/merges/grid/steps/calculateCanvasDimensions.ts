@@ -8,9 +8,9 @@ interface Options {
 }
 
 export const calculateCanvasDimensions: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
-  requireState(context.state, 'imageWidth');
-  requireState(context.state, 'imageHeight');
-  requireState(context.state, 'areCaptionsProvided');
+  requireState(context, 'imageWidth');
+  requireState(context, 'imageHeight');
+  requireState(context, 'areCaptionsProvided');
 
   const CAPTION_HEIGHT_TO_CANVAS_WIDTH_RATIO = 0.04;
   const rows = Math.ceil(context.images.length / options.columns);

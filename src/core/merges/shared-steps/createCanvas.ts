@@ -14,8 +14,8 @@ interface State {
 }
 
 export const createCanvas: MergeStep<Options, State> = async (context, options, _onProgress) => {
-  requireState(context.state, 'canvasWidth');
-  requireState(context.state, 'canvasHeight');
+  requireState(context, 'canvasWidth');
+  requireState(context, 'canvasHeight');
 
   // Create canvas
   const canvas = sharp({

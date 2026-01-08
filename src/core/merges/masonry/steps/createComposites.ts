@@ -106,8 +106,8 @@ type Options = HorizontalOptions | VerticalOptions;
 
 export const createComposites: MergeStep<Options, MasonryState> = async (context, options, onProgress) => {
   // Require needed states
-  requireState(context.state, 'lanes');
-  options.flow === 'horizontal' ? requireState(context.state, 'rowHeight') : requireState(context.state, 'columnWidth');
+  requireState(context, 'lanes');
+  options.flow === 'horizontal' ? requireState(context, 'rowHeight') : requireState(context, 'columnWidth');
 
   // Initialize flow-dependent values
   const laneCrossSize = options.flow === 'horizontal' ? context.state.rowHeight : context.state.columnWidth;

@@ -12,9 +12,9 @@ interface Options {
 
 export const createComposites: MergeStep<Options, TemplateState> = async (context, options, onProgress) => {
   // Require needed states
-  requireState(context.state, 'blocks');
-  requireState(context.state, 'slotWidth');
-  requireState(context.state, 'slotHeight');
+  requireState(context, 'blocks');
+  requireState(context, 'slotWidth');
+  requireState(context, 'slotHeight');
 
   // Collect composites
   const composites = [];

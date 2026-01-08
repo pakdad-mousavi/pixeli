@@ -8,7 +8,7 @@ interface Options {
 }
 
 export const shuffleImagesAndCaptions: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
-  requireState(context.state, 'areCaptionsProvided');
+  requireState(context, 'areCaptionsProvided');
 
   // If captions are given and shuffle is true
   if (context.state.areCaptionsProvided && options.shuffle) {
