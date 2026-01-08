@@ -2,6 +2,7 @@ import { MESSAGES } from '../../modules/messages.js';
 import type { SupportedOutputFormat } from '../../helpers.js';
 import { MergeError } from '../../mergeError.js';
 import type { MergeStep } from '../../pipeline/mergePipeline.js';
+import { requireContextProp } from '../../pipeline/guards.js';
 
 interface Options {
   format: SupportedOutputFormat;
@@ -9,12 +10,7 @@ interface Options {
 
 export const exportCanvas: MergeStep<Options, any> = async (context, options, _onProgress) => {
   // Ensure canvas exists
-  if (!context.canvas) {
-    throw new MergeError(MESSAGES.ERROR.INTERNAL.message, {
-      type: 'internal',
-      cause: 'cannot apply composites on undefined canvas',
-    });
-  }
+  requireContextProp(context, 'canvas');
 
   try {
     return await context.canvas.toFormat(options.format).toBuffer();
