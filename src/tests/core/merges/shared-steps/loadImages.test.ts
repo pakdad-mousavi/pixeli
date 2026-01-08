@@ -92,9 +92,9 @@ describe('loadImages', async () => {
     await expect(res).rejects.toBeInstanceOf(MergeError);
     await expect(res).rejects.toMatchObject({
       name: 'MergeError',
-      message: 'No images provided to merge',
+      message: '"inputs" must not be empty',
       context: {
-        type: 'validation',
+        type: 'internal',
       },
     });
   });
