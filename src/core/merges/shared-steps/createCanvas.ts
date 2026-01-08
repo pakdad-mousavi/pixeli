@@ -8,7 +8,12 @@ interface Options {
   canvasColor: RGBA;
 }
 
-export const createCanvas: MergeStep<Options, any> = async (context, options, _onProgress) => {
+interface State {
+  canvasWidth: number;
+  canvasHeight: number;
+}
+
+export const createCanvas: MergeStep<Options, State> = async (context, options, _onProgress) => {
   requireState(context.state, 'canvasWidth');
   requireState(context.state, 'canvasHeight');
 
