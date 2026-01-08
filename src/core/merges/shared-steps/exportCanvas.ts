@@ -21,7 +21,7 @@ export const exportCanvas: MergeStep<Options, any> = async (context, options, _o
     // SPECIFIC SHARP ERROR
     // occurs when trying to create a buffer that exceeds the limits of the current image format
     if (sharpError.message.includes('pixel limit') || sharpError.message.includes('Processed image is too large')) {
-      const errText = `Error: image to large for '${options.format}' format, try a format that allows larger images`;
+      const errText = `Error: image to large for "${options.format}" format, try a format that allows larger images`;
       throw new MergeError(errText, { type: 'image' });
     }
 
