@@ -28,6 +28,6 @@ export function requireContextProp<TState, K extends keyof MergeContext<TState>>
 // |------------------|
 export function requireNonEmptyArray<T>(arr: readonly T[], name = 'Array'): asserts arr is readonly [T, ...T[]] {
   if (arr.length === 0) {
-    throw new MergeError(`${name} must not be empty`, { type: 'internal' });
+    throw new MergeError(`"${name}" must not be empty`, { type: 'internal' });
   }
 }
