@@ -111,7 +111,8 @@ export class MergePipeline<TOptions, TState> {
       // Try to run the step
       let result;
       try {
-        result = await step(this.context, this.options, this.onProgress);
+        // Use a copy of this.options to ensure that merge steps cannot mutate the original
+        result = await step(this.context, { ...this.options }, this.onProgress);
         if (testOptions) this.logForDebugging(testOptions);
       } catch (error) {
         // Throw a runtime error if a non-MergeError is ever thrown
