@@ -34,7 +34,6 @@ afterEach(() => {
 describe('calculateCanvasDimensions', async () => {
   it('throws a MergeError when imageWidth is not in context.state', async () => {
     // Set up context
-    context.images = [];
     context.state.imageHeight = 400;
     context.state.areCaptionsProvided = true;
 
@@ -51,7 +50,6 @@ describe('calculateCanvasDimensions', async () => {
 
   it('throws a MergeError when imageHeight is not in context.state', async () => {
     // Set up context
-    context.images = [];
     context.state.imageWidth = 400;
     context.state.areCaptionsProvided = true;
 
@@ -68,7 +66,6 @@ describe('calculateCanvasDimensions', async () => {
 
   it('throws a MergeError when areCaptionsProvided is not in context.state', async () => {
     // Set up context
-    context.images = [];
     context.state.imageWidth = 400;
     context.state.imageHeight = 400;
 
