@@ -10,6 +10,11 @@ interface Options {
 export const calculateFontSize: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
   requireState(context, 'imageWidth');
   requireState(context, 'captionHeight');
+
+  if (!context.state.areCaptionsProvided) {
+    return;
+  }
+
   requireNonEmptyArray(context.captions, 'captions');
 
   const longestCaption = context.captions.reduce((longest, current) => {

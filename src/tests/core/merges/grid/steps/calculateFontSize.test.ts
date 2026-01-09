@@ -68,6 +68,7 @@ describe('calculateFontSize', async () => {
   it('throws a MergeError when context.captions is empty', async () => {
     context.state.imageWidth = 400;
     context.state.captionHeight = 38;
+    context.state.areCaptionsProvided = true;
     const res = calculateFontSize(context, { maxCaptionSize: 100 });
 
     await expect(res).rejects.toBeInstanceOf(MergeError);
@@ -83,6 +84,7 @@ describe('calculateFontSize', async () => {
     context.captions = ['tiny', 'very very long caption', 'small', 'medium'];
     context.state.imageWidth = 400;
     context.state.captionHeight = 38;
+    context.state.areCaptionsProvided = true;
     await calculateFontSize(context, { maxCaptionSize: 120 });
 
     expect(getFontSizeSpy).toHaveBeenCalledExactlyOnceWith({
