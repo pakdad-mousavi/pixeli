@@ -39,7 +39,7 @@ afterEach(() => {
 const shuffleArraySpy = vi.spyOn(helpers, 'shuffleArray');
 const shuffleTogetherSpy = vi.spyOn(helpers, 'shuffleTogether');
 
-describe('applyComposites', async () => {
+describe('shuffleImagesAndCaptions', async () => {
   it('throws a merge error without the "areCaptionsProvided" state', async () => {
     const res = shuffleImagesAndCaptions(context, { shuffle: true });
 
