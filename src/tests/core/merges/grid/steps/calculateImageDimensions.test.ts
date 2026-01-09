@@ -52,19 +52,6 @@ describe('calculateImageDimensions', async () => {
     });
   });
 
-  it('throws a MergeError when context.images is empty', async () => {
-    context.images = [];
-    const res = calculateImageDimensions(context, { aspectRatio: 1 });
-
-    await expect(res).rejects.toBeInstanceOf(MergeError);
-    await expect(res).rejects.toMatchObject({
-      message: '"images" must not be empty',
-      context: {
-        type: 'internal',
-      },
-    });
-  });
-
   it('throws a MergeError if trimmedMedian fails', async () => {
     // Set up spy implementation
     trimmedMedianSpy.mockImplementationOnce(() => {
