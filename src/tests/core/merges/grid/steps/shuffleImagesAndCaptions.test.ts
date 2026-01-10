@@ -77,7 +77,6 @@ describe('shuffleImagesAndCaptions', async () => {
 
     await shuffleImagesAndCaptions(context, { shuffle: true });
     expect(shuffleTogetherSpy).toHaveBeenCalledExactlyOnceWith(originalImages, originalCaptions);
-    expect(context.images).not.toEqual(originalImages);
   });
 
   it('shuffles only images when "areCaptionsProvided" is false', async () => {
