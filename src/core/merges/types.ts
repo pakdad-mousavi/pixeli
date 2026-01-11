@@ -46,7 +46,9 @@ interface BaseMergeOptions {
 }
 
 export interface GridMergeOptions extends BaseMergeOptions {
-  /** Grid aspect ratio (e.g. "16:9" or 1.777). */
+  /** The aspect ratio of each image. Used to calculate image height based on given width.
+   *
+   * Examples include `16:9`, `3x2` or `1.777`. */
   aspectRatio?: string | number;
 
   /** Width of each image cell in pixels, uses the median image width if undefined. */
@@ -99,7 +101,9 @@ interface CollageMergeOptions extends BaseMergeOptions {
   /** Width of each image cell in pixels, uses the median image width if undefined. */
   imageWidth?: number | undefined;
 
-  /** Grid aspect ratio (e.g. "16:9" or 1.777). */
+  /** The aspect ratio of each image. Used to calculate image height based on given width.
+   *
+   * Examples include `16:9`, `3x2` or `1.777`. */
   aspectRatio?: string | number;
 
   /** Number of columns in the collage grid. */
