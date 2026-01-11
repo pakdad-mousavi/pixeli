@@ -95,8 +95,27 @@ interface TemplateMergeOptions extends BaseMergeOptions {
   template: Template;
 }
 
+interface CollageMergeOptions extends BaseMergeOptions {
+  /** Width of each image cell in pixels, uses the median image width if undefined. */
+  imageWidth?: number | undefined;
+
+  /** Grid aspect ratio (e.g. "16:9" or 1.777). */
+  aspectRatio?: string | number;
+
+  /** Number of columns in the collage grid. */
+  columns?: number;
+
+  /** The estimated percentage of overlap for every image pair. A higher percentage creates a tighter collage. */
+  overlapPercentage?: number;
+
+  /** The maximum and minimum degree to rotate each image. For example, a value of `10` will result in a random degree being picked from `-10` to `+10` degrees. */
+  rotationDegree?: number;
+}
+
 export type GridMerge = MergeCommand<GridMergeOptions>;
 
 export type MasonryMerge = MergeCommand<MasonryMergeOptions>;
 
 export type TemplateMerge = MergeCommand<TemplateMergeOptions>;
+
+export type CollageMerge = MergeCommand<CollageMergeOptions>;
