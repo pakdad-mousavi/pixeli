@@ -105,10 +105,17 @@ interface CollageMergeOptions extends BaseMergeOptions {
   /** Number of columns in the collage grid. */
   columns?: number;
 
+  /** The number of pixels to potentially variate `imageWidth` by. Used to create random-sized images in the collage.
+   *
+   *  For example, a value of `50` results in images being up to `50` pixels wider or narrower than the given `imageWidth`. */
+  imageWidthVariation?: number;
+
   /** The estimated percentage of overlap for every image pair. A higher percentage creates a tighter collage. */
   overlapPercentage?: number;
 
-  /** The maximum and minimum degree to rotate each image. For example, a value of `10` will result in a random degree being picked from `-10` to `+10` degrees. */
+  /** The maximum and minimum degree to rotate each image.
+   *
+   * For example, a value of `10` will result in a random degree being picked from `-10` to `+10` degrees. */
   rotationDegree?: number;
 }
 
