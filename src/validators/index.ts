@@ -41,7 +41,7 @@ export const VALIDATORS = {
   canvasHeight: z.number().gt(0).int(),
   overlapPercentage: z.number().gte(0).lte(100).int(),
   rotationDegree: z.number().gte(0).lte(360).int(),
-  imageWidthVariation: z.number().gte(0).int(),
+  imageWidthVariance: z.number().gte(0).int(),
 
   // Coerced Numbers
   cliCornerRadius: useNumberCoercion(z.number().int().gte(0)),

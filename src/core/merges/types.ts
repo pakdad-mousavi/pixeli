@@ -112,7 +112,7 @@ interface CollageMergeOptions extends BaseMergeOptions {
   /** The number of pixels to potentially variate `imageWidth` by. Used to create random-sized images in the collage.
    *
    *  For example, a value of `50` results in images being up to `50` pixels wider or narrower than the given `imageWidth`. */
-  imageWidthVariation?: number;
+  imageWidthVariance?: number;
 
   /** The estimated percentage of overlap for every image pair. A higher percentage creates a tighter collage. */
   overlapPercentage?: number;
