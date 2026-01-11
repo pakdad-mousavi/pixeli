@@ -39,6 +39,8 @@ export const VALIDATORS = {
   columnWidth: z.number().gt(0).int(),
   canvasWidth: z.number().gt(0).int(),
   canvasHeight: z.number().gt(0).int(),
+  overlapPercentage: z.number().gte(0).lte(100).int(),
+  rotationDegree: z.number().gte(0).lte(360).int(),
 
   // Coerced Numbers
   cliCornerRadius: useNumberCoercion(z.number().int().gte(0)),
