@@ -97,7 +97,13 @@ interface TemplateMergeOptions extends BaseMergeOptions {
   template: Template;
 }
 
-interface CollageMergeOptions extends BaseMergeOptions {
+interface CollageMergeOptions extends Omit<BaseMergeOptions, 'gap'> {
+  /** Width of the border around each image. Borders are placed internally in each image. */
+  borderWidth?: number;
+
+  /** Width of the border around each image. Borders are placed internally in each image. */
+  borderColor?: number;
+
   /** Width of each image cell in pixels, uses the median image width if undefined. */
   imageWidth?: number | undefined;
 

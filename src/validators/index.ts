@@ -28,6 +28,7 @@ export const VALIDATORS = {
   // Colors
   canvasColor: hexColorValidator,
   captionColor: hexColorValidator,
+  borderColor: hexColorValidator,
 
   // Numbers
   cornerRadius: z.number().int().gte(0),
@@ -42,6 +43,7 @@ export const VALIDATORS = {
   overlapPercentage: z.number().gte(0).lte(100).int(),
   rotationDegree: z.number().gte(0).lte(360).int(),
   imageWidthVariance: z.number().gte(0).int(),
+  borderWidth: z.number().gte(0).int(),
 
   // Coerced Numbers
   cliCornerRadius: useNumberCoercion(z.number().int().gte(0)),
