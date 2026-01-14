@@ -10,34 +10,51 @@ interface Options {
   // Image details
   imageWidth: number;
   imageHeight: number;
+
+  // Finalization
+  finalizePipeline?: boolean;
 }
 
-export const addImageBorder = async (image: sharp.Sharp, options: Options) => {
+export const addImageBorder = async (
+  image: sharp.Sharp,
+  { borderWidth, borderHeight, borderColor, imageWidth, imageHeight, finalizePipeline = false }: Options
+) => {
+  // Only add borders to an image if needed
+  if (borderWidth <= 0) return image;
+
+  // Create background to act as border
   const background = sharp({
     create: {
-      width: options.imageWidth,
-      height: options.imageHeight,
+      width: imageWidth,
+      height: imageHeight,
       channels: 4,
-      background: options.borderColor,
+      background: borderColor,
     },
   }).toFormat('png');
 
+  // Crop image
   const croppedImage = image.extract({
-    top: options.borderWidth,
-    left: options.borderHeight,
-    width: options.imageWidth - options.borderWidth * 2,
-    height: options.imageHeight - options.borderHeight * 2,
+    top: borderWidth,
+    left: borderHeight,
+    width: imageWidth - borderWidth * 2,
+    height: imageHeight - borderHeight * 2,
   });
 
+  // Put cropped image on the background
   background.composite([
     {
       input: await croppedImage.toBuffer(),
-      top: options.borderWidth,
-      left: options.borderHeight,
+      top: borderWidth,
+      left: borderHeight,
     },
   ]);
 
-  return sharp(await background.toBuffer());
+  // Finalize image if needed
+  if (finalizePipeline) {
+    return sharp(await background.toBuffer());
+  }
+
+  return background;
 };
 
 // import type { MergeStep } from '../../../pipeline/mergePipeline.js';

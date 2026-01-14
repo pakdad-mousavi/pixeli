@@ -37,6 +37,7 @@ export const resizeAndBorderImages: MergeStep<Options, CollageState> = async (co
       borderWidth: options.borderWidth,
       borderHeight: options.borderWidth,
       borderColor: options.borderColor,
+      finalizePipeline: true,
     });
 
     context.images[i] = borderedImage;
