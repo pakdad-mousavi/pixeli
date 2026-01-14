@@ -9,6 +9,8 @@ const baseCliMasonryOptions = z.object({
   cornerRadius: VALIDATORS.cliCornerRadius.default(0),
   gap: VALIDATORS.cliGap.default(50),
   canvasColor: VALIDATORS.canvasColor.prefault('#fff'),
+  borderWidth: VALIDATORS.cliBorderWidth.default(0),
+  borderColor: VALIDATORS.borderColor.prefault('#000'),
   output: VALIDATORS.output.default('./pixeli.png'),
   flow: VALIDATORS.flow.default('horizontal'),
 });

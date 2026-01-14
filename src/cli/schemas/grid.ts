@@ -16,6 +16,7 @@ export const cliGridSchema = z
     columns: VALIDATORS.cliColumns.default(4),
     caption: VALIDATORS.caption.default(false),
     captionColor: VALIDATORS.captionColor.prefault('#000'),
+    borderWidth: VALIDATORS.cliBorderWidth.default(0),
     maxCaptionSize: VALIDATORS.cliMaxCaptionSize.default(100),
   })
   .superRefine((opts, ctx) => {

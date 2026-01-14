@@ -46,6 +46,14 @@ const masonryCommand = buildCommandFromSchema(
       flags: '--bg, --canvas-color <hex|transparent>',
       description: 'Background color for canvas',
     },
+    borderWidth: {
+      flags: '--bw, --border-width <px>',
+      description: 'Width of the border around each image. Borders are placed internally in each image',
+    },
+    borderColor: {
+      flags: '--bc, --border-color <hex>',
+      description: 'Color of the border around each image',
+    },
     output: {
       flags: '-o, --output <file>',
       description: 'Output file path',
