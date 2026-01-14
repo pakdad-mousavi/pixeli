@@ -6,6 +6,8 @@ export const collageSchema = z.strictObject({
   cornerRadius: VALIDATORS.cornerRadius.default(0),
   gap: VALIDATORS.gap.default(50),
   canvasColor: VALIDATORS.canvasColor.prefault('#fff'),
+  borderWidth: VALIDATORS.imageWidthVariance.default(20),
+  borderColor: VALIDATORS.borderColor.prefault('#000'),
   format: VALIDATORS.format.default('png'),
   aspectRatio: VALIDATORS.aspectRatio.prefault('1:1'),
   imageWidth: VALIDATORS.imageWidth.optional(),
@@ -13,6 +15,4 @@ export const collageSchema = z.strictObject({
   overlapPercentage: VALIDATORS.overlapPercentage.default(10),
   rotationDegree: VALIDATORS.overlapPercentage.default(13),
   imageWidthVariance: VALIDATORS.imageWidthVariance.default(20),
-  borderWidth: VALIDATORS.imageWidthVariance.default(20),
-  borderColor: VALIDATORS.borderColor.prefault('#000'),
 });

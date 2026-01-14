@@ -7,6 +7,8 @@ export const gridSchema = z
     cornerRadius: VALIDATORS.cornerRadius.default(0),
     gap: VALIDATORS.gap.default(50),
     canvasColor: VALIDATORS.canvasColor.prefault('#fff'),
+    borderWidth: VALIDATORS.borderWidth.default(0),
+    borderColor: VALIDATORS.borderColor.prefault('#000'),
     format: VALIDATORS.format.default('png'),
     aspectRatio: VALIDATORS.aspectRatio.prefault('1:1'),
     imageWidth: VALIDATORS.imageWidth.optional(),
@@ -15,8 +17,6 @@ export const gridSchema = z
     captions: VALIDATORS.captions.nonempty().optional(),
     captionColor: VALIDATORS.captionColor.prefault('#000'),
     maxCaptionSize: VALIDATORS.maxCaptionSize.default(100),
-    borderWidth: VALIDATORS.borderWidth.default(0),
-    borderColor: VALIDATORS.borderColor.prefault('#000'),
   })
   .superRefine((opts, ctx) => {
     // Ensure captions are given if caption is set to true
