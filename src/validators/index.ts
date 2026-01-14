@@ -41,7 +41,7 @@ export const VALIDATORS = {
   canvasWidth: z.number().gt(0).int(),
   canvasHeight: z.number().gt(0).int(),
   overlapPercentage: z.number().gte(0).lte(100).int(),
-  rotationDegree: z.number().gte(0).lte(360).int(),
+  rotationRange: z.number().gte(0).lte(360).int(),
   imageWidthVariance: z.number().gte(0).int(),
   borderWidth: z.number().gte(0).int(),
 
@@ -56,7 +56,7 @@ export const VALIDATORS = {
   cliCanvasWidth: useNumberCoercion(z.number().gt(0).int()),
   cliCanvasHeight: useNumberCoercion(z.number().gt(0).int()),
   cliOverlapPercentage: useNumberCoercion(z.number().gte(0).lte(100).int()),
-  cliRotationDegree: useNumberCoercion(z.number().gte(0).lte(360).int()),
+  cliRotationRange: useNumberCoercion(z.number().gte(0).lte(360).int()),
   cliImageWidthVariance: useNumberCoercion(z.number().gte(0).int()),
   cliBorderWidth: useNumberCoercion(z.number().gte(0).int()),
 

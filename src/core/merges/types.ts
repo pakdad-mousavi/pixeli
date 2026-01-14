@@ -126,7 +126,7 @@ interface CollageMergeOptions extends Omit<BaseMergeOptions, 'gap'> {
   /** The maximum and minimum degree to rotate each image.
    *
    * For example, a value of `10` will result in a random degree being picked from `-10` to `+10` degrees. */
-  rotationDegree?: number;
+  rotationRange?: number;
 }
 
 export type GridMerge = MergeCommand<GridMergeOptions>;

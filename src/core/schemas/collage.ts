@@ -13,6 +13,6 @@ export const collageSchema = z.strictObject({
   imageWidth: VALIDATORS.imageWidth.optional(),
   columns: VALIDATORS.columns.default(4),
   overlapPercentage: VALIDATORS.overlapPercentage.default(25),
-  rotationDegree: VALIDATORS.overlapPercentage.default(7),
+  rotationRange: VALIDATORS.rotationRange.default(7),
   imageWidthVariance: VALIDATORS.imageWidthVariance.default(10),
 });
