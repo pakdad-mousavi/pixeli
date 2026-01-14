@@ -10,7 +10,7 @@ interface Options {
   columns: number;
 }
 
-export const createComposites: MergeStep<Options, CollageState> = async (context, options, _onProgress) => {
+export const createComposites: MergeStep<Options, CollageState> = async (context, options, onProgress) => {
   requireState(context, 'rows');
   requireNonEmptyArray(context.images, 'images');
 
@@ -53,6 +53,12 @@ export const createComposites: MergeStep<Options, CollageState> = async (context
       minY = Math.min(minY, top);
       maxX = Math.max(maxX, left + meta.width);
       maxY = Math.max(maxY, top + meta.height);
+
+      if (onProgress) {
+        context.progressInfo.completed += 1;
+        context.progressInfo.phase = 'Merging images';
+        onProgress({ ...context.progressInfo });
+      }
     }
   }
 
