@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import type { Color } from '../utils/colors/types.js';
+import type { Color, RGBA } from '../utils/colors/types.js';
 import type { Template } from './template/types.js';
 
 export interface ProgressInfo {
@@ -40,6 +40,12 @@ interface BaseMergeOptions {
 
   /** Background canvas color. */
   canvasColor?: Color;
+
+  /** Width of the border around each image. Borders are placed internally in each image. */
+  borderWidth?: number;
+
+  /** Color of the border around each image. */
+  borderColor?: RGBA;
 
   /** Output image format (png, jpeg, webp). */
   format?: string;
@@ -98,12 +104,6 @@ interface TemplateMergeOptions extends BaseMergeOptions {
 }
 
 interface CollageMergeOptions extends Omit<BaseMergeOptions, 'gap'> {
-  /** Width of the border around each image. Borders are placed internally in each image. */
-  borderWidth?: number;
-
-  /** Width of the border around each image. Borders are placed internally in each image. */
-  borderColor?: number;
-
   /** Width of each image cell in pixels, uses the median image width if undefined. */
   imageWidth?: number | undefined;
 

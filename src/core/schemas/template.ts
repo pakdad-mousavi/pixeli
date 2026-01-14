@@ -9,6 +9,8 @@ export const templateSchema = z
     canvasColor: VALIDATORS.canvasColor.prefault('#fff'),
     format: VALIDATORS.format.default('png'),
     template: VALIDATORS.template,
+    borderWidth: VALIDATORS.borderWidth.default(0),
+    borderColor: VALIDATORS.borderColor.prefault('#000'),
   })
   .superRefine((opts, ctx) => {
     // Ensure canvas is wide enough for at least a single 1px column

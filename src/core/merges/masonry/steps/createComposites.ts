@@ -1,8 +1,10 @@
 import sharp from 'sharp';
-import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { MasonryState } from '../index.js';
-import { roundImages } from '../../../utils/images/roundImages.js';
+import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import { requireState } from '../../../pipeline/guards.js';
+
+import type { RGBA } from '../../../utils/colors/types.js';
+import { handleImageEdges } from '../../../utils/images/handleImageEdges.js';
 
 // |----------------------|
 // |----------------------|
@@ -86,6 +88,8 @@ interface BaseOptions {
   flow: 'horizontal' | 'vertical';
   gap: number;
   cornerRadius: number;
+  borderWidth: number;
+  borderColor: RGBA;
 }
 
 interface HorizontalOptions extends BaseOptions {
@@ -142,18 +146,19 @@ export const createComposites: MergeStep<Options, MasonryState> = async (context
         meta = await finalizedImage.metadata();
       }
 
-      // Handle image rounding AFTER image cropping for justified layouts
-      const rounded = (
-        await roundImages([finalizedImage], {
-          width: meta.width,
-          height: meta.height,
-          cornerRadius: options.cornerRadius,
-        })
-      )[0]!;
+      // Handle borders and corner rounding
+      const borderedImage = await handleImageEdges(finalizedImage, {
+        imageWidth: meta.width,
+        imageHeight: meta.height,
+        borderWidth: options.borderWidth,
+        borderHeight: options.borderWidth,
+        borderColor: options.borderColor,
+        cornerRadius: options.cornerRadius,
+      });
 
       // Create the composite
       composites.push({
-        input: await rounded.toBuffer(),
+        input: await borderedImage.toBuffer(),
         left: options.flow === 'horizontal' ? primary : cross,
         top: options.flow === 'horizontal' ? cross : primary,
       });

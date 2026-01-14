@@ -7,6 +7,8 @@ const baseMasonrySchema = z.object({
   gap: VALIDATORS.gap.default(50),
   canvasColor: VALIDATORS.canvasColor.prefault('#fff'),
   format: VALIDATORS.format.default('png'),
+  borderWidth: VALIDATORS.borderWidth.default(0),
+  borderColor: VALIDATORS.borderColor.prefault('#000'),
 });
 
 const horizontalMasonrySchema = z.object({

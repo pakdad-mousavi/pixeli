@@ -3,14 +3,16 @@ import type { CollageState } from '../index.js';
 
 import { requireNonEmptyArray, requireState } from '../../../pipeline/guards.js';
 
-import { addImageBorder } from '../../../utils/images/addImageBorder.js';
 import { randint } from '../../../utils/math/randint.js';
 import type { RGBA } from '../../../utils/colors/types.js';
+import { scaleImage } from '../../../utils/images/scaleImage.js';
+import { handleImageEdges } from '../../../utils/images/handleImageEdges.js';
 
 interface Options {
   imageWidthVariance: number;
   aspectRatio: number;
   borderWidth: number;
+  cornerRadius: number;
   borderColor: RGBA;
 }
 
@@ -26,17 +28,15 @@ export const resizeAndBorderImages: MergeStep<Options, CollageState> = async (co
     const varianceHeight = Math.floor(varianceWidth / options.aspectRatio);
     const height = context.state.imageHeight + varianceHeight;
 
-    const resizedImage = context.images[i]!.resize({
-      width,
-      height,
-    });
+    const resizedImage = await scaleImage(context.images[i]!, { width, height });
 
-    const borderedImage = await addImageBorder(resizedImage, {
+    const borderedImage = await handleImageEdges(resizedImage, {
       imageWidth: width,
       imageHeight: height,
       borderWidth: options.borderWidth,
       borderHeight: options.borderWidth,
       borderColor: options.borderColor,
+      cornerRadius: options.cornerRadius,
       finalizePipeline: true,
     });
 

@@ -2,7 +2,7 @@ import { requireNonEmptyArray, requireState } from '../../../pipeline/guards.js'
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { MasonryState } from '../index.js';
 
-import { scaleImages } from '../../../utils/images/scaleImages.js';
+import { scaleImage } from '../../../utils/images/scaleImage.js';
 
 interface Options {
   flow: 'horizontal' | 'vertical';
@@ -19,5 +19,8 @@ export const resizeImages: MergeStep<Options, MasonryState> = async (context, op
     options.flow === 'horizontal'
       ? { height: context.state.rowHeight, finalizePipeline: true }
       : { width: context.state.columnWidth, finalizePipeline: true };
-  context.images = await scaleImages(context.images, scaleOptions);
+
+  for (let i = 0; i < context.images.length; i++) {
+    context.images[i] = await scaleImage(context.images[i]!, scaleOptions);
+  }
 };
