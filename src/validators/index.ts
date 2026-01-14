@@ -55,10 +55,10 @@ export const VALIDATORS = {
   cliColumnWidth: useNumberCoercion(z.number().gt(0).int()),
   cliCanvasWidth: useNumberCoercion(z.number().gt(0).int()),
   cliCanvasHeight: useNumberCoercion(z.number().gt(0).int()),
-  cliOverlapPercentage: z.number().gte(0).lte(100).int(),
-  cliRotationDegree: z.number().gte(0).lte(360).int(),
-  cliImageWidthVariance: z.number().gte(0).int(),
-  cliBorderWidth: z.number().gte(0).int(),
+  cliOverlapPercentage: useNumberCoercion(z.number().gte(0).lte(100).int()),
+  cliRotationDegree: useNumberCoercion(z.number().gte(0).lte(360).int()),
+  cliImageWidthVariance: useNumberCoercion(z.number().gte(0).int()),
+  cliBorderWidth: useNumberCoercion(z.number().gte(0).int()),
 
   // Enumerations
   flow: z.enum(['horizontal', 'vertical']),
