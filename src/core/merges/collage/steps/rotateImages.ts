@@ -14,6 +14,6 @@ export const rotateImages: MergeStep<Options, CollageState> = async (context, op
 
   for (let i = 0; i < context.images.length; i++) {
     const angle = randint(-options.rotationRange, options.rotationRange);
-    context.images[i] = context.images[i]!.rotate(angle, { background: { r: 0, g: 0, b: 0, alpha: 0 } });
+    context.images[i] = context.images[i]!.toFormat('png').rotate(angle, { background: { r: 0, g: 0, b: 0, alpha: 0 } });
   }
 };
