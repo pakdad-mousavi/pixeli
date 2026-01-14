@@ -108,21 +108,9 @@ export class MergePipeline<TOptions, TState> {
     if (testOptions) this.logForDebugging(testOptions);
 
     for (const step of this.steps) {
-      // Try to run the step
-      let result;
-      try {
-        // Use a copy of this.options to ensure that merge steps cannot mutate the original
-        result = await step(this.context, { ...this.options }, this.onProgress);
-        if (testOptions) this.logForDebugging(testOptions);
-      } catch (error) {
-        // Throw a runtime error if a non-MergeError is ever thrown
-        if (!(error instanceof MergeError)) {
-          throw new Error(`Invalid error thrown by "${step.name}".`);
-        }
-
-        // Throw the validated error
-        throw error;
-      }
+      // Use a copy of this.options to ensure that merge steps cannot mutate the original
+      const result = await step(this.context, { ...this.options }, this.onProgress);
+      if (testOptions) this.logForDebugging(testOptions);
 
       // If the result is a sharp instance, update finalImage
       if (result instanceof Buffer) {
