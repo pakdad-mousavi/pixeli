@@ -97,7 +97,7 @@ You could also use one of the presets provided using the `-p` flag:
 pixeli template -rd ./samples/images -p instagram-grid
 ```
 
-To learn about the JSON template, see [templates](#templates).
+To learn about the JSON template, see [templates](#json-templates).
 
 ## Full CLI Documentation
 
@@ -164,6 +164,20 @@ The template merge requires a specified JSON template file, or JSON string. Imag
 | ---------------------------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `-t`, `--template <path>`                            | `null`                  | Sets the **path to the JSON template file** which will be used to arrange the collage. Either use `--template` or `--preset`.                                                                |
 | `-p`, `--preset <preset-id>`                         | `null`                  | Use a **pre-defined collage preset** instead of providing your own. Available preset IDs: `instagram-grid`, `dashboardShot`, `horizontal-book-spread`, `vertical-book-spread`, `art-gallery` |
+
+### pixeli collage
+Usage: `pixeli collage [options] [files...]`
+
+The collage merge arranges images into a messy, photo-wall style grid with fixed columns and automatic row calculation. The table below displays all of the options available to this command:
+
+| Option/Flag                                     | Default                      | Description                                                                                                                                                                                                                                 |
+| ----------------------------------------------- | ----------------------       | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--ar`, `--aspect-ratio <width/height\|number>` | `1:1`                        | Sets the **per-image aspect ratio**. Accepts ratio expressions (`16/9`, `4:3`) or decimal values (`1.777`). Images are scaled as needed to match this ratio before placement.                                                               |
+| `-w`, `--image-width <px>`                      | *trimmed median image width* | Sets the **final width of each processed image** in the grid. The height is derived automatically based on the chosen aspect ratio.                                                                                                         |
+| `-c`, `--columns <n>`                           | `4`                          | Defines how many **images per row** are placed in the grid. The total number of rows is calculated from the number of inputs.                                                                                                               |
+| `--op`, `--overlap-percentage <percent>`        | `25`                         | Defines the **percentage of both vertical and horizontal overlap** between any two images. A higher percentage results in tighter, more packed collages.                                                                                    |
+| `--rr`, `--rotation-range <deg>`                | `7`                          | Defines the **minimum and maximum rotation**. A random rotation of this amount in degrees will be applied to each image. For no rotation, a value of `0` can be used.                                                                       |
+| `--wv`, `--image-width-variance <px>`           | `10`                         | Defines the **random variation in image width** that is added to each image width (image height variance is automatically calculated). This helps create more natural collages. A larger image variance results in more uneven image sizes. |
 
 ## Other
 
