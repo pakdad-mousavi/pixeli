@@ -73,7 +73,7 @@ const collageCommand = buildCommandFromSchema(
       flags: '--op, --overlap-percentage <percent>',
       description: 'The estimated percentage of overlap for every image pair. A higher percentage creates a tighter collage',
     },
-    rotationDegree: {
+    rotationRange: {
       flags: '--rr, --rotation-range <deg>',
       description: 'The maximum and minimum degrees to randomly rotate each image',
     },
