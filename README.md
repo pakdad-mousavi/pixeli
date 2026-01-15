@@ -3,7 +3,7 @@
 
 <img src="./assets/logo.svg" width="150" align="right">
 
-**Pixeli** is a lightweight and flexible command-line tool for merging multiple images into clean, customizable grid layouts. It’s designed for speed and simplicity, making it ideal for generating collages, previews, gallery layouts, inspiration boards, and composite images without relying on heavy desktop software.
+**Pixeli** is a typescript-first, lightweight, and flexible command-line tool and library for merging multiple images into clean, customizable grid layouts. It’s designed for speed and simplicity, making it ideal for generating collages, previews, gallery layouts, inspiration boards, and composite images without relying on heavy desktop software.
 
 Pixeli uses Sharp, a Node.js wrapper for the libvips library which is based on C. This makes it an extremely fast tool with support for PNG, JPG, GIF, SVG, AVIF, etc.
 
@@ -20,6 +20,43 @@ The tool currently supports four main layout modes: ***Grid***, ***Masonry*** (h
 | <img src="samples/horizontal-book-spread.jpg" width="400"> | <img src="samples/dashboard-shot.jpg" width="400"> |
 | **Template (Art Gallery)** | **Collage** |
 | <img src="samples/art-gallery.jpg" width="400"> | <img src="samples/collage.jpg" width="400"> | 
+
+# Table of Contents
+1. [Installation](#installation)
+2. [Quick CLI Examples](#quick-cli-examples)
+    * [Basic Grid](#basic-grid)
+    * [Grid with Rectangular Images](#grid-with-rectangular-images)
+    * [Grid with 8 Columns](#grid-with-8-columns)
+    * [Contact Sheet](#contact-sheet)
+    * [Masonry Layout](#masonry-layout)
+    * [Template Layout](#template-layout)
+    * [Collage Layout](#collage-layout)
+3. [Full CLI Documentation](#full-cli-documentation)
+    * [pixeli](#pixeli)
+    * [pixeli grid](#pixeli-grid)
+    * [pixeli masonry](#pixeli-masonry)
+    * [pixeli template](#pixeli-template)
+    * [pixeli collage](#pixeli-collage)
+4. [Full Library Documentation](#full-library-documentation)
+    * [gridMerge Function Options](#gridmerge-function-options)
+    * [masonryMerge Function Options](#masonrymerge-function-options)
+    * [templateMerge Function Options](#templatemerge-function-options)
+    * [collageMerge Function Options](#collagemerge-function-options)
+5. [Other](#other)
+    * [JSON Templates](#json-templates)
+        * [Canvas](#canvas)
+        * [Slots](#slots)
+        * [Slot Rules](#slot-rules)
+        * [Sample JSON Template](#sample-json-template)
+    * [All Supported Input Formats](#all-supported-input-formats)
+    * [All Supported Output Formats](#all-supported-output-formats)
+    * [Pixel Limits](#pixel-limits)
+    * [Colors and Transparency](#colors-and-transparency)
+        * [CLI](#cli)
+        * [Library](#library)
+6. [License](#license)
+
+
 
 ## Installation
 Pixeli can be installed using npm. Simply run the following command to install it globally on your machine:
@@ -87,7 +124,7 @@ pixeli merge masonry -rd ./samples/images -f vertical --cvh 4000
 Note that the masonry command always requires either the `--cvw` or `--cvh` option, depending on the flow.
 
 ### Template Layout
-Collage layouts require a JSON template which describe your specific layout. The `-t` flag is used to specify the path to a JSON template:
+Template layouts require a JSON template which describe your specific layout. The `-t` flag is used to specify the path to a JSON template:
 ```bash
 pixeli template -rd ./samples/images -t ./template.json
 ```
@@ -97,7 +134,33 @@ You could also use one of the presets provided using the `-p` flag:
 pixeli template -rd ./samples/images -p instagram-grid
 ```
 
-To learn about the JSON template, see [templates](#json-templates).
+To learn about the JSON template, see [JSON Templates](#json-templates).
+
+### Collage Layout
+Collage layouts are similar to grid layouts, in a way. Images are arranged in a grid, jittered, rotated, and overlapped to create a photo-wall style grid:
+```bash
+pixeli collage -rd ./samples/images
+```
+
+To customize the image sizes, use the `-w` flag:
+```bash
+pixeli collage -rd ./samples/images -w 400
+```
+
+To change the overlap percentage of any two images in the collage, use the `--op` flag:
+```bash
+pixeli collage -rd ./samples/images --op 10
+```
+
+For varying image sizes, you can use the `--wv` flag to change the image width variance (in pixels):
+```bash
+pixeli collage -rd ./samples/images --wv 50
+```
+
+To change the minimum and maximum degrees to rotate each image by, use the `--rr` flag to customize the rotation range:
+```bash
+pixeli collage -rd ./samples/images --rr 15
+```
 
 ## Full CLI Documentation
 
@@ -179,6 +242,113 @@ The collage merge arranges images into a messy, photo-wall style grid with fixed
 | `--rr`, `--rotation-range <deg>`                | `7`                          | Defines the **minimum and maximum rotation**. A random rotation of this amount in degrees will be applied to each image. For no rotation, a value of `0` can be used.                                                                       |
 | `--wv`, `--image-width-variance <px>`           | `10`                         | Defines the **random variation in image width** that is added to each image width (image height variance is automatically calculated). This helps create more natural collages. A larger image variance results in more uneven image sizes. |
 
+## Full Library Documentation
+
+Pixeli also provides functions for every merge. They can be imported like so:
+
+
+```javascript
+import { gridMerge, masonryMerge, templageMerge, collageMerge } from 'pixeli';
+```
+
+All merge functions have the following signature:
+
+```typescript
+interface MergeCommand<T> {
+  (
+  imageInputs: sharp.SharpInput[],
+  options: T,
+  onProgress?: (total: number, completed: number, phase: string): void;
+  ): Promise<Buffer>;
+}
+```
+
+The `imageInputs` parameter takes an array of valid image inputs which will be processed by sharp to create sharp instances. An image input can be a `Buffer` object, any subclass of `Buffer`, a file path string, or any other input type supported by the Sharp `SharpInput` interface.
+
+The `options` parameter is where merge-specific options are given as an object. Each merge function has their own set of supported options.
+
+The `onProgress` parameter is optional. It is a callback function which is called everytime progress is made during a merge operation. If provided, it will receive a `ProgressInfo` object, which contains the total number of images to be processed, the number of completed images so far, and the current phase of the merge (e.g., "Merging images" or "Initializing").
+
+⚠️ NOTE ⚠️: The `onProgress` callback will be changed in upcoming versions.
+
+The returned value of the function, if successful, is a buffer containing the final mosaic. If not successful, a `MergeError` will be thrown. To learn more about error handling, see ***wopuhfewopifhvweproihvfewpoihv*** MergeErrors.
+
+### gridMerge Function Options
+
+The `gridMerge` function has the following set of options:
+
+| Option           | Data Type             | Description                                                                                                                        |
+| ---------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `shuffle`        | `boolean`             | Whether to randomize the image order before merging.                                                                               |
+| `cornerRadius`   | `number`              | Rounded corner radius in pixels applied to each image.                                                                             |
+| `gap`            | `number`              | Gap between images in pixels.                                                                                                      |
+| `canvasColor`    | `Color`               | Background color of the output canvas.                                                                                             |
+| `borderWidth`    | `number`              | Width of the border around each image in pixels. Borders are drawn internally within each image.                                   |
+| `borderColor`    | `Color`               | Color of the border around each image.                                                                                             |
+| `format`         | `string`              | Output image format (e.g., `png`, `jpeg`, `webp`).                                                                                 |
+| `aspectRatio`    | `string \| number`    | Aspect ratio of each image cell. Used to calculate image height based on the given width. Examples: `"16:9"`, `"3x2"`, or `1.777`. |
+| `imageWidth`     | `number \| undefined` | Width of each image cell in pixels. If undefined, the median width of the input images is used.                                    |
+| `columns`        | `number`              | Number of columns in the grid layout.                                                                                              |
+| `caption`        | `boolean`             | Whether to render captions under images.                                                                                           |
+| `captions`       | `string[]`            | Caption text for each image, in order.                                                                                             |
+| `captionColor`   | `Color`               | Text color used for image captions.                                                                                                |
+| `maxCaptionSize` | `number`              | Maximum caption font size in pixels.                                                                                               |
+
+### masonryMerge Function Options
+
+The `masonryMerge` function has the following set of options:
+
+| Option         | Data Type                                      | Description                                                                                                                 |
+| -------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `shuffle`      | `boolean`                                      | Whether to randomize the image order before merging.                                                                        |
+| `cornerRadius` | `number`                                       | Rounded corner radius in pixels applied to each image.                                                                      |
+| `gap`          | `number`                                       | Gap between images in pixels.                                                                                               |
+| `canvasColor`  | `Color`                                        | Background color of the output canvas.                                                                                      |
+| `borderWidth`  | `number`                                       | Width of the border around each image in pixels. Borders are drawn internally within each image.                            |
+| `borderColor`  | `Color`                                        | Color of the border around each image.                                                                                      |
+| `format`       | `string`                                       | Output image format (e.g., `png`, `jpeg`, `webp`).                                                                          |
+| `rowHeight`    | `number \| undefined`                          | Height of each row in pixels. Defaults to the trimmed median image height if undefined. Only applied in horizontal layouts. |
+| `columnWidth`  | `number \| undefined`                          | Width of each column in pixels. Defaults to the trimmed median image width if undefined. Only applied in vertical layouts.  |
+| `canvasWidth`  | `number \| undefined`                          | Width of the entire output canvas in pixels. Required when using horizontal flow.                                           |
+| `canvasHeight` | `number \| undefined`                          | Height of the entire output canvas in pixels. Required when using vertical flow.                                            |
+| `flow`         | `'horizontal' \| 'vertical'`                   | Orientation of the masonry layout. Determines whether items flow by rows (horizontal) or by columns (vertical).             |
+| `hAlign`       | `'left' \| 'center' \| 'right' \| 'justified'` | Horizontal alignment of items within each row. Only applied in horizontal layouts.                                          |
+| `vAlign`       | `'top' \| 'middle' \| 'bottom' \| 'justified'` | Vertical alignment of items within each column. Only applied in vertical layouts.                                           |
+
+### templateMerge Function Options
+
+The `templateMerge` function has the following set of options:
+
+| Option         | Data Type  | Description                                                                                                                                                    |
+| -------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shuffle`      | `boolean`  | Whether to randomize the image order before merging.                                                                                                           |
+| `cornerRadius` | `number`   | Rounded corner radius in pixels applied to each image.                                                                                                         |
+| `gap`          | `number`   | Gap between images in pixels.                                                                                                                                  |
+| `canvasColor`  | `Color`    | Background color of the output canvas.                                                                                                                         |
+| `borderWidth`  | `number`   | Width of the border around each image in pixels. Borders are drawn internally within each image.                                                               |
+| `borderColor`  | `Color`    | Color of the border around each image.                                                                                                                         |
+| `format`       | `string`   | Output image format (e.g., `png`, `jpeg`, `webp`).                                                                                                             |
+| `template`     | `Template` | An object definition describing the layout, slots, and canvas configuration used to place images. See [JSON Templates](#json-templates) for more information.  |
+
+### collageMerge Function Options
+
+The `collageMerge` function has the following set of options:
+
+| Option               | Data Type          | Description                                                                                                                                                                                    |
+| -------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shuffle`            | `boolean`          | Whether to randomize the image order before merging.                                                                                                                                           |
+| `cornerRadius`       | `number`           | Rounded corner radius in pixels applied to each image.                                                                                                                                         |
+| `canvasColor`        | `Color`            | Background color of the output canvas.                                                                                                                                                         |
+| `borderWidth`        | `number`           | Width of the border around each image in pixels. Borders are drawn internally within each image.                                                                                               |
+| `borderColor`        | `Color`            | Color of the border around each image.                                                                                                                                                         |
+| `format`             | `string`           | Output image format (e.g., `png`, `jpeg`, `webp`).                                                                                                                                             |
+| `imageWidth`         | `number`           | Width of each image cell in pixels. If undefined, the median input image width is used.                                                                                                        |
+| `aspectRatio`        | `string \| number` | Aspect ratio used to calculate image height from width. Examples: `"16:9"`, `"3x2"`, or `1.777`.                                                                                               |
+| `columns`            | `number`           | Number of columns in the collage grid.                                                                                                                                                         |
+| `imageWidthVariance` | `number`           | Maximum number of pixels that each image width may randomly vary from `imageWidth`, creating natural size variation. For example, `50` allows images to be up to ±50 pixels wider or narrower. |
+| `overlapPercentage`  | `number`           | Estimated percentage of overlap between neighboring images. Higher values create a tighter, denser collage.                                                                                    |
+| `rotationRange`      | `number`           | Maximum absolute rotation angle in degrees. A value of `10` produces a random rotation between `-10°` and `+10°`.                                                                              |
+
 ## Other
 
 ### JSON Templates
@@ -243,7 +413,7 @@ row + rowSpan - 1 ≤ rows
 - Overlapping slots will be rejected.
 - Slot indices start at 1, not 0.
 
-#### Sample
+#### Sample JSON Template
 
 This is an example of a full JSON template:
 ```json
@@ -311,18 +481,13 @@ For fully transparent images, a value of `transparent` is allowed. Note that the
 Semi-transparency is also allowed, and can be achieved with hex colors of the format `#rrggbbaa`, where the last two hex values represent the transparency.
 
 #### Library
-Colors in the library functions are objects, and require the following format:
+Colors in the library functions are either objects or hex values. The `Color` type is used to describe colors:
 
-```javascript
-const color = {
-  r: 255,
-  g: 255,
-  b: 255,
-  alpha: 1
-}
+```typescript
+type Color = { r: number; g: number; b: number; alpha: number } | string;
 ```
 
-`color.r`, `color.g`, and `color.b` are values ranging from 0 to 255, while `color.alpha` is a value ranging from 0 to 1. 
+Given that a color object has been used instead of a hex value, note that `color.r`, `color.g`, and `color.b` are all values ranging from 0 to 255, while `color.alpha` is a value ranging from 0 to 1. 
 
 ## License
 This project is licensed under the [MIT License](./LICENSE).
