@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import type { Color, RGBA } from '../utils/colors/types.js';
+import type { Color } from '../utils/colors/types.js';
 import type { Template } from './template/types.js';
 
 export interface ProgressInfo {
@@ -45,7 +45,7 @@ interface BaseMergeOptions {
   borderWidth?: number;
 
   /** Color of the border around each image. */
-  borderColor?: RGBA;
+  borderColor?: Color;
 
   /** Output image format (png, jpeg, webp). */
   format?: string;
