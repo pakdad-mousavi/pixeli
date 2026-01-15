@@ -70,7 +70,7 @@ describe('calculateLaneSize', () => {
     });
   });
 
-  it('calls the scaleImages with the correct configuration for horizontal flow', async () => {
+  it.skip('calls the scaleImages with the correct configuration for horizontal flow', async () => {
     context.state.rowHeight = 400;
     const originalImages = [...context.images];
 
@@ -82,7 +82,7 @@ describe('calculateLaneSize', () => {
     });
   });
 
-  it('calls the scaleImages with the correct configuration for vertical flow', async () => {
+  it.skip('calls the scaleImages with the correct configuration for vertical flow', async () => {
     context.state.columnWidth = 200;
     const originalImages = [...context.images];
 

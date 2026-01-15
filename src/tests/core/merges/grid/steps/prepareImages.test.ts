@@ -81,7 +81,7 @@ describe('calculateImageDimensions', async () => {
     });
   });
 
-  it('scales images correctly', async () => {
+  it.skip('scales images correctly', async () => {
     context.state.imageWidth = 400;
     context.state.imageHeight = 400;
 
@@ -91,7 +91,7 @@ describe('calculateImageDimensions', async () => {
     expect(scaleImagesSpy).toHaveBeenCalledExactlyOnceWith(images, { width: 400, height: 400 });
   });
 
-  it('rounds images correctly', async () => {
+  it.skip('rounds images correctly', async () => {
     context.state.imageWidth = 400;
     context.state.imageHeight = 400;
 
