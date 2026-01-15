@@ -1,0 +1,38 @@
+name: Build & Publish Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  NODE_VERSION: 24
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout code
+      - uses: actions/checkout@v4
+
+      # 2. Setup Node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org
+
+      # 3. Install dependencies
+      - run: npm ci
+
+      # 4. Build the dist folder
+      - run: npm run build
+
+      # 5. Run tests to make sure everything works
+      - run: npm test
+
+      # 6. Publish to npm (only dist folder will be included)
+      - run: npm publish
