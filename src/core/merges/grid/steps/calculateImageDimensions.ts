@@ -12,7 +12,7 @@ interface Options {
   aspectRatio: number;
 }
 
-export const calculateImageDimensions: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
+export const calculateImageDimensions: MergeStep<Options, GridState> = async (context, options) => {
   requireNonEmptyArray(context.images, 'images');
 
   // Calculate image width

@@ -1,19 +1,35 @@
 import sharp from 'sharp';
 import type { Color } from '../utils/colors/types.js';
 import type { Template } from './template/types.js';
+import type { PhaseProgress } from '../modules/progressTracker.js';
 
-export interface ProgressInfo {
-  /** How many images have been processed so far */
-  completed: number;
+export type ProgressLifecycle = 'start' | 'update' | 'complete';
 
-  /** The total number of images to be processed */
-  total: number;
+export interface ProgressInfo<TPhase extends string> {
+  /** The current event lifecycle type. The values of the progress lifecycle is one of the following values:
+   *
+   * - `start` represents the very first update of the very first phase.
+   * - `update` represents when progress has been made or a total has been set.
+   * - `complete` represents the very last update of the very last phase.
+   */
+  progressLifecycle: ProgressLifecycle;
 
-  /** The current phase of the merge */
-  phase: string;
+  /** Progress per logical phase. */
+  phases: Record<TPhase, PhaseProgress>;
+
+  overall: {
+    /** The total number of operations that have been completed. */
+    completed: number;
+
+    /** The total number of operations that need to be completed (so far). */
+    total: number;
+
+    /** Calculated as `completed / total`, may return null if `total = 0`. */
+    percent: number | null;
+  };
 }
 
-export type OnProgress = (info: ProgressInfo) => void;
+export type OnProgress<TPhase extends string> = (info: ProgressInfo<TPhase>) => void;
 
 /**
  * Generic image merge command.
@@ -24,8 +40,8 @@ export type OnProgress = (info: ProgressInfo) => void;
  * @param onProgress - Optional progress callback
  * @returns A Promise resolving to the merged image buffer
  */
-interface MergeCommand<T> {
-  (imageInputs: sharp.SharpInput[], options: T, onProgress?: OnProgress): Promise<Buffer>;
+export interface MergeCommand<T, TPhase extends string> {
+  (imageInputs: sharp.SharpInput[], options: T, onProgress?: OnProgress<TPhase>): Promise<Buffer>;
 }
 
 interface BaseMergeOptions {
@@ -129,7 +145,7 @@ interface CollageMergeOptions extends Omit<BaseMergeOptions, 'gap'> {
   rotationRange?: number;
 }
 
-export type GridMerge = MergeCommand<GridMergeOptions>;
+// export type GridMerge = MergeCommand<GridMergeOptions>;
 
 export type MasonryMerge = MergeCommand<MasonryMergeOptions>;
 

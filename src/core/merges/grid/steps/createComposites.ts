@@ -1,5 +1,5 @@
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
-import type { GridState } from '../index.js';
+import type { GridPhase, GridState } from '../index.js';
 import { requireNonEmptyArray, requireState } from '../../../pipeline/guards.js';
 import sharp from 'sharp';
 import { createSvgTextBuffer } from '../../../utils/svg/createSvgTextBuffer.js';
@@ -12,13 +12,20 @@ interface Options {
   captionColor: RGBA;
 }
 
-export const createComposites: MergeStep<Options, GridState> = async (context, options, onProgress) => {
+export const createComposites: MergeStep<Options, GridState> = async (context, options, progressTracker, onProgress) => {
   requireState(context, 'areCaptionsProvided');
   requireState(context, 'captionHeight');
   requireState(context, 'imageWidth');
   requireState(context, 'imageHeight');
   requireState(context, 'rows');
   requireNonEmptyArray(context.images, 'images');
+
+  // Set up phase
+  const PHASE = 'Merging images' satisfies GridPhase;
+
+  // Initialize phase and emit initial progressInfo
+  progressTracker.setTotal(PHASE, context.images.length);
+  onProgress?.(progressTracker.getProgressInfo());
 
   // Only needed when there are captions
   if (context.state.areCaptionsProvided) {
@@ -65,12 +72,9 @@ export const createComposites: MergeStep<Options, GridState> = async (context, o
       // Update coordinates
       x += context.state.imageWidth + options.gap;
 
-      // Call onProgress
-      if (onProgress) {
-        context.progressInfo.completed += 1;
-        context.progressInfo.phase = 'Merging images';
-        onProgress({ ...context.progressInfo });
-      }
+      // Call the onProgress callback
+      progressTracker.incrementProgress(PHASE);
+      onProgress?.(progressTracker.getProgressInfo());
     }
 
     // Update coordinates

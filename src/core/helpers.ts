@@ -14,7 +14,7 @@ export const escapeXML = (str: string) => {
         '&': '&amp;',
         '"': '&quot;',
         "'": '&apos;',
-      }[c]!)
+      })[c]!,
   );
 };
 
@@ -57,4 +57,8 @@ export const isSupportedOutputImage = (extname: string): extname is SupportedOut
 export const isValidHexColor = (hex: string) => {
   const hexRegex = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
   return hexRegex.test(hex);
+};
+
+export const objectKeys = <T extends object>(obj: T): Array<keyof T> => {
+  return Object.keys(obj) as Array<keyof T>;
 };

@@ -8,12 +8,20 @@ interface Options {
   format: SupportedOutputFormat;
 }
 
-export const exportCanvas: MergeStep<Options, any> = async (context, options, _onProgress) => {
+export const exportCanvas: MergeStep<Options, any> = async (context, options, progressTracker, onProgress) => {
+  // Set up phase
+  const PHASE = 'Writing to buffer';
+
   // Ensure canvas exists
   requireContextProp(context, 'canvas');
 
+  // Set up phase total
+  progressTracker.setTotal(PHASE, 1);
+  onProgress?.(progressTracker.getProgressInfo());
+  let res;
+
   try {
-    return await context.canvas.toFormat(options.format).toBuffer();
+    res = await context.canvas.toFormat(options.format).toBuffer();
   } catch (err) {
     // Assuming ALL sharp errors are instances of the Error object
     const sharpError = err as Error;
@@ -30,5 +38,10 @@ export const exportCanvas: MergeStep<Options, any> = async (context, options, _o
       type: 'internal',
       cause: err,
     });
+  } finally {
+    progressTracker.incrementProgress(PHASE);
+    onProgress?.(progressTracker.getProgressInfo('complete'));
   }
+
+  return res;
 };

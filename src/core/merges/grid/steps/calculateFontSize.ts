@@ -7,7 +7,7 @@ interface Options {
   maxCaptionSize: number;
 }
 
-export const calculateFontSize: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
+export const calculateFontSize: MergeStep<Options, GridState> = async (context, options) => {
   requireState(context, 'imageWidth');
   requireState(context, 'captionHeight');
 

@@ -1,4 +1,4 @@
-import type { GridMerge } from '../types.js';
+import type { GridMergeOptions, MergeCommand, ProgressInfo } from '../types.js';
 import { gridSchema } from '../../schemas/grid.js';
 import { MergePipeline } from '../../pipeline/mergePipeline.js';
 
@@ -31,7 +31,22 @@ export interface GridState {
   rows: number;
 }
 
-export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => {
+const gridPhases = [
+  'Loading images',
+  'Resizing images',
+  'Rounding images',
+  'Bordering images',
+  'Merging images',
+  'Writing to buffer',
+] as const;
+
+export type GridPhase = (typeof gridPhases)[number];
+
+export const gridMerge: MergeCommand<GridMergeOptions, (typeof gridPhases)[number]> = async (
+  imageInputs,
+  options,
+  onProgress,
+) => {
   const context = {
     inputs: imageInputs,
     captions: [],
@@ -40,12 +55,7 @@ export const gridMerge: GridMerge = async (imageInputs, options, onProgress) => 
     state: {} as GridState,
   };
 
-  const gridMergePipeline = await MergePipeline.createPipeline<typeof gridSchema, typeof options, GridState>(
-    gridSchema,
-    options,
-    context,
-    onProgress
-  );
+  const gridMergePipeline = await MergePipeline.createPipeline(gridSchema, options, context, gridPhases, onProgress);
 
   gridMergePipeline
     .use(loadImages)

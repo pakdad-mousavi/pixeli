@@ -13,7 +13,7 @@ interface State {
   canvasHeight: number;
 }
 
-export const createCanvas: MergeStep<Options, State> = async (context, options, _onProgress) => {
+export const createCanvas: MergeStep<Options, State> = async (context, options) => {
   requireState(context, 'canvasWidth');
   requireState(context, 'canvasHeight');
 

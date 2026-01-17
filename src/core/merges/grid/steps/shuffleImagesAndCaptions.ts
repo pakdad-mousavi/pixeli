@@ -7,7 +7,7 @@ interface Options {
   shuffle: boolean;
 }
 
-export const shuffleImagesAndCaptions: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
+export const shuffleImagesAndCaptions: MergeStep<Options, GridState> = async (context, options) => {
   requireState(context, 'areCaptionsProvided');
   requireNonEmptyArray(context.images, 'images');
 

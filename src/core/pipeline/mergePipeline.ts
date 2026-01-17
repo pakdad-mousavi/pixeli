@@ -1,13 +1,14 @@
 import sharp from 'sharp';
 import type z from 'zod';
-import { MergeError } from '../mergeError.js';
-import { MESSAGES } from '../modules/messages.js';
-import type { OnProgress, ProgressInfo } from '../merges/types.js';
 import chalk from 'chalk';
+
+import type { OnProgress } from '../merges/types.js';
+import { MESSAGES } from '../modules/messages.js';
+import { ProgressTracker } from '../modules/progressTracker.js';
+import { MergeError } from '../mergeError.js';
 
 export interface MergeContext<TState> {
   inputs: sharp.SharpInput[];
-  progressInfo: ProgressInfo;
   images: sharp.Sharp[];
   canvas?: sharp.Sharp;
   composites: sharp.OverlayOptions[];
@@ -18,7 +19,8 @@ export interface MergeContext<TState> {
 export type MergeStep<TOptions, TState> = (
   context: MergeContext<TState>,
   options: TOptions,
-  onProgress?: OnProgress
+  progressTracker: ProgressTracker<string>,
+  onProgress?: OnProgress<string>,
 ) => Promise<Buffer | void>;
 
 /**
@@ -51,36 +53,32 @@ export type MergeStep<TOptions, TState> = (
  * @template TOptions - Validated options shape used by registered steps.
  * @template TState - Context/state shape managed by the pipeline.
  */
-export class MergePipeline<TOptions, TState> {
+export class MergePipeline<TOptions, TState, TPhase extends string> {
   private steps: MergeStep<TOptions, TState>[] = [];
   private optionsCounter = 0;
   private stateCounter = 0;
 
-  constructor(private options: TOptions, private context: MergeContext<TState>, private onProgress?: OnProgress) {}
+  constructor(
+    private options: TOptions,
+    private context: MergeContext<TState>,
+    private progressTracker: ProgressTracker<TPhase>,
+    private onProgress?: OnProgress<TPhase>,
+  ) {}
 
-  static async createPipeline<TZodSchema extends z.ZodType, TOptions, TState>(
+  static async createPipeline<TZodSchema extends z.ZodType, TOptions, TState, const TPhases extends readonly string[]>(
     schema: TZodSchema,
     options: TOptions,
-    context: Omit<MergeContext<TState>, 'progressInfo'>,
-    onProgress?: OnProgress
+    context: MergeContext<TState>,
+    phases: TPhases,
+    onProgress?: OnProgress<TPhases[number]>,
   ) {
     const { success, data, error } = await schema.safeParseAsync(options);
     if (success) {
-      // Initialize progressInfo
-      const progressInfo = {
-        completed: 0,
-        total: context.inputs.length,
-        phase: 'Initializing',
-      };
+      // Create progress tracker
+      const progressTracker = new ProgressTracker<TPhases[number]>(phases);
 
-      // Initialize mergeContext
-      const mergeContext = {
-        ...context,
-        progressInfo,
-      };
-
-      // Return the pipeline
-      return new MergePipeline<typeof data, TState>(data, mergeContext, onProgress);
+      // Return the created pipeline
+      return new MergePipeline<typeof data, TState, TPhases[number]>(data, context, progressTracker, onProgress);
     } else {
       const path = error.issues[0]?.path;
       const err = error.issues[0]?.message;
@@ -109,7 +107,7 @@ export class MergePipeline<TOptions, TState> {
 
     for (const step of this.steps) {
       // Use a copy of this.options to ensure that merge steps cannot mutate the original
-      const result = await step(this.context, { ...this.options }, this.onProgress);
+      const result = await step(this.context, { ...this.options }, this.progressTracker, this.onProgress);
       if (testOptions) this.logForDebugging(testOptions);
 
       // If the result is a sharp instance, update finalImage

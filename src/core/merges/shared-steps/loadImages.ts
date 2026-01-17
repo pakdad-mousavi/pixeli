@@ -4,9 +4,15 @@ import { isActualImage } from '../../utils/images/isActualImage.js';
 import { MergeError } from '../../mergeError.js';
 import { requireNonEmptyArray } from '../../pipeline/guards.js';
 
-export const loadImages: MergeStep<any, any> = async (context, _options, _onProgress) => {
+export const loadImages: MergeStep<any, any> = async (context, _options, progressTracker, onProgress) => {
+  const PHASE = 'Loading images' as const;
+
   // Ensure inputs are provided
   requireNonEmptyArray(context.inputs, 'inputs');
+
+  // Initialize phase and emit initial progressInfo
+  progressTracker.setTotal(PHASE, context.inputs.length);
+  onProgress?.(progressTracker.getProgressInfo('start'));
 
   const images: sharp.Sharp[] = [];
   for (let i = 0; i < context.inputs.length; i++) {
@@ -22,6 +28,9 @@ export const loadImages: MergeStep<any, any> = async (context, _options, _onProg
     }
 
     images.push(sharp(input));
+
+    progressTracker.incrementProgress('Loading images');
+    onProgress?.(progressTracker.getProgressInfo());
   }
 
   // Ensure there's at least one image

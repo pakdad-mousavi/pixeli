@@ -7,7 +7,7 @@ interface Options {
   gap: number;
 }
 
-export const calculateCanvasDimensions: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
+export const calculateCanvasDimensions: MergeStep<Options, GridState> = async (context, options) => {
   requireState(context, 'imageWidth');
   requireState(context, 'imageHeight');
   requireState(context, 'areCaptionsProvided');

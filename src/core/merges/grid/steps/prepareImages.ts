@@ -1,5 +1,5 @@
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
-import type { GridState } from '../index.js';
+import type { GridState, GridPhase } from '../index.js';
 import type { RGBA } from '../../../utils/colors/types.js';
 
 import { scaleImage } from '../../../utils/images/scaleImage.js';
@@ -12,10 +12,25 @@ interface Options {
   borderColor: RGBA;
 }
 
-export const prepareImages: MergeStep<Options, GridState> = async (context, options, _onProgress) => {
+export const prepareImages: MergeStep<Options, GridState> = async (context, options, progressTracker, onProgress) => {
   requireState(context, 'imageWidth');
   requireState(context, 'imageHeight');
   requireNonEmptyArray(context.images, 'images');
+
+  // Set up phases
+  const RESIZE_PHASE = 'Resizing images' satisfies GridPhase;
+  const ROUNDING_PHASE = 'Rounding images' satisfies GridPhase;
+  const BORDERING_PHASE = 'Bordering images' satisfies GridPhase;
+
+  // Initialize phases and emit initial progressInfos
+  progressTracker.setTotal(RESIZE_PHASE, context.images.length);
+  onProgress?.(progressTracker.getProgressInfo());
+
+  progressTracker.setTotal(ROUNDING_PHASE, context.images.length);
+  onProgress?.(progressTracker.getProgressInfo());
+
+  progressTracker.setTotal(BORDERING_PHASE, context.images.length);
+  onProgress?.(progressTracker.getProgressInfo());
 
   // Get values from context and options
   const width = context.state.imageWidth;
@@ -27,6 +42,8 @@ export const prepareImages: MergeStep<Options, GridState> = async (context, opti
 
     // Resize image
     const resizedImage = await scaleImage(image, { width, height });
+    progressTracker.incrementProgress(RESIZE_PHASE);
+    onProgress?.(progressTracker.getProgressInfo());
 
     // Handle borders and corner rounding
     const borderedImage = await handleImageEdges(resizedImage, {
@@ -38,6 +55,12 @@ export const prepareImages: MergeStep<Options, GridState> = async (context, opti
       cornerRadius,
       finalizePipeline: true,
     });
+
+    progressTracker.incrementProgress(BORDERING_PHASE);
+    onProgress?.(progressTracker.getProgressInfo());
+
+    progressTracker.incrementProgress(ROUNDING_PHASE);
+    onProgress?.(progressTracker.getProgressInfo());
 
     // Update context
     context.images[i] = borderedImage;

@@ -3,7 +3,7 @@ import { MergeError } from '../../mergeError.js';
 import type { MergeStep } from '../../pipeline/mergePipeline.js';
 import { requireContextProp } from '../../pipeline/guards.js';
 
-export const applyComposites: MergeStep<any, any> = async (context, _options, _onProgress) => {
+export const applyComposites: MergeStep<any, any> = async (context, _options) => {
   requireContextProp(context, 'canvas');
 
   // Create final grid

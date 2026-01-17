@@ -2,14 +2,15 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 
 import { buildCommandFromSchema } from '../../utils/buildCommandFromSchema.js';
-import { gridMerge } from '../../../core/merges/grid/index.js';
+import { gridMerge, type GridPhase } from '../../../core/merges/grid/index.js';
 
 import { cliGridSchema } from '../../schemas/grid.js';
 
 import { loadImages } from '../../modules/loadImages.js';
-import { MergeProgressBar } from '../../modules/progressBar.js';
+import { MergeProgressBar, MergeProgressBarV2 } from '../../modules/progressBar.js';
 import { MessageRenderer, MESSAGES } from '../../../core/modules/messages.js';
 import { toErrorMessage } from '../../utils/toErrorMessage.js';
+import { objectKeys } from '../../../core/helpers.js';
 
 const gridCommand = buildCommandFromSchema(
   'grid',
@@ -82,7 +83,7 @@ const gridCommand = buildCommandFromSchema(
       flags: '--mcs, --max-caption-size <pt>',
       description: 'The maximum allowed caption size',
     },
-  }
+  },
 ).action(async (files, opts) => {
   const input = { files, ...opts };
 
@@ -117,22 +118,43 @@ const gridCommand = buildCommandFromSchema(
       ...cliOptions,
     };
 
-    // Get grid buffer
-    const buffer = await gridMerge(images, mergeOptions, (progressInfo) => {
-      if (!bar.progressBar.isActive) {
-        bar.startBar(progressInfo.phase);
-      } else {
-        bar.updateBar(progressInfo);
+    const progressBar = new MergeProgressBarV2<GridPhase>();
+
+    const buffer = await gridMerge(images, mergeOptions, (info) => {
+      switch (info.progressLifecycle) {
+        case 'start':
+          // Initialize bars with all phases
+          progressBar.initializeBar(info.phases);
+          break;
+
+        case 'update':
+          // Update all bars based on the completed count
+          progressBar.updateAll(info.phases);
+          break;
+
+        case 'complete':
+          // Stop all bars
+          progressBar.stopAllBars();
+          break;
       }
     });
 
+    // (progressInfo) => {
+    //   if (!bar.progressBar.isActive) {
+    //     bar.startBar(progressInfo.phase);
+    //   } else {
+    //     bar.updateBar(progressInfo);
+    //   }
+    // }
+
     // Write file and display success message
     await fs.writeFile(output, buffer);
-    bar.endBar();
+    // bar.endBar();
 
     const success = new MessageRenderer(MESSAGES.SUCCESS.OUTPUT, output);
     success.render();
   } catch (err) {
+    console.log(err);
     // End the progress bar
     bar.endBar();
 
