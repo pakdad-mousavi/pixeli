@@ -5,4 +5,4 @@ import { SUPPORTED_OUTPUT_FORMATS, type SupportedOutputFormat } from '../core/he
 export const outputFileValidator = z.string().refine((outputPath) => {
   const extension = path.extname(outputPath).replace('.', '');
   return SUPPORTED_OUTPUT_FORMATS.includes(extension as SupportedOutputFormat);
-}, '--output image format is invalid');
+}, 'output image format is invalid');
