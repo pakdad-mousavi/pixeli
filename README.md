@@ -51,6 +51,7 @@ The tool currently supports four main layout modes: ***Grid***, ***Masonry*** (h
     * [All Supported Input Formats](#all-supported-input-formats)
     * [All Supported Output Formats](#all-supported-output-formats)
     * [Pixel Limits](#pixel-limits)
+    * [Error Handling](#error-handling)
     * [Colors and Transparency](#colors-and-transparency)
         * [CLI](#cli)
         * [Library](#library)
@@ -470,6 +471,26 @@ Generating extremely large images significantly reduces speed, and may also lead
 | **GIF**                      | `.gif`               | **65,536 × 65,536 px**                               | -                                                                                                  |
 | **BMP**                      | `.bmp`               | **32,767×32,767 or ~2,147,483,647×2,147,483,647 px** | Depends on version/fields.                                                                         |
 | **TIFF**                     | `.tif`, `.tiff`      | **4,294,967,295 × 4,294,967,295 px** (theoretical)   | Very large; may be limited by software or memory.                                                  |
+
+### Error Handling
+All errors produced by this library are instances of the `MergeError` class, which extends the `Error` class.
+
+In addition to the inherited `message` property, the `MergeError` class also has a `context` object parameter attached to it, where there is a `type` and an optional `cause` property. Consider the following:
+
+```typescript
+throw new MergeError("Some error has occurred", {
+  type: 'internal',
+  cause: 'helper "trimmedMedian" failed'
+});
+```
+
+The `cause` property is only used when an internal error has occurred, meaning that there is something wrong with the API.
+
+The `type` property can be one of the following:
+- `validation`: One of the options provided to the merge function is incorrect or is required but not provided.
+- `image`: An invalid, corrupt, or empty image input list has been provided.
+- `internal`: An error with the interal library. Should not occur.
+
 
 ### Colors and Transparency
 
