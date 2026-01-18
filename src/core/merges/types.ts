@@ -99,11 +99,11 @@ export interface MasonryMergeOptions extends BaseMergeOptions {
   vAlign?: 'top' | 'middle' | 'bottom' | 'justified';
 }
 
-interface TemplateMergeOptions extends BaseMergeOptions {
+export interface TemplateMergeOptions extends BaseMergeOptions {
   template: Template;
 }
 
-interface CollageMergeOptions extends Omit<BaseMergeOptions, 'gap'> {
+export interface CollageMergeOptions extends Omit<BaseMergeOptions, 'gap'> {
   /** Width of each image cell in pixels, uses the median image width if undefined. */
   imageWidth?: number | undefined;
 
@@ -128,6 +128,32 @@ interface CollageMergeOptions extends Omit<BaseMergeOptions, 'gap'> {
    * For example, a value of `10` will result in a random degree being picked from `-10` to `+10` degrees. */
   rotationRange?: number;
 }
+
+export type MergeTypeOptions =
+  | {
+      /** Use the grid layout engine. */
+      type: 'grid';
+      /** Options specific to grid merges. */
+      options: GridMergeOptions;
+    }
+  | {
+      /** Use the masonry layout engine. */
+      type: 'masonry';
+      /** Options specific to masonry merges. */
+      options: MasonryMergeOptions;
+    }
+  | {
+      /** Use the template-based merge engine. */
+      type: 'template';
+      /** Options specific to template merges. */
+      options: TemplateMergeOptions;
+    }
+  | {
+      /** Use the free-form collage merge engine. */
+      type: 'collage';
+      /** Options specific to collage merges. */
+      options: CollageMergeOptions;
+    };
 
 export type GridMerge = MergeCommand<GridMergeOptions>;
 
