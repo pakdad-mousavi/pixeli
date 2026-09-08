@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Onest:wght@100..900&display=swap');
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Onest';
+  --font-serif: 'IBM Plex Serif';
+
+  --color-beige: #d0c5b0;
+  --color-gold: #f8d36f;
+  --color-rust: #7e6221;
+}
+
+body {
+  @apply bg-zinc-50 dark:bg-mist-900 dark:text-gray-200 duration-300;
+}
+
+.router-link-active {
+  @apply text-zinc-100 bg-rust dark:bg-gold dark:text-black;
+}
+
+.router-link-active svg {
+  @apply stroke-zinc-100 dark:stroke-black;
+}
