@@ -39,25 +39,25 @@ const mergePages = [
   >
     <div class="flex w-full h-full p-4">
       <div
-        class="min-w-80 bg-zinc-100 dark:bg-mist-900 rounded-xl overflow-hidden border border-gold/40 duration-300 transition-colors"
+        class="fixed z-100 min-w-80 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-gold/40 duration-300 transition-colors"
       >
         <div
           class="mb-4 bg-gold/5 p-4 border-b border-gold/40 text-rust dark:text-gold flex gap-x-2 items-center duration-300 transition-colors"
         >
-          <SidebarIcon class="stroke-rust size-5"></SidebarIcon>
+          <SidebarIcon class="stroke-rust dark:stroke-zinc-100 size-5"></SidebarIcon>
           <span class="uppercase font-serif font-semibold text-zinc-700 dark:text-zinc-100">PIXELI</span>
         </div>
-        <h2 class="text-xs px-4 font-light uppercase tracking-widest dark:text-gold">Files and Folders</h2>
+        <h2 class="text-xs px-4 font-light uppercase tracking-widest text-black dark:text-gold">Files and Folders</h2>
         <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">
           <RouterLink
             to="/"
             class="flex items-center gap-x-4 font-semibold px-2 py-2.5 rounded-md duration-150 hover:bg-zinc-200 dark:hover:bg-mist-800"
           >
-            <UploadIcon class="stroke-rust dark:stroke-beige size-5.5 duration-150"></UploadIcon>
+            <UploadIcon class="stroke-rust dark:stroke-beige size-5.5 duration-150 stroke-2"></UploadIcon>
             <span class="duration-150">Upload Folders</span>
           </RouterLink>
         </div>
-        <h2 class="text-xs px-4 font-light uppercase tracking-widest dark:text-gold">Merge Modes</h2>
+        <h2 class="text-xs px-4 font-light uppercase tracking-widest text-black dark:text-gold">Merge Modes</h2>
         <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">
           <RouterLink
             :to="page.link"

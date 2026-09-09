@@ -13,7 +13,7 @@
 }
 
 body {
-  @apply bg-zinc-50 dark:bg-mist-900 dark:text-gray-200 duration-300;
+  @apply bg-zinc-100 dark:bg-mist-900 dark:text-gray-200 duration-300;
 }
 
 .router-link-active {
