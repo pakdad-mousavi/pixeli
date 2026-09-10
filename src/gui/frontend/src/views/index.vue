@@ -119,11 +119,11 @@ const handleDrop = async (e: DragEvent) => {
         </div>
       </div>
 
-      <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 w-full pb-4">
+      <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 w-full pb-4 relative">
         <TransitionGroup name="list">
           <div
             v-for="(file, index) in fileStore.files"
-            :key="index"
+            :key="file.name + file.type + file.size + file.lastModified"
             class="bg-white dark:bg-mist-800 p-2 rounded-lg flex items-center gap-4 border border-zinc-200 dark:border-mist-700 relative group hover:bg-rose-950/10 hover:border-rose-500 duration-150 cursor-pointer"
             :style="`transition-delay: ${index * 0.01}s`"
             @click="fileStore.removeFile(index)"
