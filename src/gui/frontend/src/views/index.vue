@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // ICONS
+import FileUpload from '@/components/icons/FileUpload.vue';
 import UploadIcon from '@/components/icons/Upload.vue';
 import XIcon from '@/components/icons/X.vue';
 
@@ -15,12 +16,12 @@ const fileStore = useFilesStore();
 
 const isDraggingOver = ref(false);
 
-const onFileChange = (e: Event) => {
+const onFileChange = async (e: Event) => {
   const target = e.target as HTMLInputElement;
   const files = target?.files;
 
   if (files && files.length > 0) {
-    fileStore.addFiles(files);
+    await fileStore.addFiles(files);
   }
 };
 
@@ -128,7 +129,16 @@ const handleDrop = async (e: DragEvent) => {
             :style="`transition-delay: ${index * 0.01}s`"
             @click="fileStore.removeFile(index)"
           >
-            <img :src="fileStore.thumbnails[index]" :alt="file.name" class="w-16 aspect-square object-cover rounded-md border" />
+            <img
+              v-if="fileStore.thumbnails[index]"
+              :src="fileStore.thumbnails[index]"
+              :alt="file.name"
+              class="w-16 aspect-square object-cover rounded-md border"
+            />
+            <div v-else class="size-16 aspect-square flex justify-center items-center relative">
+              <div class="absolute size-10 rounded-full bg-rust/50 dark:bg-gold/30 blur-xl"></div>
+              <FileUpload class="size-10 stroke-rust dark:stroke-gold"></FileUpload>
+            </div>
             <div class="flex flex-col w-full font-serif">
               <div class="flex items-center gap-x-4">
                 <span class="line-clamp-1 font-medium mr-auto">{{ file.name }}</span>
@@ -139,12 +149,24 @@ const handleDrop = async (e: DragEvent) => {
                 </div>
               </div>
               <div class="flex items-center text-sm my-2 text-zinc-600 dark:text-zinc-400 font-sans">
-                <span class="flex-1">Uploading...</span>
+                <span class="flex-1">
+                  {{ fileStore.uploadProgresses[index] === 100 ? 'Uploaded - ' : 'Uploading...' }}
+                  {{ fileStore.uploadProgresses[index] }}%
+                </span>
                 <span> {{ formatBytes(file.size, 0) }}</span>
               </div>
-              <div class="h-2 rounded-full w-full bg-linear-to-r from-gold to-rust to-175% relative">
-                <div class="ml-auto h-full rounded-r-full bg-zinc-200 dark:bg-mist-600 w-1/4 relative z-10"></div>
-                <div class="absolute inset-0 bg-gold/50 blur-sm"></div>
+              <div
+                class="h-2 rounded-full w-full bg-linear-to-r from-gold to-rust to-175% relative duration-50"
+                :class="{ 'from-emerald-500! to-emerald-800!': fileStore.uploadProgresses[index] === 100 }"
+              >
+                <div
+                  class="ml-auto h-full rounded-r-full bg-zinc-200 dark:bg-mist-600 relative z-10 w-0"
+                  :style="`width: ${100 - fileStore.uploadProgresses[index]!}% !important`"
+                ></div>
+                <div
+                  class="absolute inset-0 bg-gold/50 blur-sm"
+                  :class="{ 'bg-emerald-500/50!': fileStore.uploadProgresses[index] === 100 }"
+                ></div>
               </div>
             </div>
           </div>
