@@ -2,12 +2,14 @@ import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { bodyLimit } from 'hono/body-limit';
+import { saveFile } from './utils/writeFile.js';
+import { HonoResponse } from './utils/HonoResponse.js';
 
 const app = new Hono();
 app.use(cors());
 
 app.post(
-  '/upload',
+  '/file',
   bodyLimit({
     maxSize: 1000 * 1024 * 1024,
   }),
@@ -19,13 +21,33 @@ app.post(
       return c.text('File is required', 400);
     }
 
-    return c.json({
-      name: file.name,
-      size: file.size,
-      type: file.type,
-    });
+    const writeResult = await saveFile(file);
+    let response;
+    if (writeResult.success) {
+      response = new HonoResponse({
+        success: writeResult.success,
+        message: `Successfully uploaded ${file.name}.`,
+        payload: {
+          path: writeResult.path,
+        },
+      });
+    } else {
+      response = new HonoResponse({
+        success: writeResult.success,
+        message: `Could not upload ${file.name}.`,
+        payload: {
+          error: writeResult.error,
+        },
+      });
+    }
+
+    return c.json(response);
   },
 );
+
+app.delete('/file', (c) => {
+  return c.json({ success: true });
+});
 
 serve(
   {

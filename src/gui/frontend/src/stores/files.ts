@@ -27,7 +27,7 @@ export const useFilesStore = defineStore('files', {
         formData.set('file', file);
         const index = this.uploadProgresses.length - 1;
         currentRequestBatch.push(
-          progressFetch('POST', 'http://localhost:3000/upload', formData, (progress) => {
+          progressFetch('POST', 'http://localhost:3000/file', formData, (progress) => {
             this.uploadProgresses.splice(index, 1, progress);
             console.log('Image at ' + index, progress);
           }),
