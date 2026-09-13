@@ -7,6 +7,7 @@ import gridCommand from './commands/grid/index.js';
 import masonryCommand from './commands/masonry/index.js';
 import templateCommand from './commands/template/index.js';
 import collageCommand from './commands/collage/index.js';
+import projectCommand from './commands/project/index.js';
 
 import pkg from '../../package.json' with { type: 'json' };
 
@@ -21,6 +22,7 @@ program.addCommand(gridCommand);
 program.addCommand(masonryCommand);
 program.addCommand(templateCommand);
 program.addCommand(collageCommand);
+program.addCommand(projectCommand);
 
 configureCommandErrors(program);
 
