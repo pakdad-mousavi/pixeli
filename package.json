@@ -35,16 +35,20 @@
     "image-merge"
   ],
   "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc",
+    "dev:cli": "tsc --watch",
+    "dev:frontend": "npm run dev -w frontend",
+    "build": "tsc && npm run build -w frontend",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "cli": "node ./dist/cli/index.js"
   },
   "dependencies": {
+    "@hono/node-server": "^2.1.1",
     "chalk": "^5.6.2",
     "cli-progress": "^3.12.0",
     "commander": "^14.0.2",
+    "hono": "^4.13.7",
     "sharp": "^0.34.5",
     "zod": "^4.1.13"
   },
@@ -61,5 +65,8 @@
     "esbuild@0.27.2": true,
     "fsevents@2.3.3": true,
     "sharp@0.34.5": true
-  }
+  },
+  "workspaces": [
+    "src/cli/commands/project/frontend"
+  ]
 }
