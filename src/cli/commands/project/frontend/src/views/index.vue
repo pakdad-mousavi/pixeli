@@ -8,8 +8,9 @@ import XIcon from '@/components/icons/X.vue';
 import { useFilesStore } from '@/stores/files';
 import { formatBytes } from '@/utils/formatBytes';
 import { traverseFileTree } from '@/utils/traverseFileTree';
+import { useFetch } from '@vueuse/core';
 
-import { ref, useTemplateRef } from 'vue';
+import { onMounted, ref, useTemplateRef } from 'vue';
 
 const fileInput = useTemplateRef('fileInput');
 const fileStore = useFilesStore();
@@ -53,6 +54,8 @@ const handleDrop = async (e: DragEvent) => {
   fileInput.value.dispatchEvent(new Event('change'));
   isDraggingOver.value = false;
 };
+
+const {} = useFetch('/scan');
 </script>
 
 <template>
@@ -60,10 +63,10 @@ const handleDrop = async (e: DragEvent) => {
     <!-- IMAGE UPLOAD -->
     <div class="w-[calc(100%-40rem)] p-4">
       <div class="mb-4 flex flex-col justify-center">
-        <h1 class="font-semibold text-3xl mb-2">Upload Images</h1>
-        <p class="font-light">Upload your images below to get started. You can also upload a folder.</p>
+        <h1 class="font-semibold text-3xl mb-2">Image Selection</h1>
+        <p class="font-light">Add, remove or edit the images you want to merge.</p>
       </div>
-      <div
+      <!-- <div
         class="relative cursor-pointer group mb-4"
         @click="fileInput?.click()"
         @dragover="
@@ -97,7 +100,6 @@ const handleDrop = async (e: DragEvent) => {
               'bg-gold/10 dark:bg-gold/10': isDraggingOver,
             }"
           >
-            <!-- <div v-if="isDropzoneMinified" class="absolute -top-4 w-full h-4 bg-amber-200"></div> -->
             <div class="flex flex-col text-center items-center">
               <div class="relative">
                 <UploadIcon class="stroke-rust dark:stroke-gold size-16"></UploadIcon>
@@ -118,7 +120,7 @@ const handleDrop = async (e: DragEvent) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 w-full pb-4 relative">
         <TransitionGroup name="list">
