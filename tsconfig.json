@@ -28,5 +28,5 @@
     "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["dist", "**/*.test.ts"]
+  "exclude": ["dist", "**/*.test.ts", "**/*/frontend"]
 }
