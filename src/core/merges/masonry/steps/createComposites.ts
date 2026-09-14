@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import sharp, { type Sharp, type OverlayOptions, type Metadata, type ResizeOptions } from 'sharp';
 import type { MasonryState } from '../index.js';
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import { requireState } from '../../../pipeline/guards.js';
@@ -13,10 +13,10 @@ import { handleImageEdges } from '../../../utils/images/handleImageEdges.js';
 // |----------------------|
 const computeOffset = async (
   flow: 'horizontal' | 'vertical',
-  lane: sharp.Sharp[],
+  lane: Sharp[],
   canvasSize: number,
   gap: number,
-  alignment: 'justified' | ('left' | 'top') | ('middle' | 'center') | ('right' | 'bottom')
+  alignment: 'justified' | ('left' | 'top') | ('middle' | 'center') | ('right' | 'bottom'),
 ) => {
   // Calculate total row width
   let totalLaneLength = gap * (lane.length + 1);
@@ -48,9 +48,9 @@ const computeOffset = async (
 // |-----------------------------------------------------|
 interface AxisStrategy {
   flow: 'horizontal' | 'vertical';
-  getPrimary(meta: sharp.Metadata): number;
-  getCross(meta: sharp.Metadata): number;
-  crop(meta: sharp.Metadata, overflow: number): sharp.ResizeOptions;
+  getPrimary(meta: Metadata): number;
+  getCross(meta: Metadata): number;
+  crop(meta: Metadata, overflow: number): ResizeOptions;
 }
 
 const horizontalAxis: AxisStrategy = {
@@ -120,7 +120,7 @@ export const createComposites: MergeStep<Options, MasonryState> = async (context
   const primaryCanvasSize = options.flow === 'horizontal' ? options.canvasWidth : options.canvasHeight;
 
   // Define initial variables
-  const composites: sharp.OverlayOptions[] = [];
+  const composites: OverlayOptions[] = [];
 
   let primaryCursor = options.gap;
   let crossCursor = options.gap;

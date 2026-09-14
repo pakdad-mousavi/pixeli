@@ -1,6 +1,6 @@
-import sharp from 'sharp';
+import sharp, { type SharpInput } from 'sharp';
 
-export const isActualImage = async (input: sharp.SharpInput): Promise<{ isImage: boolean; reason: string }> => {
+export const isActualImage = async (input: SharpInput): Promise<{ isImage: boolean; reason: string }> => {
   try {
     // Try to get metadata
     const metadata = await sharp(input).metadata();

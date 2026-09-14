@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import sharp, { type Sharp } from 'sharp';
 
 interface ScaleImageOptions {
   width?: number;
@@ -6,7 +6,7 @@ interface ScaleImageOptions {
   finalizePipeline?: boolean;
 }
 
-export const scaleImage = async (image: sharp.Sharp, { width, height, finalizePipeline = false }: ScaleImageOptions) => {
+export const scaleImage = async (image: Sharp, { width, height, finalizePipeline = false }: ScaleImageOptions) => {
   // Ensure either width or height is provided
   if (width == undefined && height === undefined) {
     throw new Error('You must provide either width or height.');
@@ -35,7 +35,7 @@ export const scaleImage = async (image: sharp.Sharp, { width, height, finalizePi
   // Only finalize changes in the image pipeline if needed
   if (finalizePipeline) {
     // Use jpg format if possible for less memory usage
-    const formatPipe = meta.channels === 4 ? resizedImage.toFormat('png') : resizedImage.toFormat('jpg');
+    const formatPipe = meta.channels === 4 ? resizedImage.toFormat('png') : resizedImage.toFormat('jpeg');
     const buffer = await formatPipe.toBuffer();
     return sharp(buffer);
   } else {

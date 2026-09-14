@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import sharp, { type Sharp } from 'sharp';
 import type { RGBA } from '../colors/types.js';
 
 interface Options {
@@ -17,8 +17,8 @@ interface Options {
 }
 
 export const addImageBorder = async (
-  image: sharp.Sharp,
-  { borderWidth, borderHeight, borderColor, imageWidth, imageHeight, cornerRadius = 0, finalizePipeline = false }: Options
+  image: Sharp,
+  { borderWidth, borderHeight, borderColor, imageWidth, imageHeight, cornerRadius = 0, finalizePipeline = false }: Options,
 ) => {
   // Only add borders to an image if needed
   if (borderWidth <= 0) return image;

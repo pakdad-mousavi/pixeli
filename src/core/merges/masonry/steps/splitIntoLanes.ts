@@ -1,4 +1,4 @@
-import type sharp from 'sharp';
+import type { Sharp } from 'sharp';
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { MasonryState } from '../index.js';
 import { requireNonEmptyArray } from '../../../pipeline/guards.js';
@@ -32,7 +32,7 @@ export const splitIntoLanes: MergeStep<Options, MasonryState> = async (context, 
   context.state.lanes = lanes;
 };
 
-const splitIntoRows = async (images: sharp.Sharp[], canvasWidth: number, gap: number, hAlign: HorizontalOptions['hAlign']) => {
+const splitIntoRows = async (images: Sharp[], canvasWidth: number, gap: number, hAlign: HorizontalOptions['hAlign']) => {
   const rows = [];
   let currentRow = [];
   let currentWidth = gap; // initial leading gap
@@ -72,7 +72,7 @@ const splitIntoRows = async (images: sharp.Sharp[], canvasWidth: number, gap: nu
   return rows;
 };
 
-const splitIntoColumns = async (images: sharp.Sharp[], canvasHeight: number, gap: number, vAlign: VerticalOptions['vAlign']) => {
+const splitIntoColumns = async (images: Sharp[], canvasHeight: number, gap: number, vAlign: VerticalOptions['vAlign']) => {
   const cols = [];
   const currentCol = [];
   let currentHeight = gap;

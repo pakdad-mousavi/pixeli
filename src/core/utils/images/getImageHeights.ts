@@ -1,6 +1,6 @@
-import sharp from 'sharp';
+import { type Sharp } from 'sharp';
 
-export const getImageHeights = async (images: sharp.Sharp[]) => {
+export const getImageHeights = async (images: Sharp[]) => {
   const heights = [];
 
   for (const image of images) {

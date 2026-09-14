@@ -13,7 +13,8 @@ export const exportCanvas: MergeStep<Options, any> = async (context, options, _o
   requireContextProp(context, 'canvas');
 
   try {
-    return await context.canvas.toFormat(options.format).toBuffer();
+    const format = options.format === 'jpg' ? 'jpeg' : options.format;
+    return await context.canvas.toFormat(format).toBuffer();
   } catch (err) {
     // Assuming ALL sharp errors are instances of the Error object
     const sharpError = err as Error;

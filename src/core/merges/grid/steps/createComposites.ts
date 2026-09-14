@@ -1,7 +1,7 @@
 import type { MergeStep } from '../../../pipeline/mergePipeline.js';
 import type { GridState } from '../index.js';
 import { requireNonEmptyArray, requireState } from '../../../pipeline/guards.js';
-import sharp from 'sharp';
+import { type Sharp } from 'sharp';
 import { createSvgTextBuffer } from '../../../utils/svg/createSvgTextBuffer.js';
 import type { RGBA } from '../../../utils/colors/types.js';
 import { rgbaToHex } from '../../../utils/colors/rgbaToHex.js';
@@ -35,7 +35,7 @@ export const createComposites: MergeStep<Options, GridState> = async (context, o
       const index = row * options.columns + col;
       if (index >= context.images.length) break;
 
-      const image = context.images[index] as sharp.Sharp;
+      const image = context.images[index] as Sharp;
 
       composites.push({
         input: await image.toBuffer(),

@@ -2,7 +2,7 @@ import { MergePipeline } from '../../pipeline/mergePipeline.js';
 import { masonrySchema } from '../../schemas/masonry.js';
 
 import type { MasonryMerge } from '../types.js';
-import type sharp from 'sharp';
+import { type Sharp } from 'sharp';
 
 import { loadImages } from '../shared-steps/loadImages.js';
 import { createCanvas } from '../shared-steps/createCanvas.js';
@@ -23,7 +23,7 @@ export interface MasonryState {
   canvasHeight: number;
 
   // Layout
-  lanes: sharp.Sharp[][];
+  lanes: Sharp[][];
 }
 
 export const masonryMerge: MasonryMerge = async (imageInputs, options, onProgress) => {
@@ -39,7 +39,7 @@ export const masonryMerge: MasonryMerge = async (imageInputs, options, onProgres
     masonrySchema,
     options,
     context,
-    onProgress
+    onProgress,
   );
 
   masonryMergePipeline

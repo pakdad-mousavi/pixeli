@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import sharp, { type Sharp, type OverlayOptions } from 'sharp';
 import type { RGBA } from '../colors/types.js';
 import { rgbaToHex } from '../colors/rgbaToHex.js';
 
@@ -18,8 +18,8 @@ interface Options {
 }
 
 export const handleImageEdges = async (
-  image: sharp.Sharp,
-  { borderWidth, borderHeight, borderColor, imageWidth, imageHeight, cornerRadius = 0, finalizePipeline = false }: Options
+  image: Sharp,
+  { borderWidth, borderHeight, borderColor, imageWidth, imageHeight, cornerRadius = 0, finalizePipeline = false }: Options,
 ) => {
   // Only change the image's edges if needed
   if (borderWidth <= 0 && borderHeight <= 0 && cornerRadius <= 0) return image;
@@ -41,14 +41,14 @@ export const handleImageEdges = async (
   const border = `
     <svg width="${imageWidth}" height="${imageHeight}">
       <rect x="${effectiveBorderWidth / 2}" y="${effectiveBorderHeight / 2}" width="${
-    imageWidth - effectiveBorderWidth
-  }" height="${imageHeight - effectiveBorderHeight}" rx="${cornerRadius}" ry="${cornerRadius}" 
+        imageWidth - effectiveBorderWidth
+      }" height="${imageHeight - effectiveBorderHeight}" rx="${cornerRadius}" ry="${cornerRadius}" 
         fill="none" stroke="${rgbaToHex(borderColor)}" stroke-width="${Math.max(effectiveBorderWidth, effectiveBorderHeight)}"/>
     </svg>
   `;
 
   // Only pick needed composites
-  const composites: sharp.OverlayOptions[] = [];
+  const composites: OverlayOptions[] = [];
 
   if (cornerRadius > 0) {
     composites.push({ input: Buffer.from(mask), blend: 'dest-in', top: 0, left: 0 });

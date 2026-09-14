@@ -1,9 +1,9 @@
-import type sharp from 'sharp';
+import { type SharpInput } from 'sharp';
 import type { MergeTypeOptions } from '../merges/types.js';
 
 export type MergeJob = {
   /** File paths to all of the images to load. */
-  inputs: sharp.SharpInput[];
+  inputs: SharpInput[];
 } & MergeTypeOptions;
 
 export interface BatchOptions {

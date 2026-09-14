@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import { type Sharp, type SharpInput, type OverlayOptions } from 'sharp';
 import type z from 'zod';
 import { MergeError } from '../mergeError.js';
 import { MESSAGES } from '../modules/messages.js';
@@ -6,11 +6,11 @@ import type { OnProgress, ProgressInfo } from '../merges/types.js';
 import chalk from 'chalk';
 
 export interface MergeContext<TState> {
-  inputs: sharp.SharpInput[];
+  inputs: SharpInput[];
   progressInfo: ProgressInfo;
-  images: sharp.Sharp[];
-  canvas?: sharp.Sharp;
-  composites: sharp.OverlayOptions[];
+  images: Sharp[];
+  canvas?: Sharp;
+  composites: OverlayOptions[];
   captions: string[];
   state: TState;
 }
@@ -18,7 +18,7 @@ export interface MergeContext<TState> {
 export type MergeStep<TOptions, TState> = (
   context: MergeContext<TState>,
   options: TOptions,
-  onProgress?: OnProgress
+  onProgress?: OnProgress,
 ) => Promise<Buffer | void>;
 
 /**
@@ -56,13 +56,17 @@ export class MergePipeline<TOptions, TState> {
   private optionsCounter = 0;
   private stateCounter = 0;
 
-  constructor(private options: TOptions, private context: MergeContext<TState>, private onProgress?: OnProgress) {}
+  constructor(
+    private options: TOptions,
+    private context: MergeContext<TState>,
+    private onProgress?: OnProgress,
+  ) {}
 
   static async createPipeline<TZodSchema extends z.ZodType, TOptions, TState>(
     schema: TZodSchema,
     options: TOptions,
     context: Omit<MergeContext<TState>, 'progressInfo'>,
-    onProgress?: OnProgress
+    onProgress?: OnProgress,
   ) {
     const { success, data, error } = await schema.safeParseAsync(options);
     if (success) {

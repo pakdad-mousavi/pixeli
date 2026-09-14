@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import type { SharpInput } from 'sharp';
 import type { Color } from '../utils/colors/types.js';
 import type { Template } from './template/types.js';
 
@@ -25,7 +25,7 @@ export type OnProgress = (info: ProgressInfo) => void;
  * @returns A Promise resolving to the merged image buffer
  */
 interface MergeCommand<T> {
-  (imageInputs: sharp.SharpInput[], options: T, onProgress?: OnProgress): Promise<Buffer>;
+  (imageInputs: SharpInput[], options: T, onProgress?: OnProgress): Promise<Buffer>;
 }
 
 interface BaseMergeOptions {

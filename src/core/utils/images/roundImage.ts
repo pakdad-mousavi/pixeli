@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import sharp, { type Sharp } from 'sharp';
 
 interface RoundImageOptions {
   width: number;
@@ -8,8 +8,8 @@ interface RoundImageOptions {
 }
 
 export const roundImage = async (
-  image: sharp.Sharp,
-  { width, height, cornerRadius, finalizePipeline = false }: RoundImageOptions
+  image: Sharp,
+  { width, height, cornerRadius, finalizePipeline = false }: RoundImageOptions,
 ) => {
   // Skip if the cornerRadius = zero
   if (!cornerRadius) return image;

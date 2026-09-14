@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import sharp, { type Sharp } from 'sharp';
 
 interface RoundImagesOptions {
   width: number;
@@ -6,7 +6,7 @@ interface RoundImagesOptions {
   cornerRadius: number;
 }
 
-export const roundImages = async (images: sharp.Sharp[], { width, height, cornerRadius }: RoundImagesOptions) => {
+export const roundImages = async (images: Sharp[], { width, height, cornerRadius }: RoundImagesOptions) => {
   // Skip if the cornerRadius = zero
   if (!cornerRadius) return images;
 
@@ -24,6 +24,6 @@ export const roundImages = async (images: sharp.Sharp[], { width, height, corner
         .png()
         .toBuffer();
       return sharp(buff);
-    })
+    }),
   );
 };
