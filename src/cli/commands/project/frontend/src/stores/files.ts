@@ -1,70 +1,68 @@
-import { progressFetch } from '@/utils/progressFetch';
 import { defineStore } from 'pinia';
+import type { AppType } from '../../../backend';
+import { hc } from 'hono/client';
+
+const client = hc<AppType>('/');
+
+interface Image {
+  size: number;
+  path: string;
+  width: number;
+  height: number;
+}
 
 export const useFilesStore = defineStore('files', {
   state: () => ({
-    files: [] as File[],
-    thumbnails: [] as (string | null)[],
-    uploadProgresses: [] as number[],
+    images: new Map() as Map<string, Image>,
+    ignoredPaths: [] as string[],
+    isLoaded: false,
   }),
 
+  getters: {
+    formattedImages: (state) => {
+      const formatted = [];
+      for (const image of state.images.values()) {
+        const { path, ...rest } = image;
+        const sections = path.replace(/\\/g, '/').split('/');
+        const name = sections.pop()!;
+        formatted.push({
+          sections,
+          name,
+          path,
+          ...rest,
+        });
+      }
+
+      return formatted;
+    },
+  },
+
   actions: {
-    async addFiles(files: File[] | FileList) {
-      const currentRequestBatch = [];
+    async loadFiles() {
+      this.isLoaded = false;
+      try {
+        const res = await client.fs.$get();
+        const data = await res.json();
+        console.log(data);
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i]!;
-        this.files.push(file);
-
-        if (file.size / 1024 / 1024 / 5 < 5) {
-          this.thumbnails.push(URL.createObjectURL(file));
-        } else {
-          this.thumbnails.push(null);
+        for (const image of data.images) {
+          this.images.set(image.path, image);
         }
-        this.uploadProgresses.push(0);
+        this.ignoredPaths = data.ignoredPaths;
 
-        const formData = new FormData();
-        formData.set('file', file);
-        const index = this.uploadProgresses.length - 1;
-        currentRequestBatch.push(
-          progressFetch('POST', 'http://localhost:3000/file', formData, (progress) => {
-            this.uploadProgresses.splice(index, 1, progress);
-            console.log('Image at ' + index, progress);
-          }),
-        );
-
-        const isLastItem = i === files.length - 1;
-        if (currentRequestBatch.length - (1 % 5) === 0 || isLastItem) {
-          await Promise.all(currentRequestBatch);
-          currentRequestBatch.length = 0;
-        }
+        this.isLoaded = true;
+      } catch (e) {
+        console.log('xxx');
+        console.log(e);
       }
     },
 
-    removeFile(idx: number) {
-      if (idx < 0 || idx === this.files.length) {
-        throw Error('Attempting to remove file at invalid index');
-      }
-
-      this.files.splice(idx, 1);
-      this.uploadProgresses.splice(idx, 1);
-      const fileUrl = this.thumbnails.splice(idx, 1)[0];
-
-      if (fileUrl) {
-        URL.revokeObjectURL(fileUrl);
-      }
+    removeFile(path: string) {
+      this.images.delete(path);
     },
 
     removeAllFiles() {
-      this.files.length = 0;
-      this.thumbnails.length = 0;
-      this.uploadProgresses.length = 0;
-
-      for (const fileUrl of this.thumbnails) {
-        if (fileUrl) {
-          URL.revokeObjectURL(fileUrl);
-        }
-      }
+      this.images.clear();
     },
   },
 });

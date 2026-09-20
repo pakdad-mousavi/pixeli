@@ -23,3 +23,7 @@ body {
 .router-link-active svg {
   @apply stroke-zinc-100 dark:stroke-black;
 }
+
+.compact {
+  @apply flex-col;
+}
