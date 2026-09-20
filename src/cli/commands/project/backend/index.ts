@@ -14,13 +14,13 @@ const app = new Hono();
 export const serveApp = (projectDir: string, cb: ((info: AddressInfo) => void) | null = null, port: number | null = null) => {
   // Serve frontend build
   app.use('/*', serveStatic({ root: path.join(__dirname, 'dist') }));
-  app.get('*', serveStatic({ path: path.join(__dirname, 'dist/index.html') }));
 
   // Routes
-  app.route('/fs', routers.createFsRouter(projectDir));
-  app.route('/merge', routers.createMergeRouter(projectDir));
+  const routes = app
+    .route('/fs', routers.createFsRouter(projectDir))
+    .route('/merge', routers.createMergeRouter(projectDir));
 
-  // Serve
+  app.get('*', serveStatic({ path: path.join(__dirname, 'dist/index.html') }));
 
   // For specific ports (not required during build)
   if (port) {
@@ -31,10 +31,11 @@ export const serveApp = (projectDir: string, cb: ((info: AddressInfo) => void) |
       },
       (info) => (cb ? cb(info) : console.log(`Project running at: http://localhost:${info.port}`)),
     );
-    return;
+    return routes;
   }
 
   serve(app, (info) => (cb ? cb(info) : console.log(`Project running at: http://localhost:${port}`)));
+  return routes;
 };
 
-export type AppType = typeof app;
+export type AppType = ReturnType<typeof serveApp>;
