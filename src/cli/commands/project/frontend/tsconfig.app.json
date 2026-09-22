@@ -6,6 +6,8 @@
     // Extra safety for array and object lookups, but may have false positives.
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
+    "target": "es2025",
+    "lib": ["ESNext", "DOM"],
 
     // Path mapping for cleaner imports.
     "paths": {
