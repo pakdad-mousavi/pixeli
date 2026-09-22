@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import type { AppType } from '../../../backend';
 import { hc } from 'hono/client';
+import type { FileSettings } from '@/types';
+import { toRaw } from 'vue';
 
 const client = hc<AppType>('/');
 
@@ -13,7 +15,9 @@ interface Image {
 
 export const useFilesStore = defineStore('files', {
   state: () => ({
-    images: new Map() as Map<string, Image>,
+    settings: {} as FileSettings,
+    paths: new Set<string>(),
+    images: new Map<string, Image>(),
     ignoredPaths: [] as string[],
     isLoaded: false,
   }),
@@ -38,27 +42,34 @@ export const useFilesStore = defineStore('files', {
   },
 
   actions: {
-    async loadFiles() {
+    updateSettings(settings: FileSettings) {
+      this.settings = settings;
+    },
+
+    async loadFiles(settings?: FileSettings) {
+      // Update settings if needed and begin loading
+      if (settings) this.updateSettings(settings);
       this.isLoaded = false;
+
       try {
         const res = await client.fs.$get();
         const data = await res.json();
-        console.log(data);
 
-        for (const image of data.images) {
-          this.images.set(image.path, image);
-        }
+        const newPaths = new Set(data.images.map((i) => i.path));
+        console.log(newPaths);
+        const pathsToRemove = toRaw(this.paths).difference(newPaths);
+        console.log('weijhgfwekjhgfwhk');
+
+        data.images.forEach((image) => this.images.set(image.path, image));
+        pathsToRemove.forEach((path) => this.images.delete(path));
+
+        this.paths = newPaths;
         this.ignoredPaths = data.ignoredPaths;
-
         this.isLoaded = true;
       } catch (e) {
         console.log('xxx');
         console.log(e);
       }
-    },
-
-    removeFile(path: string) {
-      this.images.delete(path);
     },
 
     removeAllFiles() {

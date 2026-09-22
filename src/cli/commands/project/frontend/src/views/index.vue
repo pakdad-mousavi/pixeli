@@ -2,14 +2,15 @@
 import UploadIcon from '@/components/icons/Upload.vue';
 
 import { breakpointsTailwind, useBreakpoints, useStorage } from '@vueuse/core';
-import { onMounted, ref, useTemplateRef, watch } from 'vue';
-import { AutoLayout, createLayout } from 'animejs';
+import { onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
+import { animate, AutoLayout, createLayout } from 'animejs';
 
 import FileCard from '@/components/core/FileCard.vue';
 import Toggle from '@/components/fields/Toggle.vue';
 
 import { useFilesStore } from '@/stores/files';
 import { STORAGE_KEYS } from '@/utils/storageKeys';
+import type { FileSettings } from '@/types';
 
 // -------------------------------------------------------
 
@@ -24,6 +25,11 @@ const fileStore = useFilesStore();
 const isCompact = ref(false);
 
 const state = useStorage(STORAGE_KEYS.STATE.KEY, STORAGE_KEYS.STATE.DEFAULT);
+
+const fileSettings = reactive({
+  recursive: true,
+  sort: 'alphabetical' as 'alphabetical' | 'last modified' | 'size',
+}) satisfies FileSettings;
 
 // Toggle compact layout with animejs
 const toggleCompactLayout = () => {
@@ -44,6 +50,26 @@ const toggleCompactLayout = () => {
   });
 };
 
+const onEnter = (el: Element, done: () => void) => {
+  animate(el, {
+    y: [20, 0],
+    opacity: [0, 1],
+    duration: 300,
+    ease: 'inOut',
+    onComplete: done,
+  });
+};
+
+const onLeave = (el: Element, done: () => void) => {
+  animate(el, {
+    y: [0, -20],
+    opacity: [1, 0],
+    duration: 300,
+    ease: 'inOut',
+    onComplete: done,
+  });
+};
+
 // Toggle compact layout in sizes sm or smaller
 watch(smOrSmaller, (isSmOrSmaller) => {
   if (isSmOrSmaller) isCompact.value = true;
@@ -52,15 +78,26 @@ watch(smOrSmaller, (isSmOrSmaller) => {
 // Handle layout changes
 watch(isCompact, toggleCompactLayout);
 
+// Handle image loading
+watch(fileSettings, async (newSettings) => {
+  await fileStore.loadFiles(newSettings);
+});
+
 onMounted(async () => {
   if (!selectionContainer.value) return;
   selectionLayout.value = createLayout(selectionContainer.value, {
     children: '.filecard, .filecard > *, .breadcrumbs',
     duration: 300,
+    enterFrom: {
+      transform: 'translateY(100px) scale(.25)',
+      opacity: 0,
+      duration: 350, // Applied to the elements entering the layout
+      ease: 'out(3)', // Applied to the elements entering the layout
+    },
   });
 
   if (!fileStore.isLoaded) {
-    await fileStore.loadFiles();
+    await fileStore.loadFiles(fileSettings);
   }
 });
 </script>
@@ -80,7 +117,15 @@ onMounted(async () => {
         <p class="font-light">Add, remove or edit the images you want to merge.</p>
       </div>
       <div class="grid lg:grid-cols-2 2xl:grid-cols-3 gap-4 w-full pb-4 relative" ref="selection-container">
-        <FileCard v-for="image in fileStore.formattedImages" :image="image" :is-compact="isCompact" class="filecard"></FileCard>
+        <TransitionGroup :css="false" @enter="onEnter" @leave="onLeave">
+          <FileCard
+            v-for="image in fileStore.formattedImages"
+            :key="image.path"
+            :image="image"
+            :is-compact="isCompact"
+            class="filecard"
+          ></FileCard>
+        </TransitionGroup>
       </div>
     </div>
 
@@ -92,22 +137,19 @@ onMounted(async () => {
         class="mb-4 bg-gold/5 p-4 border-b border-rust/40 dark:border-gold/40 text-rust dark:text-gold flex gap-x-2 items-center duration-300 transition-colors"
       >
         <UploadIcon class="stroke-rust dark:stroke-zinc-100 size-5.5 stroke-2"></UploadIcon>
-        <span class="font-serif font-medium text-zinc-700 dark:text-zinc-100">Upload Settings</span>
+        <span class="font-serif font-medium text-zinc-700 dark:text-zinc-100">Image Selection</span>
       </div>
       <ul>
         <li v-if="!smOrSmaller">
           <h2 class="text-xs px-4 my-4 font-light uppercase tracking-widest dark:text-beige">Display Mode</h2>
           <Toggle :options="['normal', 'compact']" v-model="isCompact"></Toggle>
         </li>
-        <!-- <li>
-          <h2 class="text-xs px-4 my-4 font-light uppercase tracking-widest dark:text-beige">Settings</h2>
-          <span class="px-4 mb-4 text-rust dark:text-beige text-sm">Load files recursively</span>
-          <Toggle :options="['Normal', 'Compact']" :togglee="isCompact" :cb="toggleCompactLayout"></Toggle>
-          <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm"></div>
-          <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">134</div>
-          <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">134</div>
-        </li> -->
+        <li>
+          <h2 class="text-xs px-4 my-4 font-light uppercase tracking-widest dark:text-beige">Load Recursively</h2>
+          <Toggle :options="['non-recursive', 'recursive']" v-model="fileSettings.recursive"></Toggle>
+        </li>
       </ul>
     </div>
   </div>
 </template>
+<!-- <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm"></div> -->
