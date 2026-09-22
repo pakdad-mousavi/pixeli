@@ -48,11 +48,11 @@ const mergePages = [
 
 <template>
   <div
-    class="h-svh w-full dark:bg-mist-900 dark:bg-[repeating-radial-gradient(var(--color-zinc-800)_0,var(--color-zinc-800)_1px,transparent_1px,transparent_100%)] bg-[repeating-radial-gradient(var(--color-zinc-200)_0,var(--color-zinc-200)_1px,transparent_1px,transparent_100%)] bg-size-[20px_20px] duration-300 transition-colors"
+    class="h-svh w-full mx-auto dark:bg-mist-900 dark:bg-[repeating-radial-gradient(var(--color-zinc-800)_0,var(--color-zinc-800)_1px,transparent_1px,transparent_100%)] bg-[repeating-radial-gradient(var(--color-zinc-200)_0,var(--color-zinc-200)_1px,transparent_1px,transparent_100%)] bg-size-[20px_20px] duration-300 transition-colors"
   >
     <div class="flex w-full h-full p-4">
       <div
-        class="fixed z-1000 w-72 min-w-72 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-rust/40 dark:border-gold/40 duration-500"
+        class="fixed z-1000 w-72 min-w-72 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-rust/40 dark:border-gold/40 duration-300"
         :class="{ 'w-16! min-w-16!': !state.isSidebarOpen }"
       >
         <div
@@ -109,7 +109,7 @@ const mergePages = [
 
   <Transition>
     <div
-      class="bg-zinc-300/50 backdrop-blur-sm fixed inset-0 z-900"
+      class="bg-zinc-300/50 dark:bg-mist-900/50 backdrop-blur-sm fixed inset-0 z-900"
       v-if="state.isSidebarOpen && lgOrSmaller"
       @click="state.isSidebarOpen = !state.isSidebarOpen"
     ></div>
@@ -119,7 +119,7 @@ const mergePages = [
 <style scoped>
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s ease;
 }
 
 .v-enter-from,

@@ -41,25 +41,22 @@ const toggleCompactLayout = () => {
     for (const card of Array.from(cards)) {
       card.classList.toggle('compact');
     }
-
-    isCompact.value = !isCompact.value;
   });
 };
 
 // Toggle compact layout in sizes sm or smaller
 watch(smOrSmaller, (isSmOrSmaller) => {
-  if (isSmOrSmaller) {
-    if (!isCompact.value) {
-      toggleCompactLayout();
-    }
-  }
+  if (isSmOrSmaller) isCompact.value = true;
 });
+
+// Handle layout changes
+watch(isCompact, toggleCompactLayout);
 
 onMounted(async () => {
   if (!selectionContainer.value) return;
   selectionLayout.value = createLayout(selectionContainer.value, {
     children: '.filecard, .filecard > *, .breadcrumbs',
-    duration: 400,
+    duration: 300,
   });
 
   if (!fileStore.isLoaded) {
@@ -72,7 +69,7 @@ onMounted(async () => {
   <div class="h-full w-full flex">
     <!-- IMAGE LISTING -->
     <div
-      class="p-4 max-w-7xl duration-500"
+      class="p-4 duration-300"
       :class="{
         'w-[calc(100%-22rem)] ml-16': !state.isSidebarOpen || !xlOrGreater,
         'w-[calc(100%-36rem)] ml-72': state.isSidebarOpen && xlOrGreater,
@@ -97,17 +94,20 @@ onMounted(async () => {
         <UploadIcon class="stroke-rust dark:stroke-zinc-100 size-5.5 stroke-2"></UploadIcon>
         <span class="font-serif font-medium text-zinc-700 dark:text-zinc-100">Upload Settings</span>
       </div>
-      <div v-if="!smOrSmaller">
-        <h2 class="text-xs px-4 font-light uppercase tracking-widest dark:text-gold">Display Mode</h2>
-        <Toggle :options="['Normal', 'Compact']" :togglee="isCompact" :cb="toggleCompactLayout"></Toggle>
-      </div>
-      <!-- <div>
-        <h2 class="text-xs px-4 font-light uppercase tracking-widest dark:text-gold">Settings</h2>
-        <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">Load files recursively</div>
-        <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">134</div>
-        <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">134</div>
-        <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">134</div>
-      </div> -->
+      <ul>
+        <li v-if="!smOrSmaller">
+          <h2 class="text-xs px-4 my-4 font-light uppercase tracking-widest dark:text-beige">Display Mode</h2>
+          <Toggle :options="['normal', 'compact']" v-model="isCompact"></Toggle>
+        </li>
+        <!-- <li>
+          <h2 class="text-xs px-4 my-4 font-light uppercase tracking-widest dark:text-beige">Settings</h2>
+          <span class="px-4 mb-4 text-rust dark:text-beige text-sm">Load files recursively</span>
+          <Toggle :options="['Normal', 'Compact']" :togglee="isCompact" :cb="toggleCompactLayout"></Toggle>
+          <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm"></div>
+          <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">134</div>
+          <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">134</div>
+        </li> -->
+      </ul>
     </div>
   </div>
 </template>

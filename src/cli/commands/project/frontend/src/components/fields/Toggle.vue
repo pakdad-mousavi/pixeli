@@ -1,32 +1,28 @@
 <script setup lang="ts">
-defineProps<{
+import { capitalize } from '@/utils/capitalize';
+
+const props = defineProps<{
   options: [string, string];
-  togglee: boolean;
-  cb: () => void;
 }>();
+
+const modelValue = defineModel<boolean>({ required: true });
 </script>
 
 <template>
-  <div
-    class="flex gap-x-2 items-center bg-gray-100 dark:bg-mist-800 border border-rust/40 dark:border-gold/40 rounded-lg m-4 p-1.5 text-sm relative"
-  >
-    <div
-      class="absolute left-1.5 h-[calc(100%-16px)] w-[calc(50%-6px)] bg-white dark:bg-mist-900 rounded-lg border border-rust dark:border-gold duration-500"
-      :class="{ 'translate-x-0': !togglee, 'translate-x-full': togglee }"
-    ></div>
-    <div
-      class="w-1/2 text-center py-2 relative z-10 cursor-pointer rounded-lg duration-150"
-      :class="{ 'hover:bg-gray-200 dark:hover:bg-mist-700': togglee }"
-      @click="() => (togglee ? cb() : '')"
+  <ul class="flex gap-4 text-sm px-4">
+    <li
+      class="w-1/2 p-2 bg-gray-100 dark:bg-mist-950 border border-rust/40 dark:border-gold/40 rounded-lg dark:text-beige text-center duration-300 cursor-pointer"
+      :class="{ 'bg-gold/30! border-rust! dark:border-gold! text-rust! dark:text-white!': !modelValue }"
+      @click="modelValue = false"
     >
-      {{ options[0] }}
-    </div>
-    <div
-      class="w-1/2 text-center py-2 relative z-10 cursor-pointer rounded-lg duration-150"
-      :class="{ 'hover:bg-gray-200 dark:hover:bg-mist-700': !togglee }"
-      @click="() => (!togglee ? cb() : '')"
+      {{ capitalize(options[0]) }}
+    </li>
+    <li
+      class="w-1/2 p-2 bg-gray-100 dark:bg-mist-950 border border-rust/40 dark:border-gold/40 rounded-lg dark:text-beige text-center duration-300 cursor-pointer"
+      :class="{ 'bg-gold/30! border-rust! dark:border-gold! text-rust! dark:text-white!': modelValue }"
+      @click="modelValue = true"
     >
-      {{ options[1] }}
-    </div>
-  </div>
+      {{ capitalize(options[1]) }}
+    </li>
+  </ul>
 </template>
