@@ -1,22 +1,26 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterLink, RouterView } from "vue-router";
 
 // ICONS
-import GridIcon from './components/icons/Grid.vue';
-import MasonryIcon from './components/icons/Masonry.vue';
-import CollageIcon from './components/icons/Collage.vue';
-import TemplateIcon from './components/icons/Template.vue';
-import UploadIcon from './components/icons/Upload.vue';
-import SidebarIcon from './components/icons/Sidebar.vue';
+import GridIcon from "./components/icons/Grid.vue";
+import MasonryIcon from "./components/icons/Masonry.vue";
+import CollageIcon from "./components/icons/Collage.vue";
+import TemplateIcon from "./components/icons/Template.vue";
+import UploadIcon from "./components/icons/Upload.vue";
+import SidebarIcon from "./components/icons/Sidebar.vue";
 
-import { breakpointsTailwind, useBreakpoints, useStorage } from '@vueuse/core';
-import { STORAGE_KEYS } from './utils/storageKeys.ts';
-import { watch } from 'vue';
+import { breakpointsTailwind, useBreakpoints, useDark, useStorage, useToggle } from "@vueuse/core";
+import { STORAGE_KEYS } from "./utils/storageKeys.ts";
+import { watch } from "vue";
+import Moon from "./components/icons/Moon.vue";
+import Sun from "./components/icons/Sun.vue";
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
-const lgOrSmaller = breakpoints.smallerOrEqual('xl');
+const lgOrSmaller = breakpoints.smallerOrEqual("xl");
 
 const state = useStorage(STORAGE_KEYS.STATE.KEY, STORAGE_KEYS.STATE.DEFAULT);
+const isDark = useDark();
+const toggleDark = useToggle(isDark);
 
 watch(lgOrSmaller, (isLgOrSmaller) => {
   state.value.isSidebarOpen = !isLgOrSmaller;
@@ -24,24 +28,24 @@ watch(lgOrSmaller, (isLgOrSmaller) => {
 
 const mergePages = [
   {
-    link: '/grid',
+    link: "/grid",
     icon: GridIcon,
-    label: 'Grid Merge',
+    label: "Grid Merge",
   },
   {
-    link: '/masonry',
+    link: "/masonry",
     icon: MasonryIcon,
-    label: 'Masonry Merge',
+    label: "Masonry Merge",
   },
   {
-    link: '/collage',
+    link: "/collage",
     icon: CollageIcon,
-    label: 'Collage Merge',
+    label: "Collage Merge",
   },
   {
-    link: '/template',
+    link: "/template",
     icon: TemplateIcon,
-    label: 'Template Merge',
+    label: "Template Merge",
   },
 ];
 </script>
@@ -52,7 +56,7 @@ const mergePages = [
   >
     <div class="flex w-full h-full p-4">
       <div
-        class="fixed z-1000 w-72 min-w-72 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-rust/40 dark:border-gold/40 duration-300"
+        class="fixed z-1000 w-72 min-w-72 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-rust/40 dark:border-gold/40 duration-300 flex flex-col"
         :class="{ 'w-16! min-w-16!': !state.isSidebarOpen }"
       >
         <div
@@ -91,7 +95,7 @@ const mergePages = [
           Merge Modes
         </h2>
         <hr class="mx-4 border-rust/40 dark:border-gold/40" :class="{ hidden: state.isSidebarOpen }" />
-        <div class="p-4 flex flex-col gap-4 text-rust dark:text-beige text-sm" :class="{ 'gap-2': state.isSidebarOpen }">
+        <div class="p-4 flex flex-col gap-4 text-rust dark:text-beige text-sm mb-auto" :class="{ 'gap-2': state.isSidebarOpen }">
           <RouterLink
             :to="page.link"
             class="flex items-center justify-center gap-x-4 font-semibold size-8 rounded-md duration-150 hover:bg-zinc-200 dark:hover:bg-mist-800"
@@ -101,6 +105,23 @@ const mergePages = [
             <component :is="page.icon" class="size-5.5 min-w-5.5 duration-150 stroke-rust dark:stroke-beige"></component>
             <span class="line-clamp-1 duration-150" :class="{ hidden: !state.isSidebarOpen }">{{ page.label }}</span>
           </RouterLink>
+        </div>
+        <div
+          class="mx-4 flex items-center gap-x-2 text-sm font-serif justify-center border border-rust dark:border-beige rounded-md group cursor-pointer"
+          :class="{ 'px-4 py-1.5 mb-2': state.isSidebarOpen, 'aspect-square w-8 mb-4': !state.isSidebarOpen }"
+          @click="toggleDark(!isDark)"
+        >
+          <Moon v-if="!isDark" class="stroke-rust dark:stroke-beige size-5 min-w-5 group-hover:-rotate-30 duration-300"></Moon>
+          <Sun v-else class="stroke-rust dark:stroke-beige size-5 min-w-5 group-hover:rotate-45 duration-300"></Sun>
+
+          <p v-if="!isDark" class="text-rust dark:text-beige line-clamp-1" :class="{ hidden: !state.isSidebarOpen }">
+            Too Bright? Go Dark.
+          </p>
+          <p v-else class="text-rust dark:text-beige line-clamp-1" :class="{ hidden: !state.isSidebarOpen }">Too Dark? Go Light.</p>
+        </div>
+        <div class="text-xs text-rust dark:text-beige text-center my-2 w-full line-clamp-1" :class="{ hidden: !state.isSidebarOpen }">
+          <hr class="mx-4 py-1 border-rust/40 dark:border-gold/40" />
+          Pixeli CLI. All Rights Reserved.
         </div>
       </div>
       <RouterView />
