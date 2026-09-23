@@ -2,7 +2,7 @@
 import UploadIcon from '@/components/icons/Upload.vue';
 
 import { breakpointsTailwind, useBreakpoints, useStorage } from '@vueuse/core';
-import { onMounted, reactive, ref, useTemplateRef, watch } from 'vue';
+import { onMounted, ref, useTemplateRef, watch } from 'vue';
 import { animate, AutoLayout, createLayout } from 'animejs';
 
 import FileCard from '@/components/core/FileCard.vue';
@@ -10,7 +10,6 @@ import Toggle from '@/components/fields/Toggle.vue';
 
 import { useFilesStore } from '@/stores/files';
 import { STORAGE_KEYS } from '@/utils/storageKeys';
-import type { FileSettings } from '@/types';
 
 // -------------------------------------------------------
 
@@ -26,10 +25,7 @@ const isCompact = ref(false);
 
 const state = useStorage(STORAGE_KEYS.STATE.KEY, STORAGE_KEYS.STATE.DEFAULT);
 
-const fileSettings = reactive({
-  recursive: true,
-  sort: 'alphabetical' as 'alphabetical' | 'last modified' | 'size',
-}) satisfies FileSettings;
+const recursive = ref(true);
 
 // Toggle compact layout with animejs
 const toggleCompactLayout = () => {
@@ -51,6 +47,10 @@ const toggleCompactLayout = () => {
 };
 
 const onEnter = (el: Element, done: () => void) => {
+  if (isCompact.value) {
+    el.classList.toggle('compact');
+  }
+
   animate(el, {
     y: [20, 0],
     opacity: [0, 1],
@@ -79,8 +79,8 @@ watch(smOrSmaller, (isSmOrSmaller) => {
 watch(isCompact, toggleCompactLayout);
 
 // Handle image loading
-watch(fileSettings, async (newSettings) => {
-  await fileStore.loadFiles(newSettings);
+watch(recursive, async (isRecursive) => {
+  await fileStore.loadFiles(isRecursive);
 });
 
 onMounted(async () => {
@@ -97,7 +97,7 @@ onMounted(async () => {
   });
 
   if (!fileStore.isLoaded) {
-    await fileStore.loadFiles(fileSettings);
+    await fileStore.loadFiles(recursive.value);
   }
 });
 </script>
@@ -131,7 +131,7 @@ onMounted(async () => {
 
     <!-- UPLOAD SETTINGS (FIXED TO RIGHT) -->
     <div
-      class="fixed right-4 z-100 min-w-72 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-rust/40 dark:border-gold/40 duration-300 transition-colors"
+      class="fixed right-4 z-100 min-w-72 max-w-72 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-rust/40 dark:border-gold/40 duration-300 transition-colors"
     >
       <div
         class="mb-4 bg-gold/5 p-4 border-b border-rust/40 dark:border-gold/40 text-rust dark:text-gold flex gap-x-2 items-center duration-300 transition-colors"
@@ -146,7 +146,7 @@ onMounted(async () => {
         </li>
         <li>
           <h2 class="text-xs px-4 my-4 font-light uppercase tracking-widest dark:text-beige">Load Recursively</h2>
-          <Toggle :options="['non-recursive', 'recursive']" v-model="fileSettings.recursive"></Toggle>
+          <Toggle :options="['non-recursive', 'recursive']" v-model="recursive"></Toggle>
         </li>
       </ul>
     </div>
