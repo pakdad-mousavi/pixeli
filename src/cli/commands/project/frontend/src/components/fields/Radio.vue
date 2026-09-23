@@ -21,24 +21,5 @@ const model = defineModel<string>({ required: true });
       <input type="radio" name="options" :id="option" :value="option" hidden v-model="model" />
       <label :for="option" class="block w-full p-2 rounded-lg cursor-pointer">{{ capitalize(option) }}</label>
     </li>
-    <!-- <div
-      class="absolute left-1.5 h-[calc(100%-16px)] w-[calc(50%-6px)] bg-white dark:bg-mist-900 rounded-lg border border-rust dark:border-gold"
-      :class="{ 'translate-x-0': !togglee, 'translate-x-full': togglee }"
-      :style="`transition-duration: ${duration || 500}ms;`"
-    ></div>
-    <div
-      class="w-1/2 text-center py-2 relative z-10 cursor-pointer rounded-lg duration-150"
-      :class="{ 'hover:bg-gray-200 dark:hover:bg-mist-800': togglee }"
-      @click="() => (togglee ? cb() : '')"
-    >
-      {{ options[0] }}
-    </div>
-    <div
-      class="w-1/2 text-center py-2 relative z-10 cursor-pointer rounded-lg duration-150"
-      :class="{ 'hover:bg-gray-200 dark:hover:bg-mist-800': !togglee }"
-      @click="() => (!togglee ? cb() : '')"
-    >
-      {{ options[1] }}
-    </div> -->
   </ul>
 </template>
