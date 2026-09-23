@@ -1,3 +1,3 @@
 // BARREL FILE
-export { createFsRouter } from './fs.router.js';
-export { createMergeRouter } from './merge.router.js';
+export { createFsRouter } from './fs.js';
+export { createMergeRouter } from './merge.js';
