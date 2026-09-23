@@ -11,14 +11,14 @@ const modelValue = defineModel<boolean>({ required: true });
 <template>
   <ul class="flex gap-4 text-sm px-4">
     <li
-      class="w-1/2 p-2 bg-gray-100 dark:bg-mist-950 border border-rust/40 dark:border-gold/40 rounded-lg dark:text-beige text-center duration-300 cursor-pointer"
+      class="w-1/2 p-2 bg-gray-100 dark:bg-mist-950 border border-rust/40 dark:border-gold/40 rounded-lg dark:text-beige text-center duration-300 cursor-pointer hover:border-rust dark:hover:border-gold"
       :class="{ 'bg-gold/30! border-rust! dark:border-gold! text-rust! dark:text-white!': !modelValue }"
       @click="modelValue = false"
     >
       {{ capitalize(options[0]) }}
     </li>
     <li
-      class="w-1/2 p-2 bg-gray-100 dark:bg-mist-950 border border-rust/40 dark:border-gold/40 rounded-lg dark:text-beige text-center duration-300 cursor-pointer"
+      class="w-1/2 p-2 bg-gray-100 dark:bg-mist-950 border border-rust/40 dark:border-gold/40 rounded-lg dark:text-beige text-center duration-300 cursor-pointer hover:border-rust dark:hover:border-gold"
       :class="{ 'bg-gold/30! border-rust! dark:border-gold! text-rust! dark:text-white!': modelValue }"
       @click="modelValue = true"
     >
