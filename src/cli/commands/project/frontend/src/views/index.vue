@@ -1,61 +1,55 @@
 <script setup lang="ts">
-import UploadIcon from '@/components/icons/Upload.vue';
+import UploadIcon from "@/components/icons/Upload.vue";
 
-import { breakpointsTailwind, useBreakpoints, useStorage } from '@vueuse/core';
-import { onMounted, ref, useTemplateRef, watch } from 'vue';
-import { animate, AutoLayout, createLayout } from 'animejs';
+import { breakpointsTailwind, onClickOutside, useBreakpoints, useStorage, type Fn } from "@vueuse/core";
+import { onMounted, ref, useTemplateRef, watch } from "vue";
+import { animate, AutoLayout, createLayout, type DOMTarget } from "animejs";
 
-import FileCard from '@/components/core/FileCard.vue';
-import Toggle from '@/components/fields/Toggle.vue';
+import FileCard from "@/components/core/FileCard.vue";
+import Toggle from "@/components/fields/Toggle.vue";
 
-import { useFilesStore } from '@/stores/files';
-import { STORAGE_KEYS } from '@/utils/storageKeys';
+import { useFilesStore } from "@/stores/files";
+import { STORAGE_KEYS } from "@/utils/storageKeys";
 
 // -------------------------------------------------------
 
-const breakpoints = useBreakpoints(breakpointsTailwind);
-const smOrSmaller = breakpoints.smallerOrEqual('sm');
-const xlOrGreater = breakpoints.greaterOrEqual('xl');
-
-const selectionContainer = useTemplateRef('selection-container');
-const selectionLayout = ref<AutoLayout | null>(null);
-
 const fileStore = useFilesStore();
-const isCompact = ref(false);
-
 const state = useStorage(STORAGE_KEYS.STATE.KEY, STORAGE_KEYS.STATE.DEFAULT);
 
+const breakpoints = useBreakpoints(breakpointsTailwind);
+const smOrSmaller = breakpoints.smallerOrEqual("sm");
+const xlOrGreater = breakpoints.greaterOrEqual("xl");
+
+const selectionContainer = useTemplateRef("selection-container");
+const selectionLayout = ref<AutoLayout | null>(null);
+let stop: null | Fn = null;
+
+const lastSelectedImageIdx = ref(-1);
 const recursive = ref(true);
 
+const updateGrid = (root: DOMTarget) => {
+  root.classList.toggle("compact");
+  root.classList.toggle("lg:grid-cols-2");
+  root.classList.toggle("2xl:grid-cols-3");
+  root.classList.toggle("md:grid-cols-2");
+  root.classList.toggle("lg:grid-cols-4");
+  root.classList.toggle("2xl:grid-cols-6");
+};
+
 // Toggle compact layout with animejs
-const toggleCompactLayout = () => {
-  const container = selectionContainer.value;
-  if (!selectionLayout.value || !container || !container.children) return;
-
-  selectionLayout.value.update(({ root }) => {
-    root.classList.toggle('lg:grid-cols-2');
-    root.classList.toggle('2xl:grid-cols-3');
-    root.classList.toggle('md:grid-cols-2');
-    root.classList.toggle('lg:grid-cols-4');
-    root.classList.toggle('2xl:grid-cols-6');
-
-    const cards = container.children;
-    for (const card of Array.from(cards)) {
-      card.classList.toggle('compact');
-    }
+const toggleCompactLayout = (instant?: boolean) => {
+  if (!selectionLayout.value) return;
+  selectionLayout.value.update(({ root }) => updateGrid(root), {
+    duration: instant ? 0 : 300,
   });
 };
 
 const onEnter = (el: Element, done: () => void) => {
-  if (isCompact.value) {
-    el.classList.toggle('compact');
-  }
-
   animate(el, {
     y: [20, 0],
     opacity: [0, 1],
     duration: 300,
-    ease: 'inOut',
+    ease: "inOut",
     onComplete: done,
   });
 };
@@ -65,18 +59,46 @@ const onLeave = (el: Element, done: () => void) => {
     y: [0, -20],
     opacity: [1, 0],
     duration: 300,
-    ease: 'inOut',
+    ease: "inOut",
     onComplete: done,
   });
 };
 
+const selectImage = (e: MouseEvent, imageDetails: { imagePath: string; index: number }) => {
+  if (!stop) {
+    stop = onClickOutside(selectionContainer.value, () => {
+      lastSelectedImageIdx.value = -1;
+      if (stop) stop();
+      stop = null;
+    });
+  }
+
+  if (!e.shiftKey || lastSelectedImageIdx.value < 0) {
+    fileStore.toggleImageSelection(imageDetails.imagePath);
+    lastSelectedImageIdx.value = imageDetails.index;
+    return;
+  }
+
+  const increment = imageDetails.index > lastSelectedImageIdx.value ? 1 : -1;
+
+  for (let i = lastSelectedImageIdx.value + increment; i !== imageDetails.index + increment; i += increment) {
+    const image = fileStore.formattedImages[i]!;
+    fileStore.toggleImageSelection(image.path);
+  }
+
+  lastSelectedImageIdx.value = imageDetails.index;
+};
+
 // Toggle compact layout in sizes sm or smaller
 watch(smOrSmaller, (isSmOrSmaller) => {
-  if (isSmOrSmaller) isCompact.value = true;
+  if (isSmOrSmaller) state.value.isCompact = true;
 });
 
 // Handle layout changes
-watch(isCompact, toggleCompactLayout);
+watch(
+  () => state.value.isCompact,
+  () => toggleCompactLayout(),
+);
 
 // Handle image loading
 watch(recursive, async (isRecursive) => {
@@ -86,15 +108,19 @@ watch(recursive, async (isRecursive) => {
 onMounted(async () => {
   if (!selectionContainer.value) return;
   selectionLayout.value = createLayout(selectionContainer.value, {
-    children: '.filecard, .filecard > *, .breadcrumbs',
+    children: ".filecard, .filecard > *, .breadcrumbs",
     duration: 300,
     enterFrom: {
-      transform: 'translateY(100px) scale(.25)',
+      transform: "translateY(100px) scale(.25)",
       opacity: 0,
       duration: 350, // Applied to the elements entering the layout
-      ease: 'out(3)', // Applied to the elements entering the layout
+      ease: "out(3)", // Applied to the elements entering the layout
     },
   });
+
+  if (state.value.isCompact) {
+    toggleCompactLayout(true);
+  }
 
   if (!fileStore.isLoaded) {
     await fileStore.loadFiles(recursive.value);
@@ -116,14 +142,23 @@ onMounted(async () => {
         <h1 class="font-semibold text-3xl mb-2">Image Selection</h1>
         <p class="font-light">Add, remove or edit the images you want to merge.</p>
       </div>
-      <div class="grid lg:grid-cols-2 2xl:grid-cols-3 gap-4 w-full pb-4 relative" ref="selection-container">
+      <div class="grid lg:grid-cols-2 2xl:grid-cols-3 gap-4 w-full pb-4 relative select-none" ref="selection-container">
         <TransitionGroup :css="false" @enter="onEnter" @leave="onLeave">
           <FileCard
-            v-for="image in fileStore.formattedImages"
+            v-for="(image, index) in fileStore.formattedImages"
             :key="image.path"
             :image="image"
-            :is-compact="isCompact"
+            :is-compact="state.isCompact"
+            :is-selected="fileStore.selected.has(image.path)"
             class="filecard"
+            :class="{ 'border-dashed border-rust!': lastSelectedImageIdx === index }"
+            @click="
+              (e: MouseEvent) =>
+                selectImage(e, {
+                  imagePath: image.path,
+                  index,
+                })
+            "
           ></FileCard>
         </TransitionGroup>
       </div>
@@ -142,7 +177,7 @@ onMounted(async () => {
       <ul>
         <li v-if="!smOrSmaller">
           <h2 class="text-xs px-4 my-4 font-light uppercase tracking-widest dark:text-beige">Display Mode</h2>
-          <Toggle :options="['normal', 'compact']" v-model="isCompact"></Toggle>
+          <Toggle :options="['normal', 'compact']" v-model="state.isCompact"></Toggle>
         </li>
         <li>
           <h2 class="text-xs px-4 my-4 font-light uppercase tracking-widest dark:text-beige">Load Recursively</h2>
@@ -152,4 +187,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<!-- <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm"></div> -->

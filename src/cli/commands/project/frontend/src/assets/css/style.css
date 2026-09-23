@@ -24,6 +24,6 @@ body {
   @apply stroke-zinc-100 dark:stroke-black;
 }
 
-.compact {
+.compact > .filecard {
   @apply flex-col;
 }

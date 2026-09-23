@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia';
-import type { AppType } from '../../../backend';
-import { hc } from 'hono/client';
-import { toRaw } from 'vue';
+import { defineStore } from "pinia";
+import type { AppType } from "../../../backend";
+import { hc } from "hono/client";
+import { toRaw } from "vue";
 
-const client = hc<AppType>('/');
+const client = hc<AppType>("/");
 
 interface Image {
   size: number;
@@ -12,12 +12,16 @@ interface Image {
   height: number;
 }
 
-export const useFilesStore = defineStore('files', {
+export const useFilesStore = defineStore("files", {
   state: () => ({
+    // LOADED STATE
     paths: new Set<string>(),
     images: new Map<string, Image>(),
     ignoredPaths: [] as string[],
     isLoaded: false,
+
+    // IMAGE SELECTION
+    selected: new Set<string>(),
   }),
 
   getters: {
@@ -25,7 +29,7 @@ export const useFilesStore = defineStore('files', {
       const formatted = [];
       for (const image of state.images.values()) {
         const { path, ...rest } = image;
-        const sections = path.replace(/\\/g, '/').split('/');
+        const sections = path.replace(/\\/g, "/").split("/");
         const name = sections.pop()!;
         formatted.push({
           sections,
@@ -60,19 +64,27 @@ export const useFilesStore = defineStore('files', {
         const pathsToRemove = toRaw(this.paths).difference(newPaths);
 
         data.images.forEach((image) => this.images.set(image.path, image));
-        pathsToRemove.forEach((path) => this.images.delete(path));
+        pathsToRemove.forEach((path) => {
+          this.images.delete(path);
+          this.selected.delete(path);
+        });
 
         this.paths = newPaths;
         this.ignoredPaths = data.ignoredPaths;
         this.isLoaded = true;
       } catch (e) {
-        console.log('xxx');
+        console.log("xxx");
         console.log(e);
       }
     },
 
     removeAllFiles() {
       this.images.clear();
+    },
+
+    toggleImageSelection(path: string) {
+      if (this.selected.has(path)) return this.selected.delete(path);
+      this.selected.add(path);
     },
   },
 });
