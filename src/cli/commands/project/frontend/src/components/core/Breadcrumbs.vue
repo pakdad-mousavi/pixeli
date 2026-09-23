@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Folder from '../icons/Folder.vue';
+import Folder from "../icons/Folder.vue";
 
 defineProps<{
   crumbs: string[];
@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex items-center text-xs gap-x-1 w-full breadcrumbs">
+  <div class="flex items-center text-xs gap-x-1 w-full breadcrumbs" :class="{ 'pr-6': !compact }">
     <Folder class="stroke-mist-800/60 dark:stroke-mist-400 size-3 stroke-2"></Folder>
     <div class="w-full">
       <div v-if="crumbs.length >= 3" class="text-zinc-500 dark:text-mist-500 flex items-center gap-x-1">
