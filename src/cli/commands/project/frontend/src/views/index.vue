@@ -183,6 +183,26 @@ onMounted(async () => {
           <h2 class="text-xs px-4 my-4 font-light uppercase tracking-widest dark:text-beige">Load Recursively</h2>
           <Toggle :options="['non-recursive', 'recursive']" v-model="recursive"></Toggle>
         </li>
+        <li class="px-4 py-8">
+          <hr class="border-rust/40 dark:border-gold/40" />
+        </li>
+        <li>
+          <h2 class="text-xs px-4 mb-4 font-light uppercase tracking-widest dark:text-beige">Image Selection</h2>
+          <ul class="flex flex-wrap gap-4 px-4 text-sm">
+            <li
+              class="w-full p-2 bg-gray-100 dark:bg-mist-950 border border-rust/40 dark:border-gold/40 rounded-lg dark:text-beige text-center duration-150 cursor-pointer hover:border-rust active:translate-y-0.5 dark:hover:border-gold"
+              @click="fileStore.selectAll()"
+            >
+              Select All
+            </li>
+            <li
+              class="w-full p-2 bg-gray-100 dark:bg-mist-950 border border-rust/40 dark:border-gold/40 rounded-lg dark:text-beige text-center duration-150 cursor-pointer hover:border-rust active:translate-y-0.5 dark:hover:border-gold"
+              @click="fileStore.deselectAll()"
+            >
+              Deselect All
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>

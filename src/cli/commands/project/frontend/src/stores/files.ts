@@ -44,6 +44,9 @@ export const useFilesStore = defineStore("files", {
   },
 
   actions: {
+    // ---------
+    //   FILES
+    // ---------
     async loadFiles(recursive: boolean) {
       // Update settings if needed and begin loading
       this.isLoaded = false;
@@ -82,9 +85,20 @@ export const useFilesStore = defineStore("files", {
       this.images.clear();
     },
 
+    // ---------------------
+    //    IMAGE SELECTION
+    // ---------------------
     toggleImageSelection(path: string) {
       if (this.selected.has(path)) return this.selected.delete(path);
       this.selected.add(path);
+    },
+
+    selectAll() {
+      this.paths.forEach((p) => this.selected.add(p));
+    },
+
+    deselectAll() {
+      this.selected.clear();
     },
   },
 });
