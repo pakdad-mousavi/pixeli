@@ -41,6 +41,18 @@ export const useFilesStore = defineStore("files", {
 
       return formatted;
     },
+
+    totalSelectedSize: (state) => {
+      let total = 0;
+      for (const path of state.selected.values()) {
+        const image = state.images.get(path);
+        if (!image) continue;
+
+        total += image.size;
+      }
+
+      return total;
+    },
   },
 
   actions: {

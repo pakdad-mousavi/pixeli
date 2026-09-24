@@ -10,6 +10,8 @@ import Toggle from "@/components/fields/Toggle.vue";
 
 import { useFilesStore } from "@/stores/files";
 import { STORAGE_KEYS } from "@/utils/storageKeys";
+import FileUpload from "@/components/icons/FileUpload.vue";
+import { formatBytes } from "@/utils/formatBytes";
 
 // -------------------------------------------------------
 
@@ -129,7 +131,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="h-full w-full flex">
+  <div class="h-full w-full flex relative">
     <!-- IMAGE LISTING -->
     <div
       class="p-4 duration-300"
@@ -166,7 +168,7 @@ onMounted(async () => {
 
     <!-- UPLOAD SETTINGS (FIXED TO RIGHT) -->
     <div
-      class="fixed right-4 z-100 min-w-72 max-w-72 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-rust/40 dark:border-gold/40 duration-300 transition-colors"
+      class="fixed right-4 z-100 min-w-72 max-w-72 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-rust/40 dark:border-gold/40 duration-300 transition-colors flex flex-col"
     >
       <div
         class="mb-4 bg-gold/5 p-4 border-b border-rust/40 dark:border-gold/40 text-rust dark:text-gold flex gap-x-2 items-center duration-300 transition-colors"
@@ -174,7 +176,7 @@ onMounted(async () => {
         <UploadIcon class="stroke-rust dark:stroke-zinc-100 size-5.5 stroke-2"></UploadIcon>
         <span class="font-serif font-medium text-zinc-700 dark:text-zinc-100">Image Selection</span>
       </div>
-      <ul>
+      <ul class="mb-auto">
         <li v-if="!smOrSmaller">
           <h2 class="text-xs px-4 my-4 font-light uppercase tracking-widest dark:text-beige">Display Mode</h2>
           <Toggle :options="['normal', 'compact']" v-model="state.isCompact"></Toggle>
@@ -204,6 +206,57 @@ onMounted(async () => {
           </ul>
         </li>
       </ul>
+
+      <hr class="border-rust/40 dark:border-gold/40 m-4" />
+      <div class="rounded-xl px-4 py-2 mx-4 mb-4 border border-rust dark:border-gold bg-gold/30 backdrop-blur-xl duration-300">
+        <div class="flex flex-col items-center w-full font-serif text-sm">
+          <div class="flex items-center gap-x-2">
+            <div class="flex items-center" :style="`margin-right: -${Math.min(16, fileStore.selected.size * 3)}px`">
+              <div
+                v-for="(path, index) in fileStore.selected.values()"
+                class="size-5 aspect-square rounded-sm overflow-hidden border-[0.5] border-rust dark:border-gold z-40 relative"
+                :class="{ hidden: index > 2, '-translate-x-1 z-30!': index === 1, '-translate-x-2 z-20!': index === 2 }"
+                :style="`transform: rotate(${Math.random() * 40 - 20}deg);`"
+              >
+                <img
+                  v-if="fileStore.images.get(path)!.size < 5 * 1024 * 1024"
+                  :src="`/fs/preview?path=${encodeURIComponent(path)}&size=128`"
+                  alt=""
+                  class="size-full object-cover"
+                />
+                <div
+                  v-else
+                  class="size-5 aspect-square rounded-sm flex justify-center items-center bg-light-gold dark:bg-rust"
+                  :style="`transform: rotate(${Math.random() * 40 - 20}deg);`"
+                >
+                  <FileUpload class="stroke-rust dark:stroke-gold w-4"></FileUpload>
+                </div>
+              </div>
+              <div
+                v-if="fileStore.selected.size > 3"
+                class="-translate-x-3 size-5 aspect-square rounded-sm border-[0.5] border-rust dark:border-gold z-10 relative flex justify-center items-center bg-light-gold dark:bg-rust"
+                :style="`transform: rotate(${Math.random() * 40 - 20}deg);`"
+              >
+                <FileUpload class="stroke-rust dark:stroke-gold w-4"></FileUpload>
+              </div>
+            </div>
+            <p :class="{ 'ml-2': fileStore.selected.size }">
+              {{ fileStore.selected.size > 0 ? fileStore.selected.size : "No" }} File(s) Selected
+            </p>
+          </div>
+          <hr class="border-rust dark:border-gold w-full mx-4 my-2" />
+          <p>Total Size: {{ formatBytes(fileStore.totalSelectedSize, 2) }}</p>
+        </div>
+      </div>
+
+      <div class="mx-4">
+        <button
+          class="w-full text-sm mb-4 p-2 bg-gray-100 dark:bg-mist-950 border border-rust/40 dark:border-gold/40 rounded-lg dark:text-beige text-center duration-150 cursor-pointer hover:border-rust active:translate-y-0.5 dark:hover:border-gold"
+          @click="$router.push('/grid')"
+        >
+          Continue
+        </button>
+      </div>
     </div>
   </div>
 </template>
