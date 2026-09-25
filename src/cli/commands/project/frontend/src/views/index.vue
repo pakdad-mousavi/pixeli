@@ -3,7 +3,7 @@ import UploadIcon from "@/components/icons/Upload.vue";
 
 import { breakpointsTailwind, onClickOutside, useBreakpoints, useStorage, type Fn } from "@vueuse/core";
 import { onMounted, ref, useTemplateRef, watch } from "vue";
-import { animate, AutoLayout, createLayout, type DOMTarget } from "animejs";
+import { animate, AutoLayout, createLayout } from "animejs";
 
 import FileCard from "@/components/core/FileCard.vue";
 import Toggle from "@/components/fields/Toggle.vue";
@@ -29,20 +29,25 @@ let stop: null | Fn = null;
 const lastSelectedImageIdx = ref(-1);
 const recursive = ref(true);
 
-const updateGrid = (root: DOMTarget) => {
-  root.classList.toggle("compact");
-  root.classList.toggle("lg:grid-cols-2");
-  root.classList.toggle("2xl:grid-cols-3");
-  root.classList.toggle("md:grid-cols-2");
-  root.classList.toggle("lg:grid-cols-4");
-  root.classList.toggle("2xl:grid-cols-6");
+const updateGrid = () => {
+  if (!selectionContainer.value) return;
+  selectionContainer.value.classList.toggle("compact");
+  selectionContainer.value.classList.toggle("lg:grid-cols-2");
+  selectionContainer.value.classList.toggle("2xl:grid-cols-3");
+  selectionContainer.value.classList.toggle("md:grid-cols-2");
+  selectionContainer.value.classList.toggle("lg:grid-cols-4");
+  selectionContainer.value.classList.toggle("2xl:grid-cols-6");
 };
 
 // Toggle compact layout with animejs
 const toggleCompactLayout = (instant?: boolean) => {
   if (!selectionLayout.value) return;
-  selectionLayout.value.update(({ root }) => updateGrid(root), {
-    duration: instant ? 0 : 300,
+  if (instant) {
+    return updateGrid();
+  }
+
+  selectionLayout.value.update(() => updateGrid(), {
+    duration: 300,
   });
 };
 
