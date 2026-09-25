@@ -64,7 +64,7 @@ export const useFilesStore = defineStore("files", {
       this.isLoaded = false;
 
       try {
-        const res = await client.fs.$get({
+        const res = await client.api.fs.$get({
           query: {
             recursive: `${recursive}`,
           },
