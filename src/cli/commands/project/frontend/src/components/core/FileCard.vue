@@ -80,7 +80,7 @@ onMounted(() => {
     <div class="min-w-max">
       <img
         v-if="image.size < 5 * 1024 * 1024"
-        :src="`/fs/preview?path=${encodeURIComponent(image.path)}`"
+        :src="`/api/fs/preview?path=${encodeURIComponent(image.path)}`"
         :alt="image.path"
         class="object-cover rounded-md border size-20"
       />

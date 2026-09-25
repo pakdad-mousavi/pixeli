@@ -17,6 +17,7 @@ export const serveApp = (projectDir: string, cb: ((info: AddressInfo) => void) |
 
   // Routes
   const routes = app
+    .basePath('/api')
     .route('/fs', routers.createFsRouter(projectDir))
     .route('/merge', routers.createMergeRouter(projectDir));
 

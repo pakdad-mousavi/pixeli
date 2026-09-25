@@ -220,7 +220,7 @@ onMounted(async () => {
               >
                 <img
                   v-if="fileStore.images.get(path)!.size < 5 * 1024 * 1024"
-                  :src="`/fs/preview?path=${encodeURIComponent(path)}&size=128`"
+                  :src="`/api/fs/preview?path=${encodeURIComponent(path)}&size=128`"
                   alt=""
                   class="size-full object-cover"
                 />
@@ -252,7 +252,7 @@ onMounted(async () => {
       <div class="mx-4">
         <button
           class="w-full text-sm mb-4 p-2 bg-gray-100 dark:bg-mist-950 border border-rust/40 dark:border-gold/40 rounded-lg dark:text-beige text-center duration-150 cursor-pointer hover:border-rust active:translate-y-0.5 dark:hover:border-gold"
-          @click="$router.push('/grid')"
+          @click="$router.push('/merge')"
         >
           Continue
         </button>
