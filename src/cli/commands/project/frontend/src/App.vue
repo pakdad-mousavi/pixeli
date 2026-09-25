@@ -3,17 +3,15 @@ import { RouterLink, RouterView } from "vue-router";
 
 // ICONS
 import GridIcon from "./components/icons/Grid.vue";
-import MasonryIcon from "./components/icons/Masonry.vue";
-import CollageIcon from "./components/icons/Collage.vue";
-import TemplateIcon from "./components/icons/Template.vue";
 import UploadIcon from "./components/icons/Upload.vue";
 import SidebarIcon from "./components/icons/Sidebar.vue";
-
-import { breakpointsTailwind, useBreakpoints, useDark, useStorage, useToggle } from "@vueuse/core";
-import { STORAGE_KEYS } from "./utils/storageKeys.ts";
-import { watch } from "vue";
 import Moon from "./components/icons/Moon.vue";
 import Sun from "./components/icons/Sun.vue";
+import Export from "./components/icons/Export.vue";
+
+import { breakpointsTailwind, useBreakpoints, useDark, useStorage, useToggle } from "@vueuse/core";
+import { watch } from "vue";
+import { STORAGE_KEYS } from "./utils/storageKeys.ts";
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
 const lgOrSmaller = breakpoints.smallerOrEqual("xl");
@@ -25,29 +23,6 @@ const toggleDark = useToggle(isDark);
 watch(lgOrSmaller, (isLgOrSmaller) => {
   state.value.isSidebarOpen = !isLgOrSmaller;
 });
-
-const mergePages = [
-  {
-    link: "/grid",
-    icon: GridIcon,
-    label: "Grid Merge",
-  },
-  {
-    link: "/masonry",
-    icon: MasonryIcon,
-    label: "Masonry Merge",
-  },
-  {
-    link: "/collage",
-    icon: CollageIcon,
-    label: "Collage Merge",
-  },
-  {
-    link: "/template",
-    icon: TemplateIcon,
-    label: "Template Merge",
-  },
-];
 </script>
 
 <template>
@@ -61,7 +36,6 @@ const mergePages = [
       >
         <div
           class="bg-gold/5 h-14 p-4 border-b border-rust/40 dark:border-gold/40 text-rust dark:text-gold flex gap-x-2 items-center duration-300 transition-colors cursor-pointer"
-          :class="{ 'mb-4': state.isSidebarOpen }"
           @click="state.isSidebarOpen = !state.isSidebarOpen"
         >
           <SidebarIcon class="stroke-rust dark:stroke-zinc-100 size-5.5 min-w-5.5 m-1"></SidebarIcon>
@@ -72,38 +46,30 @@ const mergePages = [
             Pixeli
           </span>
         </div>
-        <h2
-          class="text-xs px-4 font-light uppercase tracking-widest text-black dark:text-gold line-clamp-1"
-          :class="{ hidden: !state.isSidebarOpen }"
-        >
-          Files and Folders
-        </h2>
-        <div class="p-4 flex flex-col gap-2 text-rust dark:text-beige text-sm">
-          <RouterLink
-            to="/"
-            class="flex items-center justify-center gap-x-4 font-semibold size-8 rounded-md duration-150 hover:bg-zinc-200 dark:hover:bg-mist-800"
-            :class="{ 'justify-start size-auto px-2 py-2.5': state.isSidebarOpen }"
-          >
-            <UploadIcon class="stroke-rust dark:stroke-beige size-5.5 duration-150 stroke-2"></UploadIcon>
-            <span class="duration-150 line-clamp-1" :class="{ hidden: !state.isSidebarOpen }">Upload Folders</span>
-          </RouterLink>
-        </div>
-        <h2
-          class="text-xs px-4 font-light uppercase tracking-widest text-black dark:text-gold line-clamp-1"
-          :class="{ hidden: !state.isSidebarOpen }"
-        >
-          Merge Modes
-        </h2>
-        <hr class="mx-4 border-rust/40 dark:border-gold/40" :class="{ hidden: state.isSidebarOpen }" />
         <div class="p-4 flex flex-col gap-4 text-rust dark:text-beige text-sm mb-auto" :class="{ 'gap-2': state.isSidebarOpen }">
           <RouterLink
-            :to="page.link"
-            class="flex items-center justify-center gap-x-4 font-semibold size-8 rounded-md duration-150 hover:bg-zinc-200 dark:hover:bg-mist-800"
-            :class="{ 'justify-start size-auto px-2 py-2.5': state.isSidebarOpen }"
-            v-for="page in mergePages"
+            to="/"
+            class="flex items-center justify-center gap-x-4 size-8 rounded-md duration-150 hover:bg-zinc-200 dark:hover:bg-mist-800"
+            :class="{ 'justify-start size-auto px-2 py-2': state.isSidebarOpen }"
           >
-            <component :is="page.icon" class="size-5.5 min-w-5.5 duration-150 stroke-rust dark:stroke-beige"></component>
-            <span class="line-clamp-1 duration-150" :class="{ hidden: !state.isSidebarOpen }">{{ page.label }}</span>
+            <UploadIcon class="stroke-rust dark:stroke-beige size-5.5 min-w-5.5 duration-150 stroke-2"></UploadIcon>
+            <span class="duration-150 line-clamp-1" :class="{ hidden: !state.isSidebarOpen }">1. Image Selection</span>
+          </RouterLink>
+          <RouterLink
+            to="/merge"
+            class="flex items-center justify-center gap-x-4 size-8 rounded-md duration-150 hover:bg-zinc-200 dark:hover:bg-mist-800"
+            :class="{ 'justify-start size-auto px-2 py-2': state.isSidebarOpen }"
+          >
+            <GridIcon class="size-5.5 min-w-5.5 duration-150 stroke-rust dark:stroke-beige"></GridIcon>
+            <span class="line-clamp-1 duration-150" :class="{ hidden: !state.isSidebarOpen }">2. Merge Images</span>
+          </RouterLink>
+          <RouterLink
+            to="/export"
+            class="flex items-center justify-center gap-x-4 size-8 rounded-md duration-150 hover:bg-zinc-200 dark:hover:bg-mist-800"
+            :class="{ 'justify-start size-auto px-2 py-2': state.isSidebarOpen }"
+          >
+            <Export class="size-5.5 min-w-5.5 duration-150 stroke-rust dark:stroke-beige"></Export>
+            <span class="line-clamp-1 duration-150" :class="{ hidden: !state.isSidebarOpen }">3. Export Merged Image</span>
           </RouterLink>
         </div>
         <div

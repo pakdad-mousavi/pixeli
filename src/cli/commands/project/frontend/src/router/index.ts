@@ -1,27 +1,19 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      component: () => import('@/views/index.vue'),
+      path: "/",
+      component: () => import("@/views/index.vue"),
     },
     {
-      path: '/grid',
-      component: () => import('@/views/Grid.vue'),
+      path: "/merge",
+      component: () => import("@/views/Merge.vue"),
     },
     {
-      path: '/masonry',
-      component: () => import('@/views/Masonry.vue'),
-    },
-    {
-      path: '/collage',
-      component: () => import('@/views/Collage.vue'),
-    },
-    {
-      path: '/template',
-      component: () => import('@/views/Template.vue'),
+      path: "/export",
+      component: () => import("@/views/Export.vue"),
     },
   ],
 });
