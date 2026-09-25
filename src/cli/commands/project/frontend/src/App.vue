@@ -31,7 +31,7 @@ watch(lgOrSmaller, (isLgOrSmaller) => {
   >
     <div class="flex w-full h-full p-4">
       <div
-        class="fixed z-1000 w-72 min-w-72 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-rust/40 dark:border-gold/40 duration-300 flex flex-col"
+        class="fixed z-1000 w-72 min-w-72 h-[calc(100vh-32px)] overflow-y-auto bg-white dark:bg-mist-900 rounded-xl border border-rust/40 dark:border-gold/40 duration-300 flex flex-col"
         :class="{ 'w-16! min-w-16!': !state.isSidebarOpen }"
       >
         <div

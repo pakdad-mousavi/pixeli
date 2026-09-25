@@ -168,10 +168,10 @@ onMounted(async () => {
 
     <!-- UPLOAD SETTINGS (FIXED TO RIGHT) -->
     <div
-      class="fixed right-4 z-100 min-w-72 max-w-72 h-[calc(100vh-32px)] bg-white dark:bg-mist-900 rounded-xl overflow-hidden border border-rust/40 dark:border-gold/40 duration-300 transition-colors flex flex-col"
+      class="fixed right-4 z-100 min-w-72 max-w-72 h-[calc(100vh-32px)] overflow-y-auto bg-white dark:bg-mist-900 rounded-xl border border-rust/40 dark:border-gold/40 duration-300 transition-colors flex flex-col"
     >
       <div
-        class="mb-4 bg-gold/5 p-4 border-b border-rust/40 dark:border-gold/40 text-rust dark:text-gold flex gap-x-2 items-center duration-300 transition-colors"
+        class="bg-gold/5 p-4 border-b border-rust/40 dark:border-gold/40 text-rust dark:text-gold flex gap-x-2 items-center duration-300 transition-colors"
       >
         <UploadIcon class="stroke-rust dark:stroke-zinc-100 size-5.5 stroke-2"></UploadIcon>
         <span class="font-serif font-medium text-zinc-700 dark:text-zinc-100">Image Selection</span>
